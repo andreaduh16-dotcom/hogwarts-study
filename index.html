@@ -342,10 +342,189 @@ details.fold .fold-body{padding:0 16px 15px;}
 .confetti{position:fixed; z-index:99; top:-14px; pointer-events:none; border-radius:2px; animation:confFall linear forwards;}
 @keyframes confFall{to{transform:translateY(112vh) rotate(720deg); opacity:.12;}}
 footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px; padding-top:13px; border-top:1px solid var(--line);}
+
+/* ═══ 每日事件 ═══ */
+.event-card{
+  border-radius:13px; padding:12px 15px; margin-bottom:12px; border:1px solid; display:flex; gap:12px; align-items:center;
+}
+.event-card .ee{font-size:30px; flex-shrink:0; line-height:1;}
+.event-card .en{font-family:"Cinzel","Noto Serif TC",serif; font-weight:700; font-size:14px; margin-bottom:2px;}
+.event-card .ed{font-size:12px; line-height:1.55; opacity:.85;}
+.ev-felix{background:linear-gradient(120deg,rgba(201,169,78,.2),rgba(201,169,78,.06)); border-color:rgba(201,169,78,.5); color:#f0dfa8;}
+.ev-felix .en{color:var(--gold);}
+.ev-dementor{background:linear-gradient(120deg,rgba(70,80,110,.26),rgba(30,36,54,.12)); border-color:rgba(130,145,185,.4); color:#c3cbe0;}
+.ev-dementor .en{color:#9fb0d8;}
+.ev-ministry{background:linear-gradient(120deg,rgba(120,80,150,.2),rgba(80,50,110,.06)); border-color:rgba(160,120,200,.4); color:#dcc9ee;}
+.ev-ministry .en{color:#c39fe0;}
+.ev-room{background:linear-gradient(120deg,rgba(61,143,94,.2),rgba(61,143,94,.05)); border-color:var(--line-str); color:#c6e6d2;}
+.ev-room .en{color:var(--green-lt);}
+.ev-calm{background:rgba(255,255,255,.03); border-color:var(--line); color:var(--dim);}
+.ev-calm .en{color:var(--silver);}
+
+/* ═══ 學院盃 ═══ */
+.cup-row{display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:9px; margin-bottom:6px; border:1px solid transparent; transition:.3s;}
+.cup-row.me{background:rgba(61,143,94,.15); border-color:var(--line-str);}
+.cup-rank{font-family:"Cinzel",serif; font-size:12px; color:var(--dim); width:20px; flex-shrink:0;}
+.cup-row.me .cup-rank{color:var(--gold);}
+.cup-emo{font-size:19px; flex-shrink:0;}
+.cup-name{font-size:13px; flex-shrink:0; min-width:66px;}
+.cup-row.me .cup-name{font-weight:700; color:var(--silver-hi);}
+.cup-bar{flex:1; height:7px; border-radius:4px; background:rgba(255,255,255,.07); overflow:hidden; min-width:36px;}
+.cup-bar>div{height:100%; border-radius:4px; transition:width .8s;}
+.cup-pts{font-family:"Cinzel",serif; font-size:12.5px; color:var(--silver-hi); min-width:44px; text-align:right; flex-shrink:0;}
+.cup-note{font-size:11.5px; margin-top:9px; padding:8px 10px; border-radius:8px; line-height:1.6;}
+.cup-lead{background:rgba(201,169,78,.12); color:#e8d9a6; border-left:3px solid var(--gold);}
+.cup-chase{background:rgba(179,82,74,.12); color:#e6bdb8; border-left:3px solid var(--red);}
+
+/* ═══ 沉浸式讀書模式 ═══ */
+#focusMode{
+  position:fixed; inset:0; z-index:200; display:none; overflow:hidden;
+  background:#05100a; animation:focusIn .8s ease;
+}
+#focusMode.on{display:block;}
+@keyframes focusIn{from{opacity:0;}to{opacity:1;}}
+.fm-scene{position:absolute; inset:0; overflow:hidden;}
+.fm-vignette{position:absolute; inset:0; background:radial-gradient(ellipse 62% 55% at 50% 46%, transparent 8%, rgba(0,0,0,.72) 78%); pointer-events:none; z-index:6;}
+/* 壁爐 */
+.fm-fire{position:absolute; bottom:-70px; left:50%; transform:translateX(-50%); width:min(560px,92vw); height:290px; z-index:1;}
+.fm-fire i{position:absolute; bottom:60px; left:50%; border-radius:50%; filter:blur(30px); animation:fireP 3.4s ease-in-out infinite alternate;}
+.fm-fire i:nth-child(1){width:330px; height:180px; margin-left:-165px; background:rgba(214,124,40,.4);}
+.fm-fire i:nth-child(2){width:200px; height:130px; margin-left:-100px; background:rgba(240,170,60,.42); animation-duration:2.3s; animation-delay:-.7s;}
+.fm-fire i:nth-child(3){width:110px; height:88px; margin-left:-55px; background:rgba(255,220,140,.44); animation-duration:1.7s; animation-delay:-1.2s;}
+@keyframes fireP{0%{transform:scale(.9) translateY(6px); opacity:.62;}100%{transform:scale(1.1) translateY(-6px); opacity:1;}}
+/* 燭台 */
+.fm-candle{position:absolute; z-index:2;}
+.fm-candle .flame{
+  width:13px; height:26px; border-radius:50% 50% 46% 46%;
+  background:radial-gradient(ellipse at 50% 78%, #fff6d0 0%, #ffcf6a 34%, #ff9a2e 68%, rgba(255,120,20,0) 100%);
+  filter:blur(1.2px); transform-origin:50% 100%; animation:flick 1.5s ease-in-out infinite alternate;
+  box-shadow:0 0 26px 12px rgba(255,168,60,.3);
+}
+@keyframes flick{
+  0%{transform:scaleY(1) scaleX(1) rotate(-2.5deg); opacity:.9;}
+  40%{transform:scaleY(1.13) scaleX(.93) rotate(2deg); opacity:1;}
+  100%{transform:scaleY(.94) scaleX(1.06) rotate(-1deg); opacity:.94;}
+}
+.fm-candle .stick{width:7px; height:36px; margin:0 auto; background:linear-gradient(180deg,#e6dcc0,#9c8f70); border-radius:2px; box-shadow:0 0 14px rgba(255,180,80,.2);}
+/* 雨窗 */
+.fm-window{
+  position:absolute; top:7%; right:6%; width:min(230px,32vw); height:min(310px,42vh); z-index:1;
+  border:8px solid #14241c; border-radius:110px 110px 10px 10px;
+  background:linear-gradient(180deg, rgba(46,72,96,.5), rgba(16,30,42,.62));
+  overflow:hidden; box-shadow:inset 0 0 46px rgba(0,0,0,.72), 0 0 44px rgba(90,140,190,.09);
+}
+.fm-window::after{content:''; position:absolute; inset:0; background:linear-gradient(100deg, transparent 44%, rgba(180,210,240,.07) 50%, transparent 56%);}
+.fm-rain{position:absolute; width:1.5px; background:linear-gradient(transparent, rgba(190,220,250,.55)); animation:rainF linear infinite;}
+@keyframes rainF{from{transform:translateY(-110px);}to{transform:translateY(360px);}}
+/* 浮塵 */
+.fm-dust{position:absolute; width:3px; height:3px; border-radius:50%; background:rgba(255,214,150,.5); animation:dustF linear infinite; z-index:3;}
+@keyframes dustF{
+  0%{transform:translate(0,0); opacity:0;}
+  12%{opacity:.75;} 88%{opacity:.6;}
+  100%{transform:translate(var(--dx,26px), -130px); opacity:0;}
+}
+/* 書架剪影 */
+.fm-shelf{position:absolute; bottom:0; width:100%; height:34%; z-index:0; opacity:.5;
+  background:repeating-linear-gradient(90deg, transparent 0 9px, rgba(0,0,0,.55) 9px 12px, transparent 12px 15px, rgba(0,0,0,.4) 15px 21px);
+  mask-image:linear-gradient(180deg, transparent, #000 55%); -webkit-mask-image:linear-gradient(180deg, transparent, #000 55%);}
+/* 大釜 */
+.fm-cauldron{position:absolute; bottom:6%; left:50%; transform:translateX(-50%); z-index:2; text-align:center;}
+.fm-cauldron .pot{font-size:min(96px,20vw); filter:drop-shadow(0 0 26px rgba(61,200,120,.42));}
+.fm-bubble{position:absolute; border-radius:50%; background:rgba(120,240,170,.34); animation:bubU linear infinite; bottom:52%;}
+@keyframes bubU{0%{transform:translateY(0) scale(.5); opacity:0;}25%{opacity:.85;}100%{transform:translateY(-120px) scale(1.25); opacity:0;}}
+/* 前景 UI */
+.fm-ui{position:relative; z-index:8; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:22px; text-align:center;}
+.fm-what{font-size:clamp(14px,3.6vw,18px); color:#dfeae4; max-width:640px; line-height:1.65; text-shadow:0 2px 20px rgba(0,0,0,.95); margin-bottom:6px;}
+.fm-phase{font-family:"Cinzel","Noto Serif TC",serif; font-size:11px; letter-spacing:3.5px; color:#9fb8a8; text-shadow:0 2px 14px #000;}
+.fm-time{
+  font-family:"Cinzel",serif; font-weight:700; font-size:clamp(66px,19vw,124px); line-height:1;
+  color:#fff8e8; letter-spacing:3px; margin:14px 0 6px; font-variant-numeric:tabular-nums;
+  text-shadow:0 0 52px rgba(255,190,90,.5), 0 4px 30px rgba(0,0,0,.95);
+}
+.fm-round{font-size:12px; color:var(--gold); letter-spacing:1px; text-shadow:0 2px 12px #000;}
+.fm-btns{display:flex; gap:9px; margin-top:24px; flex-wrap:wrap; justify-content:center;}
+.fm-btn{
+  font-family:"Cinzel","Noto Serif TC",serif; font-size:12.5px; padding:9px 18px; border-radius:9px; cursor:pointer;
+  background:rgba(255,255,255,.09); color:#e4efe9; border:1px solid rgba(255,255,255,.24); backdrop-filter:blur(7px); transition:.15s;
+}
+.fm-btn:hover{background:rgba(255,255,255,.2);}
+.fm-scenes{position:absolute; top:14px; left:50%; transform:translateX(-50%); display:flex; gap:6px; z-index:9;}
+.fm-scenes button{
+  font-family:"Noto Serif TC",serif; font-size:11px; padding:5px 11px; border-radius:16px; cursor:pointer;
+  background:rgba(0,0,0,.42); color:#a9bdb2; border:1px solid rgba(255,255,255,.14); backdrop-filter:blur(6px);
+}
+.fm-scenes button.on{background:rgba(61,143,94,.42); color:#eaf6ef; border-color:var(--green-lt);}
+.fm-patronus{position:absolute; bottom:16px; left:50%; transform:translateX(-50%); z-index:9; font-size:30px; opacity:.42; filter:drop-shadow(0 0 18px rgba(190,225,255,.75)); animation:patFloat 7s ease-in-out infinite;}
+@keyframes patFloat{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-14px);}}
+
+/* ═══ 開場動畫 ═══ */
+#intro{position:fixed; inset:0; z-index:300; background:#05100a; display:none; overflow:hidden;}
+#intro.on{display:block;}
+#intro .owl{position:absolute; top:26%; font-size:44px; animation:owlFly 2.5s cubic-bezier(.3,.1,.5,1) forwards; filter:drop-shadow(0 0 22px rgba(201,169,78,.55));}
+@keyframes owlFly{0%{left:-14%; transform:translateY(0) rotate(-7deg);}55%{transform:translateY(-26px) rotate(4deg);}100%{left:108%; transform:translateY(12px) rotate(-4deg);}}
+#intro .icandle{position:absolute; bottom:0; opacity:0; animation:lightUp .55s ease forwards;}
+@keyframes lightUp{to{opacity:1;}}
+#intro .imsg{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24px; opacity:0; animation:msgIn .9s ease .95s forwards;}
+@keyframes msgIn{to{opacity:1;}}
+#intro .ititle{font-family:"Cinzel","Noto Serif TC",serif; font-size:11px; letter-spacing:5px; color:#8fa89a; margin-bottom:12px;}
+#intro .ihead{font-size:clamp(15px,4vw,21px); color:#efe3c2; line-height:1.7; max-width:600px; text-shadow:0 3px 22px #000;}
+#intro .ihint{font-size:11px; color:#7b8f84; margin-top:26px;}
+
+/* ═══ 魔杖／守護神 ═══ */
+.wand-box{text-align:center; padding:6px 0;}
+.wand-visual{font-size:44px; margin-bottom:6px; filter:drop-shadow(0 0 16px rgba(201,169,78,.45));}
+.wand-spec{font-size:13.5px; color:var(--silver-hi); line-height:1.7;}
+.wand-core{color:var(--gold); font-weight:700;}
+.wand-flavor{font-size:11.5px; color:var(--dim); margin-top:7px; font-style:italic; line-height:1.6;}
+.patronus-box{text-align:center; padding:8px 0;}
+.pat-emoji{font-size:52px; filter:drop-shadow(0 0 22px rgba(190,225,255,.7)); animation:patFloat 5s ease-in-out infinite;}
+.pat-locked{font-size:44px; opacity:.2; filter:grayscale(1);}
+.pat-name{font-family:"Cinzel","Noto Serif TC",serif; font-size:15px; color:#bcdcf0; margin-top:5px; font-weight:700;}
+
+/* ═══ 故事 ═══ */
+.chapter{border:1px solid var(--line); border-radius:12px; padding:13px 15px; margin-bottom:10px; background:rgba(255,255,255,.03);}
+.chapter.locked{opacity:.42;}
+.ch-no{font-family:"Cinzel",serif; font-size:10.5px; letter-spacing:2px; color:var(--gold); margin-bottom:5px;}
+.ch-title{font-size:14px; font-weight:700; color:var(--silver-hi); margin-bottom:6px;}
+.ch-text{font-size:13px; line-height:1.85; color:var(--silver);}
+.ch-lock{font-size:11.5px; color:var(--dim); font-style:italic;}
+.ch-new{display:inline-block; font-size:9.5px; background:var(--gold); color:#2a2410; padding:1px 6px; border-radius:9px; margin-left:6px; vertical-align:middle; letter-spacing:1px; font-family:"Cinzel",serif;}
 </style>
 </head>
 <body>
 <div class="toast-container" id="toastContainer"></div>
+
+<!-- ═══ 開場動畫 ═══ -->
+<div id="intro">
+  <div class="owl">🦉</div>
+  <div class="imsg">
+    <div class="ititle">✦ 預言家日報 ✦</div>
+    <div class="ihead" id="introHead"></div>
+    <div class="ihint">點一下繼續</div>
+  </div>
+</div>
+
+<!-- ═══ 沉浸式讀書模式 ═══ -->
+<div id="focusMode">
+  <div class="fm-scene" id="fmScene"></div>
+  <div class="fm-vignette"></div>
+  <div class="fm-scenes" id="fmScenes">
+    <button data-scene="common" class="on">交誼廳</button>
+    <button data-scene="library">圖書館</button>
+    <button data-scene="potions">魔藥教室</button>
+  </div>
+  <div class="fm-ui">
+    <div class="fm-phase" id="fmPhase">施法中</div>
+    <div class="fm-time" id="fmTime">50:00</div>
+    <div class="fm-what" id="fmWhat"></div>
+    <div class="fm-round" id="fmRound"></div>
+    <div class="fm-btns">
+      <button class="fm-btn" id="fmPause">⏸ 暫停</button>
+      <button class="fm-btn" id="fmExit">離開沉浸模式</button>
+    </div>
+  </div>
+  <div class="fm-patronus" id="fmPatronus" style="display:none;"></div>
+</div>
 
 <div class="wrap">
   <header class="top">
@@ -370,6 +549,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
 
   <nav class="tabs" id="tabs">
     <button data-tab="dashboard" class="active">📜 今天</button>
+    <button data-tab="story">📖 故事</button>
     <button data-tab="album">🍫 畫片冊</button>
     <button data-tab="parchment">📝 三行紙</button>
     <button data-tab="map">🗺️ 學院地圖</button>
@@ -392,6 +572,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
           <div class="timer-display" id="timerDisplay">50:00</div>
           <div class="timer-btns">
             <button class="magic" id="timerStart">▶ 開始施法</button>
+            <button class="magic secondary" id="focusBtn">🕯️ 沉浸模式</button>
             <button class="magic secondary" id="timerReset">重置</button>
           </div>
           <div class="timer-rounds" id="timerRoundsLbl"></div>
@@ -402,6 +583,9 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
         </div>
       </div>
     </div>
+
+    <!-- 今日事件 -->
+    <div id="eventBox"></div>
 
     <!-- 今日任務（唯一羊皮紙） -->
     <div class="card parch" id="taskCard">
@@ -430,6 +614,12 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       </div>
 
       <div class="done-msg" id="dayCompleteMsg" style="display:none;">✓ 今天已過關。不管接下來發生什麼，今天都不算白過。</div>
+    </div>
+
+    <!-- 學院盃 -->
+    <div class="card">
+      <h2>🏆 學院盃 <span class="dim" id="cupPeriod"></span></h2>
+      <div id="cupBox"></div>
     </div>
 
     <!-- 巧克力蛙 + 貓 -->
@@ -485,6 +675,15 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     </div>
   </section>
 
+  <!-- ═══ 故事 ═══ -->
+  <section class="tab-panel" id="tab-story">
+    <div class="card">
+      <h2>📖 消失的第八年生 <span class="dim" id="storyProgress"></span></h2>
+      <p class="dim">你在交誼廳沙發縫裡摸到的那本筆記本。每過一週（該週至少 4 天過關）解鎖下一章。</p>
+    </div>
+    <div id="storyList"></div>
+  </section>
+
   <!-- ═══ 畫片冊 ═══ -->
   <section class="tab-panel" id="tab-album">
     <div class="card">
@@ -527,6 +726,9 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
         <tr><td>連續 7 天不斷線（歷史紀錄都算）</td><td>+30 / 每滿7天</td></tr>
         <tr><td>模考達標</td><td>+50</td></tr>
         <tr><td>節奏鐘完成一個 50 分鐘回合</td><td>+3 / 回合</td></tr>
+        <tr><td>🍀 福來福喜日</td><td>當日總分 ×2</td></tr>
+        <tr><td>🌫️ 催狂魔日（過關驅散）</td><td>+20</td></tr>
+        <tr><td>🏛️ 魔法部視察日（課堂複習加倍）</td><td>+10 / 門</td></tr>
       </table></div>
       <p class="dim" style="margin-top:8px;">勾一項就先拿一項的分，不用等全部做完；取消勾選會自動扣回——不是懲罰，只是那件事本來就沒發生。</p>
       <div id="pointsDetailBox"></div>
@@ -607,6 +809,16 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
 
   <!-- ═══ 工具箱 ═══ -->
   <section class="tab-panel" id="tab-toolbox">
+    <div class="grid2">
+      <div class="card">
+        <h2>🪄 你的魔杖</h2>
+        <div id="wandBox"></div>
+      </div>
+      <div class="card">
+        <h2>🦌 守護神</h2>
+        <div id="patronusBox"></div>
+      </div>
+    </div>
     <div class="vow-plaque">
       <div class="vow-title">⚡ 三個不可破的誓言 ⚡</div>
       <div class="vow-item">① 每天默寫 10 條條文，就算那天只讀了 20 分鐘</div>
@@ -671,17 +883,7 @@ function toast(msg, neg=false){
   t.className='toast'+(neg?' neg':''); t.textContent=msg;
   c.appendChild(t); setTimeout(()=>t.remove(),3300);
 }
-function chime(down=false){
-  try{
-    const ctx=new (window.AudioContext||window.webkitAudioContext)();
-    const o=ctx.createOscillator(), g=ctx.createGain();
-    o.type='sine'; o.frequency.value=down?440:880;
-    g.gain.setValueAtTime(0.001,ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.12,ctx.currentTime+0.02);
-    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.5);
-    o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+0.5);
-  }catch(e){}
-}
+function chime(){ /* 使用者選擇完全靜音：不發出任何聲音 */ }
 function celebrate(big=false){
   const colors=['#c9a94e','#3d8f5e','#c4d2cb','#5cc084','#eaf2ee'];
   for(let i=0;i<(big?80:36);i++){
@@ -694,19 +896,12 @@ function celebrate(big=false){
     p.style.animationDelay=(Math.random()*.5)+'s';
     document.body.appendChild(p); setTimeout(()=>p.remove(),3800);
   }
-  try{
-    const ctx=new (window.AudioContext||window.webkitAudioContext)();
-    [523.25,659.25,783.99].forEach((f,i)=>{
-      const o=ctx.createOscillator(), g=ctx.createGain();
-      o.type='sine'; o.frequency.value=f;
-      const t0=ctx.currentTime+i*0.12;
-      g.gain.setValueAtTime(0.001,t0);
-      g.gain.exponentialRampToValueAtTime(0.14,t0+0.03);
-      g.gain.exponentialRampToValueAtTime(0.001,t0+0.5);
-      o.connect(g); g.connect(ctx.destination); o.start(t0); o.stop(t0+0.55);
-    });
-  }catch(e){}
 }
+/* 穩定雜湊：同一個 key 永遠得到同一個結果 */
+function hashNum(s){ let h=2166136261>>>0; for(const c of s){ h^=c.charCodeAt(0); h=Math.imul(h,16777619)>>>0; } return h; }
+function rnd01(s){ return (hashNum(s)%100000)/100000; }
+function addDays(ds,n){ return toLocalDateStr(new Date(d(ds).getTime()+n*86400000+12*3600000)); }
+function monthStart(ds){ return ds.slice(0,8)+'01'; }
 
 /* ═══ 每日紀錄 ═══ */
 function dayKey(dt){ return 'hp_day_'+dt; }
@@ -755,25 +950,100 @@ function computeStreakBonus(){
   }
   return bonus;
 }
+/* ═══ 每日事件（依日期決定，不需儲存，重算永遠一致） ═══ */
+const EVENTS=[
+  {id:'felix',   e:'🍀', n:'福來福喜',   d:'幸運藥水生效：今天所有得分 ×2。', w:8},
+  {id:'dementor',e:'🌫️', n:'催狂魔靠近', d:'寒意瀰漫。今天只要過關就能施出護法咒驅散它，額外 +20。', w:14},
+  {id:'ministry',e:'🏛️', n:'魔法部視察', d:'督學今天在校。課堂當天複習加倍計分（每門 +20）。', w:12},
+  {id:'room',    e:'🚪', n:'有求必應屋', d:'牆上浮現一道門。今天過關可以多打開一隻巧克力蛙。', w:10},
+  {id:'calm',    e:'🕯️', n:'平靜的一天', d:'沒有任何異狀。就是普通地、好好地讀一天書。', w:56}
+];
+function dayEvent(ds){
+  const r=rnd01('ev|'+ds)*EVENTS.reduce((s,e)=>s+e.w,0);
+  let acc=0;
+  for(const ev of EVENTS){ acc+=ev.w; if(r<acc) return ev; }
+  return EVENTS[EVENTS.length-1];
+}
+/* 單日總得分（含事件效果） */
+function dayTotalEarned(dt){
+  const o=getDayObj(dt);
+  const cc=Object.values(o.courses).filter(Boolean).length;
+  let p = dayEarnedFromChecklist(o) + (o.errorLogged?5:0) + (o.examPass?50:0) + cc*10 + (o.timerRounds||0)*3;
+  const ev=dayEvent(dt);
+  if(ev.id==='ministry') p += cc*10;
+  if(ev.id==='dementor' && o.completed) p += 20;
+  if(ev.id==='felix') p *= 2;
+  return p;
+}
 function computeEarnedTotal(){
   let t=0;
-  for(const dt of allDayDates()){
-    const o=getDayObj(dt);
-    t+=dayEarnedFromChecklist(o);
-    if(o.errorLogged) t+=5;
-    if(o.examPass) t+=50;
-    t+=Object.values(o.courses).filter(Boolean).length*10;
-    t+=(o.timerRounds||0)*3;
-  }
+  for(const dt of allDayDates()) t+=dayTotalEarned(dt);
   return t+computeStreakBonus();
+}
+function renderEvent(){
+  const ev=dayEvent(todayStr());
+  document.getElementById('eventBox').innerHTML=
+    `<div class="event-card ev-${ev.id}"><div class="ee">${ev.e}</div>
+      <div><div class="en">${ev.n}</div><div class="ed">${ev.d}</div></div></div>`;
 }
 function computeSpent(){ return LS.get('hp_redemptions',[]).reduce((s,r)=>s+r.cost,0); }
 function getBalance(){ return computeEarnedTotal()-computeSpent(); }
+
+/* ═══ 學院盃：每月結算，三個對手學院自己會跑分 ═══ */
+const RIVALS=[
+  {id:'gryffindor',n:'葛萊分多',e:'🦁',c:'#9e2a2b',base:32},
+  {id:'ravenclaw', n:'雷文克勞',e:'🦅',c:'#2e4a8f',base:35},
+  {id:'hufflepuff',n:'赫夫帕夫',e:'🦡',c:'#c8a02a',base:29}
+];
+function rivalDayScore(id,ds){
+  const rv=RIVALS.find(x=>x.id===id);
+  const wd=d(ds).getDay();
+  const weekend=(wd===0||wd===6)?0.82:1;
+  // 0.5~1.5 倍起伏：有好日子也有爛日子
+  return Math.round(rv.base*weekend*(0.5+rnd01(id+'|'+ds)));
+}
+function cupSeasonStart(){
+  const today=todayStr(), ms=monthStart(today);
+  const dates=allDayDates();
+  const first=dates.length? dates[0] : today;
+  // 賽季從「這個月初」和「你開始記錄那天」取較晚者——中途加入不會一開始就落後幾百分
+  return first>ms? first : ms;
+}
+function cupScores(){
+  const today=todayStr(), start=cupSeasonStart();
+  let mine=0;
+  for(const dt of allDayDates()) if(dt>=start&&dt<=today) mine+=dayTotalEarned(dt);
+  const rows=[{id:'slytherin',n:'史萊哲林',e:'🐍',c:'#1a472a',pts:mine,me:true}];
+  for(const rv of RIVALS){
+    let t=0;
+    for(let ds=start; ds<=today; ds=addDays(ds,1)) t+=rivalDayScore(rv.id,ds);
+    rows.push({id:rv.id,n:rv.n,e:rv.e,c:rv.c,pts:t,me:false});
+  }
+  rows.sort((a,b)=>b.pts-a.pts);
+  return rows;
+}
+function renderCup(){
+  const rows=cupScores(), max=Math.max(...rows.map(r=>r.pts),1);
+  const today=d(todayStr());
+  const daysLeft = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate() - today.getDate();
+  document.getElementById('cupPeriod').textContent=`${today.getMonth()+1} 月賽季 · 還剩 ${daysLeft} 天結算`;
+  const me=rows.find(r=>r.me), rank=rows.indexOf(me)+1;
+  document.getElementById('cupBox').innerHTML =
+    rows.map((r,i)=>`<div class="cup-row ${r.me?'me':''}">
+      <span class="cup-rank">${i+1}</span><span class="cup-emo">${r.e}</span>
+      <span class="cup-name">${r.n}</span>
+      <span class="cup-bar"><div style="width:${Math.round(r.pts/max*100)}%; background:${r.c};"></div></span>
+      <span class="cup-pts">${r.pts}</span></div>`).join('')
+    + (rank===1
+        ? `<div class="cup-note cup-lead">👑 史萊哲林目前領先 ${me.pts-rows[1].pts} 分。守住它。</div>`
+        : `<div class="cup-note cup-chase">${rows[0].n}領先你 ${rows[0].pts-me.pts} 分——今天補回來還來得及。</div>`);
+}
 
 function refreshHeaderStats(){
   document.getElementById('statPoints').textContent=getBalance();
   document.getElementById('statStreak').textContent=computeStreakCurrent();
   renderLevel(); renderPointsDetail(); renderHeatmap(); renderCat(); renderAlbum(); renderRing();
+  renderCup(); renderPatronus(); renderStory();
 }
 function pointsFeedback(before,label){
   const delta=getBalance()-before;
@@ -1186,6 +1456,7 @@ function renderTimer(){
   document.getElementById('timerPhaseLbl').textContent= timerPhaseSt==='study'?'施法中（讀書）':'離開位子（休息）';
   const r=getDayObj(todayStr()).timerRounds||0;
   document.getElementById('timerRoundsLbl').textContent= r? `⚡ 今天已完成 ${r} 回合（+${r*3}）` : '';
+  if(document.getElementById('focusMode').classList.contains('on')) syncFocus();
 }
 document.getElementById('timerStart').addEventListener('click',()=>{
   if(timerRunning){
@@ -1353,25 +1624,33 @@ function cardHTML(c,cnt){
 }
 function renderFrogCard(){
   const box=document.getElementById('frogBox'), t=todayStr();
-  const drawn=LS.get('hp_card_day_'+t,null);
-  if(drawn){
-    const c=CARDS.find(x=>x.id===drawn);
-    box.innerHTML= c? cardHTML(c, ownedCards()[c.id]||1).replace(' frog-reveal','') : '';
-  } else if(getDayObj(t).completed){
-    box.innerHTML=`<div style="text-align:center; padding:6px 0;">
-      <p style="margin:0 0 10px;">今天過關了——盒子在你手上跳動。</p>
-      <button class="magic" id="openFrogBtn">打開巧克力蛙 🍫</button></div>`;
-    document.getElementById('openFrogBtn').addEventListener('click',()=>{
-      const c=drawRandomCard(); grantCard(c);
-      LS.set('hp_card_day_'+t,c.id);
-      box.innerHTML=cardHTML(c, ownedCards()[c.id]);
-      celebrate(c.r==='l');
-      toast(c.r==='l'?'傳說畫片！✨':`獲得畫片：${c.n}`);
-      renderAlbum();
-    });
-  } else {
+  const isRoom = dayEvent(t).id==='room';   // 有求必應屋：今天可抽兩張
+  const slots = isRoom? ['hp_card_day_'+t,'hp_card_day2_'+t] : ['hp_card_day_'+t];
+  const drawnAll = slots.map(k=>LS.get(k,null));
+  const nextSlot = slots.findIndex(k=>!LS.get(k,null));
+
+  if(!getDayObj(t).completed && nextSlot===0){
     box.innerHTML='<p class="dim">完成今天的任務清單，就能打開一隻巧克力蛙，裡面的畫片是隨機的。</p>';
+    return;
   }
+  let html = drawnAll.filter(Boolean).map(id=>{
+    const c=CARDS.find(x=>x.id===id);
+    return c? cardHTML(c, ownedCards()[c.id]||1).replace(' frog-reveal','') : '';
+  }).join('');
+  if(nextSlot>-1 && getDayObj(t).completed){
+    html += `<div style="text-align:center; padding:6px 0;">
+      <p style="margin:0 0 10px;">${nextSlot===0?'今天過關了——盒子在你手上跳動。':'🚪 有求必應屋：牆上還有一道門，再開一隻。'}</p>
+      <button class="magic" id="openFrogBtn">打開巧克力蛙 🍫</button></div>`;
+  }
+  box.innerHTML=html;
+  const btn=document.getElementById('openFrogBtn');
+  if(btn) btn.addEventListener('click',()=>{
+    const c=drawRandomCard(); grantCard(c);
+    LS.set(slots[nextSlot],c.id);
+    renderFrogCard(); renderAlbum();
+    celebrate(c.r==='l');
+    toast(c.r==='l'?'傳說畫片！✨':`獲得畫片：${c.n}`);
+  });
 }
 function renderAlbum(){
   const grid=document.getElementById('albumGrid'); if(!grid) return;
@@ -1576,6 +1855,255 @@ document.getElementById('clearDebugDate').addEventListener('click',()=>{
   LS.del('hp_debug_date'); location.reload();
 });
 
+/* ═══ 魔杖（魔杖選擇巫師，一生一支） ═══ */
+const WOODS=['冬青木','紫杉木','黑刺李','梣木','橡木','榆木','葡萄藤','山楂木','胡桃木','雪松','柳木','接骨木'];
+const CORES=[
+  {n:'鳳凰羽毛',f:'最難駕馭，但一旦認主，能施出最遠的咒。它挑的是有主見的人。'},
+  {n:'龍心弦',f:'學得最快、力量最強，也最容易走偏。適合野心明確的人。'},
+  {n:'獨角獸毛',f:'最忠誠，不會背叛主人。它挑的是能長跑的人。'},
+  {n:'蛇怪角',f:'罕見。只在極度專注的巫師手中發揮全力。'}
+];
+function rollWand(){
+  const seed='wand|'+Date.now()+'|'+Math.random();
+  const wood=WOODS[Math.floor(rnd01(seed+'w')*WOODS.length)];
+  const core=CORES[Math.floor(rnd01(seed+'c')*CORES.length)];
+  const len=(9+Math.round(rnd01(seed+'l')*10*2)/2).toFixed(1);
+  return {wood,core:core.n,flavor:core.f,len};
+}
+function renderWand(){
+  const w=LS.get('hp_wand',null), box=document.getElementById('wandBox');
+  if(!w){
+    box.innerHTML=`<div class="wand-box">
+      <div class="wand-visual" style="opacity:.35">🪄</div>
+      <p class="dim">「魔杖選擇巫師，波特先生。」——奧利凡德</p>
+      <button class="magic small" id="pickWand">走進奧利凡德的店</button></div>`;
+    document.getElementById('pickWand').addEventListener('click',()=>{
+      const nw=rollWand(); LS.set('hp_wand',nw); renderWand(); celebrate(true);
+      toast(`${nw.wood}・${nw.core}・${nw.len} 吋 — 它選擇了你`);
+    });
+  } else {
+    box.innerHTML=`<div class="wand-box">
+      <div class="wand-visual">🪄</div>
+      <div class="wand-spec">${w.wood}　<span class="wand-core">${w.core}</span>　${w.len} 吋</div>
+      <div class="wand-flavor">${w.flavor}</div></div>`;
+  }
+}
+/* ═══ 守護神（連續 30 天解鎖） ═══ */
+const PATRONI=[
+  {e:'🦌',n:'牡鹿'},{e:'🦦',n:'水獺'},{e:'🐺',n:'狼'},{e:'🦅',n:'鷹'},{e:'🐍',n:'蛇'},
+  {e:'🦊',n:'狐狸'},{e:'🐈',n:'貓'},{e:'🦉',n:'貓頭鷹'},{e:'🐎',n:'駿馬'},{e:'🐇',n:'野兔'},
+  {e:'🦢',n:'天鵝'},{e:'🐬',n:'海豚'},{e:'🐉',n:'龍'},{e:'🦁',n:'獅子'}
+];
+const PATRONUS_DAYS=30;
+function bestStreakEver(){
+  const done=allDayDates().filter(dt=>getDayObj(dt).completed);
+  let best=0,run=0,prev=null;
+  for(const dt of done){ run=(prev&&dateDiff(prev,dt)===1)?run+1:1; if(run>best)best=run; prev=dt; }
+  return best;
+}
+function getPatronus(){
+  const best=bestStreakEver();
+  if(best<PATRONUS_DAYS) return null;
+  let p=LS.get('hp_patronus',null);
+  if(!p){
+    p=PATRONI[Math.floor(Math.random()*PATRONI.length)];
+    LS.set('hp_patronus',p);
+    setTimeout(()=>{ celebrate(true); toast(`✨ 疾疾，護法現身！你的守護神是${p.n}`); },400);
+  }
+  return p;
+}
+function renderPatronus(){
+  const p=getPatronus(), box=document.getElementById('patronusBox');
+  const best=bestStreakEver();
+  if(p){
+    box.innerHTML=`<div class="patronus-box"><div class="pat-emoji">${p.e}</div>
+      <div class="pat-name">${p.n}</div>
+      <p class="dim" style="margin-top:6px;">牠在你低潮的時候會出現。專注讀書時也會。</p></div>`;
+    const fp=document.getElementById('fmPatronus');
+    fp.textContent=p.e; fp.style.display='block';
+  } else {
+    box.innerHTML=`<div class="patronus-box"><div class="pat-locked">🌫️</div>
+      <p class="dim" style="margin-top:8px;">連續過關滿 ${PATRONUS_DAYS} 天才能施出護法咒。<br>
+      目前最佳紀錄：<b style="color:var(--gold)">${best}</b> / ${PATRONUS_DAYS} 天</p></div>`;
+  }
+}
+
+/* ═══ 故事：消失的第八年生 ═══ */
+const STORY=[
+  ['沙發縫裡的東西','你在交誼廳最角落那張沙發的縫隙裡摸到一本筆記本。皮革封面磨得發白，沒有名字，只有一行小字：「給下一個坐在這裡的人。」'],
+  ['第一頁','「我也考過那場試。我把我學到的東西留在這裡——如果你讀得夠久，你會拿到全部。」字跡工整得可怕，像是寫了很多遍才敢下筆。'],
+  ['第一條建議','第三頁只有一句話：「不要相信任何說『這科不用讀』的人。他們不是在幫你，他們是在說服自己。」'],
+  ['關於憲法','「我最後悔的是憲法。它沒課、沒人逼你、分數也不高——所以我一直往後排。等我發現的時候，二試的憲法考卷占了半份。」'],
+  ['夜巡','你想查這本筆記本的主人是誰。學院名冊上第七年級的名單裡沒有一個人的字跡像這樣。'],
+  ['第二條建議','「錯題本不是罰寫。第三行『我原本以為的是什麼』才是重點——那行寫的是你思路的破口，不是你的錯誤。」'],
+  ['圖書館的紀錄','你翻出十年前的借書卡。某個名字在民法的書上出現了四十七次，然後在某個月之後，再也沒有出現過。'],
+  ['關於停損','「我曾經在一章卡了三天。三天。那三天我什麼都沒推進，只是不肯承認我讀不動。停在時間，不要停在進度。」'],
+  ['一張夾在裡面的紙','筆記本第五十頁夾著一張撕下來的行事曆，上面有人用紅筆把一整個禮拜劃掉，旁邊寫著：「這週壞掉了。沒關係，不補。」'],
+  ['第三條建議','「計畫一定會壞。壞掉的時候不要加倍補，那是溺水的人抓著別人的死法。落後就改計畫，進度只往前推。」'],
+  ['名字','借書卡最下面被磨掉了一角，只剩下一個姓氏。跟你的教授同姓。'],
+  ['關於低電量的日子','「有些日子我只默寫了十條條文就躺回床上。我以前覺得那是失敗的一天。現在我知道，那是唯一讓我撐過一整年的東西。」'],
+  ['第一次模考','「第一次全真模考我考爛了，爛到我想把整張表撕掉。但模考的意義不是分數，是告訴你哪一類在流血。」'],
+  ['關於比較','「不要看別人讀到哪裡。一試是相對錄取沒錯，但你能控制的只有你自己那份。」'],
+  ['冬天','筆記本中間有一大段字跡潦草起來，像是天氣很冷、手在抖。「一月。期末考週。今天的司律進度是零，而且我允許自己是零。」'],
+  ['第四條建議','「期末考不是司律的敵人。那些考試課的範圍就是司律的範圍——你是在用學校的死線逼自己複習。」'],
+  ['一封沒寄出的信','夾在後半本的是一封寫給家人的信，只寫了開頭：「如果我今年沒有上——」下面被劃掉了，重新寫：「不管今年結果如何，我想跟你們說——」'],
+  ['關於孤獨','「準備這場考試最難的不是內容，是沒有人知道你今天讀了幾個小時。你得自己當那個知道的人。」'],
+  ['春天','「三月。今天我在圖書館坐了一整天，抬頭的時候發現窗外的樹開花了。我完全沒注意到冬天什麼時候結束的。」'],
+  ['第五條建議','「二試不背法條——它附發法條。分數在論述結構跟涵攝。你以為的『不會寫』，多半是『沒有骨架』。」'],
+  ['熄燈時間','「我開始強迫自己在十一點闔上書。不是因為讀完了，是因為明天還要來。這一年不是衝刺，是把長跑跑完。」'],
+  ['最後一次模考','「暑假最後一次模考，我終於知道自己會落在哪個區間。那種踏實感比高分還珍貴。」'],
+  ['封盤','「考前兩週我不碰任何新東西。所有人都在瘋狂補進度，我在重讀我的錯題本。那是我這一年做過最反直覺、也最正確的決定。」'],
+  ['考前一夜','「今晚我什麼都沒讀。我把咒文本翻了一遍就闔上了。明天上場的不是今晚的我，是這一整年的我。」'],
+  ['一試','後面幾頁是空的。然後在很後面，突然又出現一行字：「過了。」'],
+  ['第八年','「他們說霍格華茲只有七年。但考完一試到二試那九週，是我的第八年——沒有人陪你上課，你得自己當自己的教授。」'],
+  ['關於申論','「模板不是作弊，是讓你在緊張到手抖的時候，還有一副骨架撐著。爭點、法條、學說實務、涵攝、結論。每科一張 A4。」'],
+  ['最後一條建議','「如果你讀到這裡——代表你撐了很久。我想告訴你的其實只有一件事：能走到最後的人，不是最聰明的，是還在的那個。」'],
+  ['留給下一個人','最後一頁的字跡不一樣了，比較新，也比較穩：「我把這本放回沙發縫裡。給下一個坐在這裡的人。」下面有一個很小的空白處，像是留給你簽名的。'],
+  ['你的名字','你拿起筆，在那個空白處寫下自己的名字。這本筆記本現在有兩個作者了。']
+];
+function weekCompletedCount(mondayStr){
+  let c=0;
+  for(let i=0;i<7;i++) if(getDayObj(addDays(mondayStr,i)).completed) c++;
+  return c;
+}
+function unlockedChapters(){
+  // 從計畫起跑那週開始，一週一章；該週至少 4 天過關才解鎖
+  const firstMon=mondayOf('2026-08-11'), curMon=mondayOf(todayStr());
+  const weeks=Math.floor(dateDiff(firstMon,curMon)/7);
+  let n=0;
+  for(let w=0; w<=weeks && n<STORY.length; w++){
+    if(weekCompletedCount(addDays(firstMon,w*7))>=4) n++;
+  }
+  return n;
+}
+function renderStory(){
+  const n=unlockedChapters();
+  document.getElementById('storyProgress').textContent=`已解鎖 ${n}/${STORY.length} 章`;
+  const lastSeen=LS.get('hp_story_seen',0);
+  document.getElementById('storyList').innerHTML = STORY.map((c,i)=>{
+    if(i<n) return `<div class="chapter"><div class="ch-no">第 ${i+1} 章${i>=lastSeen?'<span class="ch-new">NEW</span>':''}</div>
+      <div class="ch-title">${c[0]}</div><div class="ch-text">${c[1]}</div></div>`;
+    if(i===n) return `<div class="chapter locked"><div class="ch-no">第 ${i+1} 章</div>
+      <div class="ch-title">？？？</div><div class="ch-lock">再完成一週（該週至少 4 天過關）就會解鎖。</div></div>`;
+    return '';
+  }).join('') || '<div class="card"><p class="dim">還沒有解鎖任何章節。完成一週的進度就會有第一章。</p></div>';
+  if(n>lastSeen) LS.set('hp_story_seen',n);
+}
+
+/* ═══ 開場動畫（每天第一次打開） ═══ */
+function maybeIntro(){
+  const last=LS.get('hp_last_open',null), today=realTodayStr();
+  if(last===today) return;
+  LS.set('hp_last_open',today);
+  const el=document.getElementById('intro');
+  document.getElementById('introHead').textContent=document.getElementById('prophetHeadline').textContent;
+  el.querySelectorAll('.icandle').forEach(c=>c.remove());
+  // 燭火一盞盞亮起
+  for(let i=0;i<7;i++){
+    const c=document.createElement('div');
+    c.className='icandle';
+    c.style.left=(6+i*13.5)+'%';
+    c.style.animationDelay=(0.25+i*0.13)+'s';
+    c.innerHTML='<div class="flame" style="margin:0 auto"></div><div class="stick"></div>';
+    el.appendChild(c);
+  }
+  el.classList.add('on');
+  const close=()=>{ el.classList.remove('on'); el.removeEventListener('click',close); };
+  el.addEventListener('click',close);
+  setTimeout(close,5200);
+}
+
+/* ═══ 沉浸式讀書模式（純視覺，無聲音） ═══ */
+const SCENES={
+  common:{bg:'radial-gradient(ellipse 70% 55% at 50% 96%, #3a1d0c 0%, #140d08 52%, #05100a 100%)', build:'fire,candles,dust'},
+  library:{bg:'radial-gradient(ellipse 80% 60% at 50% 30%, #14202b 0%, #0a1219 55%, #04090c 100%)', build:'window,shelf,candles,dust'},
+  potions:{bg:'radial-gradient(ellipse 65% 55% at 50% 82%, #0d2a1c 0%, #071510 55%, #030a07 100%)', build:'cauldron,candles,dust'}
+};
+function buildScene(name){
+  const sc=SCENES[name]||SCENES.common, box=document.getElementById('fmScene');
+  box.style.background=sc.bg; box.innerHTML='';
+  const parts=sc.build.split(',');
+  if(parts.includes('fire')){
+    const f=document.createElement('div'); f.className='fm-fire';
+    f.innerHTML='<i></i><i></i><i></i>'; box.appendChild(f);
+  }
+  if(parts.includes('shelf')){ const s=document.createElement('div'); s.className='fm-shelf'; box.appendChild(s); }
+  if(parts.includes('window')){
+    const w=document.createElement('div'); w.className='fm-window';
+    for(let i=0;i<34;i++){
+      const r=document.createElement('div'); r.className='fm-rain';
+      r.style.left=Math.random()*100+'%';
+      r.style.height=(16+Math.random()*30)+'px';
+      r.style.animationDuration=(0.55+Math.random()*0.7)+'s';
+      r.style.animationDelay=(-Math.random()*1.2)+'s';
+      w.appendChild(r);
+    }
+    box.appendChild(w);
+  }
+  if(parts.includes('cauldron')){
+    const c=document.createElement('div'); c.className='fm-cauldron';
+    c.innerHTML='<div class="pot">🧪</div>';
+    for(let i=0;i<9;i++){
+      const b=document.createElement('div'); b.className='fm-bubble';
+      const s=5+Math.random()*11;
+      b.style.width=s+'px'; b.style.height=s+'px';
+      b.style.left=(38+Math.random()*26)+'%';
+      b.style.animationDuration=(2.2+Math.random()*2.4)+'s';
+      b.style.animationDelay=(-Math.random()*3)+'s';
+      c.appendChild(b);
+    }
+    box.appendChild(c);
+  }
+  if(parts.includes('candles')){
+    const spots=[[7,17],[91,25],[15,64],[85,70],[50,10]];
+    spots.forEach(([x,y],i)=>{
+      const c=document.createElement('div'); c.className='fm-candle';
+      c.style.left=x+'%'; c.style.top=y+'%';
+      c.innerHTML='<div class="flame" style="margin:0 auto"></div><div class="stick"></div>';
+      c.style.animationDelay=(i*0.4)+'s';
+      box.appendChild(c);
+    });
+  }
+  if(parts.includes('dust')){
+    for(let i=0;i<26;i++){
+      const p=document.createElement('div'); p.className='fm-dust';
+      p.style.left=Math.random()*100+'%';
+      p.style.top=(55+Math.random()*45)+'%';
+      p.style.setProperty('--dx',(Math.random()*70-35)+'px');
+      p.style.animationDuration=(7+Math.random()*9)+'s';
+      p.style.animationDelay=(-Math.random()*10)+'s';
+      box.appendChild(p);
+    }
+  }
+}
+function openFocus(){
+  buildScene(LS.get('hp_scene','common'));
+  document.querySelectorAll('#fmScenes button').forEach(b=>b.classList.toggle('on', b.dataset.scene===LS.get('hp_scene','common')));
+  document.getElementById('fmWhat').textContent=document.getElementById('heroWhat').textContent;
+  document.getElementById('focusMode').classList.add('on');
+  syncFocus();
+}
+function closeFocus(){ document.getElementById('focusMode').classList.remove('on'); }
+function syncFocus(){
+  document.getElementById('fmTime').textContent=document.getElementById('timerDisplay').textContent;
+  document.getElementById('fmPhase').textContent= timerPhaseSt==='study'?'施法中':'離開位子・休息';
+  document.getElementById('fmRound').textContent=document.getElementById('timerRoundsLbl').textContent;
+  document.getElementById('fmPause').textContent= timerRunning?'⏸ 暫停':'▶ 開始';
+}
+document.getElementById('focusBtn').addEventListener('click',()=>{
+  if(!timerRunning) document.getElementById('timerStart').click();
+  openFocus();
+});
+document.getElementById('fmExit').addEventListener('click',closeFocus);
+document.getElementById('fmPause').addEventListener('click',()=>{ document.getElementById('timerStart').click(); syncFocus(); });
+document.getElementById('fmScenes').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  LS.set('hp_scene',b.dataset.scene);
+  document.querySelectorAll('#fmScenes button').forEach(x=>x.classList.toggle('on',x===b));
+  buildScene(b.dataset.scene);
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeFocus(); });
+
 /* ═══ TaiLexi ═══ */
 function renderTaiLexiLock(){
   const h=new Date().getHours();
@@ -1588,6 +2116,8 @@ function renderTaiLexiLock(){
 function init(){
   renderDebugBanner();
   renderProphet();
+  renderEvent();
+  renderWand();
   renderPhaseChip();
   renderCountdown();
   renderTodayPlan();
@@ -1603,6 +2133,7 @@ function init(){
   renderRewardShopList();
   renderRedemptionHistory();
   refreshHeaderStats();
+  maybeIntro();
   // 排程中的時段跟著時鐘走
   setInterval(()=>{ renderTodayPlan(); renderTaiLexiLock(); }, 60000);
 }
