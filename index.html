@@ -237,6 +237,50 @@ label.field-label{display:block; font-size:12px; font-weight:700; color:var(--pr
   background:#6b3fa0; color:#fff; text-align:center; font-size:12px; padding:6px; border-radius:8px; margin-bottom:12px;
 }
 
+/* 學年經驗條 */
+.xp-wrap{max-width:440px; margin:10px auto 0;}
+.xp-bar{height:8px; border-radius:5px; background:rgba(255,255,255,.08); border:1px solid rgba(170,170,170,.25); overflow:hidden;}
+.xp-bar>div{height:100%; background:linear-gradient(90deg,#4e8f68,#d4af37); transition:width .5s;}
+.xp-lbl{font-size:11px; opacity:.78; margin-top:4px; text-align:center; font-family:"Cinzel","Noto Serif TC",serif; letter-spacing:1px;}
+
+/* 預言家日報 */
+.prophet-head{font-family:"Cinzel Decorative","Noto Serif TC",serif; text-align:center; font-size:15px; letter-spacing:4px; border-bottom:2px solid rgba(0,0,0,.35); padding-bottom:6px; margin-bottom:10px;}
+.prophet-headline{font-size:16px; font-weight:700; text-align:center; margin:8px 0 6px; line-height:1.6;}
+.prophet-sub{text-align:center; font-size:12px; opacity:.65;}
+
+/* 巧克力蛙卡片 */
+.tarot{border:3px solid #9a9a9a; border-radius:12px; padding:14px 12px; text-align:center; background:linear-gradient(160deg,#fff8e6,#efe3c0); max-width:250px; margin:10px auto;}
+.tarot .temoji{font-size:52px; line-height:1.2;}
+.tarot .cname{font-family:"Cinzel","Noto Serif TC",serif; font-weight:700; font-size:17px; margin-top:4px;}
+.tarot .rar{font-size:11px; letter-spacing:2px; opacity:.65;}
+.tarot .cline{font-size:12.5px; opacity:.8; margin-top:6px; line-height:1.5;}
+.rar-l{border-color:#d4af37; box-shadow:0 0 18px rgba(212,175,55,.55);}
+.rar-r{border-color:#6b3fa0; box-shadow:0 0 12px rgba(107,63,160,.4);}
+.frog-reveal{animation:cardIn .7s cubic-bezier(.2,1.4,.4,1);}
+@keyframes cardIn{from{transform:scale(.2) rotate(-8deg); opacity:0;} to{transform:scale(1) rotate(0); opacity:1;}}
+.frog-btn-box{text-align:center; padding:8px 0;}
+
+/* 畫片冊 */
+.album{display:grid; grid-template-columns:repeat(auto-fill, minmax(96px, 1fr)); gap:10px;}
+.slot{background:rgba(255,255,255,.5); border:2px solid #9a9a9a; border-radius:10px; padding:8px 4px; text-align:center; min-height:100px;}
+.slot .semoji{font-size:30px;}
+.slot .nm{font-size:11px; font-weight:700; margin-top:2px;}
+.slot .cnt{font-size:10px; opacity:.6;}
+.slot.unknown{opacity:.4; filter:grayscale(1);}
+.slot.rar-l{border-color:#d4af37;}
+.slot.rar-r{border-color:#6b3fa0;}
+
+/* 寵物小貓 */
+.cat-box{display:flex; align-items:center; gap:14px;}
+.cat-emoji{font-size:48px; flex-shrink:0;}
+.cat-bubble{background:rgba(255,255,255,.6); border-radius:12px; padding:9px 13px; font-size:13.5px; flex:1; line-height:1.6;}
+.cat-name{font-weight:700; cursor:pointer; text-decoration:underline dotted; text-underline-offset:3px;}
+.cat-meta{font-size:11px; opacity:.6; margin-top:3px;}
+
+/* 慶祝特效 */
+.confetti{position:fixed; z-index:99; top:-14px; pointer-events:none; border-radius:2px; animation:confFall linear forwards;}
+@keyframes confFall{to{transform:translateY(112vh) rotate(720deg); opacity:.15;}}
+
 footer.foot{text-align:center; font-size:12px; opacity:.5; margin-top:30px; padding-top:14px; border-top:1px solid rgba(170,170,170,.2);}
 </style>
 </head>
@@ -254,7 +298,12 @@ footer.foot{text-align:center; font-size:12px; opacity:.5; margin-top:30px; padd
       <div class="stat"><div class="num" id="statPoints">0</div><div class="lbl">學院點數</div></div>
       <div class="stat"><div class="num" id="statStreak">0</div><div class="lbl">連續天數 🔥</div></div>
       <div class="stat"><div class="num" id="statCountdown">—</div><div class="lbl" id="statCountdownLbl">距一試</div></div>
+      <div class="stat"><div class="num" id="statLevel" style="font-size:14px; line-height:1.9;">—</div><div class="lbl">學年</div></div>
       <div class="stat"><div class="num" id="statPhase" style="font-size:14px; line-height:1.9;">—</div><div class="lbl">目前階段</div></div>
+    </div>
+    <div class="xp-wrap">
+      <div class="xp-bar"><div id="xpFill" style="width:0%"></div></div>
+      <div class="xp-lbl" id="xpLbl"></div>
     </div>
   </header>
 
@@ -262,6 +311,7 @@ footer.foot{text-align:center; font-size:12px; opacity:.5; margin-top:30px; padd
 
   <nav class="tabs" id="tabs">
     <button data-tab="dashboard" class="active">📜 首頁</button>
+    <button data-tab="album">🍫 畫片冊</button>
     <button data-tab="parchment">📝 三行紙</button>
     <button data-tab="map">🗺️ 學院地圖</button>
     <button data-tab="rewards">🎁 兌換區</button>
@@ -272,10 +322,12 @@ footer.foot{text-align:center; font-size:12px; opacity:.5; margin-top:30px; padd
   <!-- DASHBOARD -->
   <section class="tab-panel active" id="tab-dashboard">
     <div class="card" id="greetingCard">
-      <h2>🕯️ <span id="greetingText">歡迎回來</span></h2>
-      <p id="todayLine" class="dim" style="margin:4px 0;"></p>
-      <div class="big-countdown" id="countdownLine"></div>
-      <p class="dim" id="phaseLine" style="margin:6px 0 0;"></p>
+      <div class="prophet-head">✦ 預言家日報 ✦</div>
+      <p id="todayLine" class="dim" style="margin:4px 0; text-align:center;"></p>
+      <div class="prophet-headline" id="prophetHeadline"></div>
+      <p class="prophet-sub" id="greetingText"></p>
+      <div class="big-countdown" id="countdownLine" style="text-align:center;"></div>
+      <p class="dim" id="phaseLine" style="margin:6px 0 0; text-align:center;"></p>
     </div>
 
     <div class="card">
@@ -294,6 +346,22 @@ footer.foot{text-align:center; font-size:12px; opacity:.5; margin-top:30px; padd
       <div class="progressbar"><div id="dayProgress" style="width:0%"></div></div>
       <ul class="checklist" id="dayChecklist"></ul>
       <p class="dim" id="dayCompleteMsg" style="display:none;">✓ 今天已過關（+10），不管接下來發生什麼，今天都不算白過。</p>
+    </div>
+
+    <div class="card" id="frogCard">
+      <h2>🍫 今日的巧克力蛙</h2>
+      <div id="frogBox"></div>
+    </div>
+
+    <div class="card" id="catCard">
+      <h2>🐈 你的貓</h2>
+      <div class="cat-box">
+        <div class="cat-emoji" id="catEmoji">🐱</div>
+        <div class="cat-bubble">
+          <span class="cat-name" id="catName" title="點擊改名">（點我取名）</span>：<span id="catLine"></span>
+          <div class="cat-meta" id="catMeta"></div>
+        </div>
+      </div>
     </div>
 
     <div class="card" id="courseReviewCard" style="display:none;">
@@ -344,6 +412,16 @@ footer.foot{text-align:center; font-size:12px; opacity:.5; margin-top:30px; padd
         <span><i style="background:#9ccdb0;"></i>低電過關</span>
         <span><i style="background:rgba(0,0,0,.08);"></i>沒過關</span>
       </div>
+    </div>
+  </section>
+
+  <!-- CARD ALBUM -->
+  <section class="tab-panel" id="tab-album">
+    <div class="card">
+      <h2>🍫 巧克力蛙畫片冊 <span class="dim" id="albumCount"></span></h2>
+      <p class="dim">每天過關可以打開一隻巧克力蛙。集滿全套的巫師，據說考運特別好。</p>
+      <div style="margin:8px 0;"><button class="magic small" id="extraDrawBtn">🍫 用 30 點再抽一張</button></div>
+      <div class="album" id="albumGrid"></div>
     </div>
   </section>
 
@@ -629,6 +707,9 @@ function refreshHeaderStats(){
   document.getElementById('statStreak').textContent = computeStreakCurrent();
   renderPointsDetail();
   renderHeatmap();
+  renderLevel();
+  renderCat();
+  renderAlbum();
 }
 function pointsFeedback(before, label){
   const after = getBalance();
@@ -986,11 +1067,13 @@ document.getElementById('modeRow').addEventListener('click', e=>{
   setDayObj(todayStr(), state);
   renderModeUI();
   pointsFeedback(before, '切換電量模式');
+  renderFrogCard();
 });
 document.getElementById('dayChecklist').addEventListener('change', e=>{
   const cb = e.target.closest('input[type=checkbox]'); if(!cb) return;
   const before = getBalance();
   const state = getDayObj(todayStr());
+  const wasCompleted = state.completed;
   if(!state.itemsByMode[state.mode]) state.itemsByMode[state.mode] = {};
   state.itemsByMode[state.mode][cb.dataset.idx] = cb.checked;
   state.completed = recomputeCompleted(state);
@@ -998,6 +1081,8 @@ document.getElementById('dayChecklist').addEventListener('change', e=>{
   setDayObj(todayStr(), state);
   renderChecklist(state);
   pointsFeedback(before, state.completed? '完成當日全部進度' : (cb.checked? '打勾一項' : '取消一項'));
+  if(!wasCompleted && state.completed){ celebrate(true); }
+  renderFrogCard();
 });
 
 /* ---------- 課堂當天複習 ---------- */
@@ -1342,6 +1427,263 @@ document.getElementById('clearDebugDate').addEventListener('click', ()=>{
   location.reload();
 });
 
+/* ---------- 慶祝特效 ---------- */
+function celebrate(big=false){
+  const colors = ['#d4af37','#1a472a','#b8b8b8','#4e8f68','#f5cf6b'];
+  const n = big? 80 : 36;
+  for(let i=0;i<n;i++){
+    const p = document.createElement('div');
+    p.className = 'confetti';
+    const size = 5 + Math.random()*7;
+    p.style.width = size+'px';
+    p.style.height = (size*0.5+Math.random()*6)+'px';
+    p.style.left = Math.random()*100+'vw';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (1.6+Math.random()*1.6)+'s';
+    p.style.animationDelay = (Math.random()*0.5)+'s';
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 3800);
+  }
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    [523.25, 659.25, 783.99].forEach((f,i)=>{
+      const o = ctx.createOscillator(); const g = ctx.createGain();
+      o.type='sine'; o.frequency.value=f;
+      const t0 = ctx.currentTime + i*0.12;
+      g.gain.setValueAtTime(0.001, t0);
+      g.gain.exponentialRampToValueAtTime(0.14, t0+0.03);
+      g.gain.exponentialRampToValueAtTime(0.001, t0+0.5);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t0); o.stop(t0+0.55);
+    });
+  }catch(e){}
+}
+
+/* ---------- 巧克力蛙畫片 ---------- */
+const CARDS = [
+  // 傳說
+  {id:'dumbledore', n:'鄧不利多', e:'🧙‍♂️', r:'l', line:'「做對的選擇，比做容易的選擇難。」'},
+  {id:'voldemort',  n:'佛地魔',   e:'🐍', r:'l', line:'「連他都不敢小看考試範圍。」'},
+  {id:'harry',      n:'哈利波特', e:'⚡', r:'l', line:'「活下來的男孩，也得乖乖考試。」'},
+  {id:'merlin',     n:'梅林',     e:'✨', r:'l', line:'「梅林的鬍子！你今天過關了！」'},
+  // 稀有
+  {id:'snape',      n:'石內卜',   e:'🧪', r:'r', line:'「上我的課，不准恍神。」'},
+  {id:'mcgonagall', n:'麥教授',   e:'🎩', r:'r', line:'「變形學的第一課：先變出讀書的自己。」'},
+  {id:'sirius',     n:'天狼星',   e:'🐕', r:'r', line:'「我是無辜的，但你的進度不能無辜。」'},
+  {id:'lupin',      n:'路平',     e:'🌕', r:'r', line:'「今晚月圓，早點收工。」'},
+  {id:'moody',      n:'瘋眼穆敵', e:'👁️', r:'r', line:'「隨時警戒——尤其是選擇題的陷阱。」'},
+  {id:'hermione',   n:'妙麗',     e:'📚', r:'r', line:'「我早就讀完三輪了，你呢？」'},
+  {id:'ron',        n:'榮恩',     e:'♟️', r:'r', line:'「吃完這隻蛙再繼續。」'},
+  {id:'draco',      n:'跩哥馬份', e:'🐉', r:'r', line:'「我爸會聽說你今天的進度。」'},
+  {id:'bellatrix',  n:'貝拉雷斯壯', e:'🔪', r:'r', line:'「敢斷線試試看。」'},
+  // 普通
+  {id:'hagrid',     n:'海格',     e:'🌂', r:'c', line:'「你是個巫師，也是個考生。」'},
+  {id:'neville',    n:'奈威',     e:'🌿', r:'c', line:'「勇氣是對自己說：今天也讀。」'},
+  {id:'luna',       n:'露娜',     e:'🦋', r:'c', line:'「騎士墜鬼馬也覺得你很努力。」'},
+  {id:'ginny',      n:'金妮',     e:'🏏', r:'c', line:'「快攻！把今天的塊清掉。」'},
+  {id:'twins',      n:'弗雷與喬治', e:'🎆', r:'c', line:'「惡作劇完成——進度也要完成。」'},
+  {id:'cedric',     n:'西追',     e:'🏆', r:'c', line:'「正直地讀，光明地考。」'},
+  {id:'cho',        n:'張秋',     e:'🕊️', r:'c', line:'「去年的錯題，別再錯第二次。」'},
+  {id:'lockhart',   n:'洛哈',     e:'💇', r:'c', line:'「我五度榮獲最迷人微笑獎。」'},
+  {id:'trelawney',  n:'崔老妮',   e:'🔮', r:'c', line:'「我預見……你會上榜。」'},
+  {id:'flitwick',   n:'孚立維',   e:'🎼', r:'c', line:'「是 Levi-O-sa，不是 Levio-SA。」'},
+  {id:'sprout',     n:'芽菜教授', e:'🌱', r:'c', line:'「進度像魔蘋果，每天都要澆水。」'},
+  {id:'pomfrey',    n:'龐芮夫人', e:'💊', r:'c', line:'「累了就睡，明天再戰。」'},
+  {id:'filch',      n:'飛七',     e:'🗝️', r:'c', line:'「書桌前，禁止滑手機。」'},
+  {id:'norris',     n:'拿樂絲太太', e:'🐈‍⬛', r:'c', line:'「牠在盯著你讀書。」'},
+  {id:'peeves',     n:'皮皮鬼',   e:'🃏', r:'c', line:'「搗蛋也要挑下課時間！」'},
+  {id:'nick',       n:'差點沒頭的尼克', e:'👻', r:'c', line:'「五百年過去了，考試還在。」'},
+  {id:'dobby',      n:'多比',     e:'🧦', r:'c', line:'「多比是自由的小精靈！」'},
+  {id:'kreacher',   n:'怪角',     e:'🪞', r:'c', line:'「主人今天有讀書，怪角欣慰。」'},
+  {id:'fawkes',     n:'佛客使',   e:'🐦‍🔥', r:'c', line:'「燒盡重生——錯題也一樣。」'},
+  {id:'buckbeak',   n:'巴嘴',     e:'🦅', r:'c', line:'「先鞠躬，再刷題。」'},
+  {id:'hedwig',     n:'嘿美',     e:'🦉', r:'c', line:'「你的成績單將由我送達。」'}
+];
+const RARITY_NAME = {l:'傳說', r:'稀有', c:'普通'};
+function drawRandomCard(){
+  const roll = Math.random();
+  const tier = roll < 0.08? 'l' : roll < 0.35? 'r' : 'c';
+  const pool = CARDS.filter(c=>c.r===tier);
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+function ownedCards(){ return LS.get('hp_cards', {}); }
+function grantCard(card){
+  const owned = ownedCards();
+  owned[card.id] = (owned[card.id]||0) + 1;
+  LS.set('hp_cards', owned);
+}
+function cardHTML(card, cnt){
+  return `<div class="tarot rar-${card.r} frog-reveal">
+    <div class="temoji">${card.e}</div>
+    <div class="cname">${card.n}</div>
+    <div class="rar">${RARITY_NAME[card.r]}${cnt>1? ` · 第 ${cnt} 張`:''}</div>
+    <div class="cline">${card.line}</div>
+  </div>`;
+}
+function renderFrogCard(){
+  const box = document.getElementById('frogBox');
+  const t = todayStr();
+  const drawnId = LS.get('hp_card_day_'+t, null);
+  const completed = getDayObj(t).completed;
+  if(drawnId){
+    const card = CARDS.find(c=>c.id===drawnId);
+    box.innerHTML = card? cardHTML(card, ownedCards()[card.id]||1).replace(' frog-reveal','') : '';
+  } else if(completed){
+    box.innerHTML = `<div class="frog-btn-box">
+      <p style="margin:0 0 8px;">今天過關了——盒子在你手上跳動。</p>
+      <button class="magic" id="openFrogBtn">打開巧克力蛙 🍫</button>
+    </div>`;
+    document.getElementById('openFrogBtn').addEventListener('click', ()=>{
+      const card = drawRandomCard();
+      grantCard(card);
+      LS.set('hp_card_day_'+t, card.id);
+      document.getElementById('frogBox').innerHTML = cardHTML(card, ownedCards()[card.id]);
+      celebrate(card.r==='l');
+      toast(card.r==='l'? '傳說畫片！✨' : `獲得畫片：${card.n}`);
+      renderAlbum();
+    });
+  } else {
+    box.innerHTML = '<p class="dim">完成今天的進度清單，就能打開一隻巧克力蛙，裡面的畫片是隨機的。</p>';
+  }
+}
+function renderAlbum(){
+  const grid = document.getElementById('albumGrid');
+  if(!grid) return;
+  const owned = ownedCards();
+  const ownedCount = CARDS.filter(c=>owned[c.id]).length;
+  document.getElementById('albumCount').textContent =
+    `· 已收集 ${ownedCount}/${CARDS.length}（傳說 ${CARDS.filter(c=>c.r==='l'&&owned[c.id]).length}/4 · 稀有 ${CARDS.filter(c=>c.r==='r'&&owned[c.id]).length}/9）`;
+  grid.innerHTML = CARDS.map(c=>{
+    const cnt = owned[c.id]||0;
+    if(!cnt) return `<div class="slot unknown"><div class="semoji">❔</div><div class="nm">？？？</div><div class="cnt">${RARITY_NAME[c.r]}</div></div>`;
+    return `<div class="slot rar-${c.r}"><div class="semoji">${c.e}</div><div class="nm">${c.n}</div><div class="cnt">${RARITY_NAME[c.r]}${cnt>1? ` ×${cnt}`:''}</div></div>`;
+  }).join('');
+  const btn = document.getElementById('extraDrawBtn');
+  btn.disabled = getBalance() < 30;
+}
+document.getElementById('extraDrawBtn').addEventListener('click', ()=>{
+  if(getBalance() < 30){ toast('點數不夠'); return; }
+  if(!confirm('用 30 點再抽一張畫片？')) return;
+  const redemptions = LS.get('hp_redemptions', []);
+  redemptions.push({id: Date.now().toString(36), name:'巧克力蛙 ×1', cost:30, date: todayStr()});
+  LS.set('hp_redemptions', redemptions);
+  const card = drawRandomCard();
+  grantCard(card);
+  celebrate(card.r==='l');
+  toast(card.r==='l'? '傳說畫片！✨' : `獲得畫片：${card.n}`);
+  const grid = document.getElementById('albumGrid');
+  refreshHeaderStats();
+  renderAlbum();
+  renderRedemptionHistory();
+  renderRewardShopList();
+  // 在畫片冊頂端秀出剛抽到的卡
+  const showoff = document.createElement('div');
+  showoff.innerHTML = cardHTML(card, ownedCards()[card.id]);
+  grid.parentNode.insertBefore(showoff.firstChild, grid);
+  setTimeout(()=>{ const t = document.querySelector('#tab-album .tarot'); if(t) t.remove(); }, 6000);
+});
+
+/* ---------- 學年等級 ---------- */
+const LEVELS = [
+  {t:'一年級', xp:0}, {t:'二年級', xp:300}, {t:'三年級', xp:800}, {t:'四年級', xp:1500},
+  {t:'五年級', xp:2400}, {t:'六年級', xp:3500}, {t:'七年級', xp:5000}, {t:'霍格華茲畢業生', xp:6800},
+  {t:'正氣師學徒', xp:8800}, {t:'傲羅', xp:11000}, {t:'魔法部長', xp:14000}
+];
+function currentLevel(xp){
+  let idx = 0;
+  for(let i=0;i<LEVELS.length;i++){ if(xp>=LEVELS[i].xp) idx=i; }
+  return idx;
+}
+function renderLevel(){
+  const xp = computeEarnedTotal();
+  const idx = currentLevel(xp);
+  const lv = LEVELS[idx];
+  const next = LEVELS[idx+1] || null;
+  document.getElementById('statLevel').textContent = lv.t;
+  const fill = document.getElementById('xpFill');
+  const lbl = document.getElementById('xpLbl');
+  if(next){
+    const pct = Math.round((xp-lv.xp)/(next.xp-lv.xp)*100);
+    fill.style.width = pct+'%';
+    lbl.textContent = `${lv.t} · 累積 ${xp} 經驗 · 距「${next.t}」還差 ${next.xp-xp}`;
+  } else {
+    fill.style.width = '100%';
+    lbl.textContent = `${lv.t} · 累積 ${xp} 經驗 · 已至頂點`;
+  }
+  const lastShown = LS.get('hp_last_level_shown', 0);
+  if(idx > lastShown){
+    LS.set('hp_last_level_shown', idx);
+    celebrate(true);
+    toast(`⬆️ 升上${lv.t}！`);
+  } else if(idx < lastShown){
+    LS.set('hp_last_level_shown', idx);  // 取消勾選導致降級，安靜更新
+  }
+}
+
+/* ---------- 每日預言家日報 ---------- */
+const PROPHET_LINES = [
+  '魔法部宣布：今日宜刷題，忌滑手機。',
+  '古靈閣快訊：你的學院點數持續增值中。',
+  '活米村特派：蜂蜜公爵的巧克力蛙到貨，過關即可打開。',
+  '霍格華茲特快車準點發車——你的進度也該準點。',
+  '魁地奇快報：搶金探子不如搶考點。',
+  '意若思鏡使用須知：鏡中的你已上榜，現實的你正在路上。',
+  '魔法生物管制局：拖延獸出沒，請提高警覺。',
+  '本報民調：多數巫師後悔沒早點開始讀書。',
+  '衛斯理笑話商店：「假裝在讀書的羽毛筆」已售罄。',
+  '魔藥課提醒：福來福喜缺貨，實力才是常備藥。',
+  '禁忌森林公告：入夜請返回城堡，並寫好三行紙。',
+  '校長室便箋：別沉溺於夢，而忘了眼前的生活。',
+  '貓頭鷹郵局：寫給明天自己的信，今晚截止收件。',
+  '時光器管理處：時間不會重來，但錯題可以重寫。',
+  '分類帽專欄：史萊哲林的野心，要配上行動。',
+  '考選司公告：O.W.L. 應考人請每日默寫條文十條。',
+  '夜騎士公車：再晚也載你，但明天請早起。',
+  '記憶保存學會：定期回顧，記憶不打結。',
+  '魔藥學教授評語：「尚可。」——這已是他最高的讚美。',
+  '海格通訊：牙牙學會了新把戲，你也學會新法條了嗎？'
+];
+function renderProphet(){
+  const t = todayStr();
+  let hash = 0;
+  for(const ch of t){ hash = (hash*31 + ch.charCodeAt(0)) >>> 0; }
+  document.getElementById('prophetHeadline').textContent = PROPHET_LINES[hash % PROPHET_LINES.length];
+}
+
+/* ---------- 寵物小貓 ---------- */
+function renderCat(){
+  const nameEl = document.getElementById('catName');
+  const name = LS.get('hp_cat_name', null);
+  nameEl.textContent = name || '（點我取名）';
+  const streak = computeStreakCurrent();
+  const o = getDayObj(todayStr());
+  const anyToday = Object.values(o.itemsByMode[o.mode]||{}).some(Boolean) || o.completed;
+  const hour = new Date().getHours();
+  let emoji, line;
+  if(hour>=23 || hour<6){
+    emoji='😴'; line='Zzz……（牠先睡了，你也快去睡）';
+  } else if(o.completed){
+    emoji = streak>=14? '😻' : streak>=7? '😸' : '😺';
+    line = streak>=14? '呼嚕呼嚕——牠已經完全信任你了。'
+         : streak>=7? '牠開心地在你的書上踩來踩去。'
+         : '今天過關了，牠蹭了蹭你的手。';
+  } else if(anyToday){
+    emoji='🐱'; line='牠蹲在書桌角落看著你，尾巴輕輕搖。';
+  } else if(streak===0){
+    emoji='😿'; line='牠在門口等你回來讀書……';
+  } else {
+    emoji='🐈'; line='牠打了個哈欠：今天還沒開始呢。';
+  }
+  document.getElementById('catEmoji').textContent = emoji;
+  document.getElementById('catLine').textContent = line;
+  document.getElementById('catMeta').textContent = streak>0? `已連續餵養 ${streak} 天` : '連續餵養中斷了，今天重新開始';
+}
+document.getElementById('catName').addEventListener('click', ()=>{
+  const cur = LS.get('hp_cat_name', '');
+  const name = prompt('幫你的貓取個名字：', cur||'');
+  if(name && name.trim()){ LS.set('hp_cat_name', name.trim()); renderCat(); }
+});
+
 /* ---------- TaiLexi 晚間規則 ---------- */
 function renderTaiLexiLock(){
   const h = new Date().getHours();
@@ -1357,9 +1699,11 @@ function renderTaiLexiLock(){
 function init(){
   renderDebugBanner();
   renderGreeting();
+  renderProphet();
   renderPhaseChip();
   renderTodayPlan();        // 先算今日計畫（任務清單要用）
   renderModeUI();
+  renderFrogCard();
   renderCourseReview();
   renderExamCard();
   renderMorning();
