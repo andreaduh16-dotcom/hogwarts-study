@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a14">
+<meta name="apple-mobile-web-app-title" content="每日魔法書">
+<title>霍格華茲司律修習 · 每日魔法書</title>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🐍</text></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=Noto+Serif+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a14;
+  --bg2:#101024;
+  --parchment:#f4ecd8;
+  --parchment-dark:#e8dcc0;
+  --ink:#2b2213;
+  --glow: 0 0 18px rgba(170,170,170,.35);
+  --primary:#1a472a; --primary-light:#265c3a; --secondary:#5d5d5d; --secondary-light:#b8b8b8;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(255,255,255,.06), transparent 40%),
+    radial-gradient(ellipse at 80% 20%, rgba(255,255,255,.05), transparent 35%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  color:var(--parchment);
+  font-family:"Noto Serif TC","Songti TC",serif;
+  position:relative;
+  overflow-x:hidden;
+}
+.stars{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20px 30px, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 140px 90px, #fff, transparent),
+    radial-gradient(1px 1px at 300px 150px, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 400px 60px, #fff, transparent),
+    radial-gradient(1px 1px at 480px 220px, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 90px 250px, #fff, transparent),
+    radial-gradient(1px 1px at 220px 320px, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 520px 340px, #fff, transparent);
+  background-repeat:repeat; background-size:600px 400px;
+  opacity:.5; animation:twinkle 6s ease-in-out infinite alternate;
+}
+@keyframes twinkle{from{opacity:.25}to{opacity:.6}}
+
+.wrap{position:relative; z-index:1; max-width:980px; margin:0 auto; padding:16px 14px 80px;}
+
+header.top{
+  text-align:center; padding:16px 8px 12px;
+  border-bottom:1px solid rgba(170,170,170,.3);
+  margin-bottom:14px;
+}
+.crest{font-size:30px; letter-spacing:6px; opacity:.85;}
+h1{
+  font-family:"Cinzel Decorative","Noto Serif TC",serif; font-weight:700;
+  font-size:clamp(20px,4.5vw,32px);
+  margin:6px 0 4px;
+  background:linear-gradient(180deg, var(--secondary-light), var(--secondary));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:var(--glow);
+}
+.subtitle{font-size:12px; opacity:.75; letter-spacing:1.5px;}
+
+.stat-bar{
+  display:flex; justify-content:center; gap:10px; margin-top:14px; flex-wrap:wrap;
+}
+.stat{
+  background:rgba(255,255,255,.04); border:1px solid rgba(170,170,170,.25); border-radius:10px;
+  padding:7px 12px; text-align:center; min-width:76px; position:relative;
+}
+.stat .num{font-family:"Cinzel",serif; font-size:19px; font-weight:700; color:var(--secondary-light);}
+.stat .lbl{font-size:10.5px; opacity:.7; letter-spacing:1px;}
+
+nav.tabs{
+  display:flex; gap:4px; overflow-x:auto; padding:12px 0 8px; margin-bottom:6px;
+  border-bottom:1px solid rgba(170,170,170,.2);
+  -webkit-overflow-scrolling:touch;
+}
+nav.tabs::-webkit-scrollbar{display:none;}
+nav.tabs button{
+  flex:0 0 auto; font-family:"Cinzel","Noto Serif TC",serif; letter-spacing:.5px; font-size:13px;
+  padding:9px 12px; border-radius:8px 8px 0 0; cursor:pointer;
+  background:transparent; color:var(--parchment); border:none; opacity:.55;
+  border-bottom:3px solid transparent;
+}
+nav.tabs button.active{opacity:1; border-bottom:3px solid var(--secondary-light); color:var(--secondary-light);}
+
+.tab-panel{display:none; animation:fadeIn .35s ease;}
+.tab-panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0; transform:translateY(6px);}to{opacity:1; transform:translateY(0);}}
+
+.card{
+  background:linear-gradient(180deg, var(--parchment), var(--parchment-dark));
+  color:var(--ink); border-radius:10px; padding:16px 18px; margin-bottom:14px;
+  border:1px solid rgba(0,0,0,.1);
+  box-shadow:0 6px 18px rgba(0,0,0,.35), inset 0 0 40px rgba(80,80,80,.06);
+  position:relative;
+}
+@media (max-width:640px){ .card{padding:14px 14px;} }
+.card h2{
+  font-family:"Cinzel","Noto Serif TC",serif; font-size:16px; margin:0 0 10px; color:var(--primary);
+  display:flex; align-items:center; gap:8px; letter-spacing:.5px; flex-wrap:wrap;
+}
+.card h3{font-family:"Cinzel","Noto Serif TC",serif; font-size:14px; margin:14px 0 6px; color:var(--primary-light);}
+.card p, .card li{font-size:14px; line-height:1.7;}
+.dim{opacity:.6; font-size:12px;}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+@media (max-width:640px){.grid2{grid-template-columns:1fr;}}
+
+.big-countdown{
+  font-family:"Cinzel",serif; font-size:15px; margin-top:4px;
+}
+.big-countdown b{font-size:26px; color:var(--primary);}
+
+/* today plan segments */
+.seg{display:flex; gap:10px; padding:7px 9px; border-radius:7px; font-size:13.5px; align-items:baseline; margin-bottom:5px;}
+.seg-time{font-family:"Cinzel",serif; font-weight:600; min-width:92px; color:var(--primary); font-size:12.5px; flex-shrink:0;}
+.seg-label{line-height:1.5;}
+.seg.class{background:rgba(26,71,42,.12); border-left:3px solid var(--primary);}
+.seg.study{background:rgba(0,0,0,.045); border-left:3px solid #8a8a8a;}
+.seg.rest{opacity:.75; border-left:3px solid #bbb; background:rgba(0,0,0,.02);}
+.seg.exam{background:rgba(122,42,42,.12); border-left:3px solid #7a2a2a;}
+.seg.now{outline:2px solid var(--primary); box-shadow:0 0 10px rgba(26,71,42,.35);}
+.seg.now .seg-time::before{content:'▶ ';}
+@media (max-width:480px){ .seg{flex-direction:column; gap:2px;} .seg-time{min-width:0;} }
+
+.mode-row{display:flex; gap:8px; flex-wrap:wrap;}
+.mode-btn{
+  flex:1; min-width:96px; padding:10px 6px; border-radius:10px; cursor:pointer; text-align:center;
+  border:2px solid rgba(0,0,0,.15); background:rgba(255,255,255,.5); font-family:"Cinzel","Noto Serif TC",serif; font-size:13px;
+  transition:.15s;
+}
+.mode-btn .emoji{font-size:20px; display:block; margin-bottom:3px;}
+.mode-btn.active{border-color:var(--primary); background:rgba(170,170,170,.25); box-shadow:0 0 0 2px var(--secondary-light) inset;}
+
+.checklist{list-style:none; padding:0; margin:10px 0 0;}
+.checklist li{
+  display:flex; align-items:flex-start; gap:10px; padding:8px 6px; border-bottom:1px dashed rgba(0,0,0,.12);
+  font-size:14px;
+}
+.checklist li:last-child{border-bottom:none;}
+.checklist input[type=checkbox]{width:19px; height:19px; margin-top:2px; accent-color:var(--primary); cursor:pointer; flex-shrink:0;}
+.checklist label{cursor:pointer;}
+.checklist li.done label{text-decoration:line-through; opacity:.5;}
+.checklist .pt{margin-left:auto; font-size:11px; opacity:.55; white-space:nowrap; flex-shrink:0;}
+
+.progressbar{height:10px; border-radius:6px; background:rgba(0,0,0,.12); overflow:hidden; margin:8px 0 2px;}
+.progressbar > div{height:100%; background:linear-gradient(90deg, var(--primary), var(--secondary)); transition:width .4s;}
+
+button.magic{
+  font-family:"Cinzel","Noto Serif TC",serif; letter-spacing:1px; font-size:13px; padding:9px 16px;
+  border-radius:8px; border:none; cursor:pointer; background:var(--primary); color:#fff;
+  box-shadow:0 3px 0 rgba(0,0,0,.25); transition:.15s;
+}
+button.magic:hover{filter:brightness(1.1); transform:translateY(-1px);}
+button.magic.secondary{background:transparent; color:var(--ink); border:1px solid var(--primary); box-shadow:none;}
+button.magic.small{padding:5px 10px; font-size:11px; box-shadow:none;}
+button.magic:disabled{opacity:.35; cursor:not-allowed; transform:none;}
+
+textarea, input[type=text], input[type=number], input[type=date], select{
+  width:100%; font-family:"Noto Serif TC","Songti TC",serif; font-size:14px; padding:8px 10px;
+  border-radius:6px; border:1px solid rgba(0,0,0,.25); background:rgba(255,255,255,.7); color:var(--ink);
+  resize:vertical;
+}
+label.field-label{display:block; font-size:12px; font-weight:700; color:var(--primary); margin:10px 0 4px;}
+
+.timer-box{text-align:center; padding:14px 0;}
+.timer-display{
+  font-family:"Cinzel Decorative","Cinzel",serif; font-size:clamp(38px,11vw,52px); font-weight:700; color:var(--primary);
+  letter-spacing:2px;
+}
+.timer-phase{font-family:"Cinzel","Noto Serif TC",serif; font-size:13px; letter-spacing:2px; opacity:.75; margin-bottom:4px;}
+
+.reward-card{
+  background:rgba(255,255,255,.55); border-radius:8px; padding:12px 14px; margin-bottom:10px;
+  border-left:4px solid #6b3fa0; display:flex; align-items:center; gap:12px; justify-content:space-between; flex-wrap:wrap;
+}
+.reward-card .rname{font-weight:700;}
+.reward-card .rcost{font-size:12px; opacity:.65;}
+.reward-card .ractions{display:flex; gap:8px; align-items:center;}
+.reward-del{background:none; border:none; color:#a33; cursor:pointer; font-size:16px; padding:0 4px;}
+
+.timeline{position:relative; margin-left:12px; padding-left:20px; border-left:3px solid var(--primary);}
+.phase{position:relative; margin-bottom:22px;}
+.phase::before{
+  content:""; position:absolute; left:-29px; top:2px; width:16px; height:16px; border-radius:50%;
+  background:var(--parchment); border:3px solid var(--primary);
+}
+.phase.current::before{background:var(--secondary-light); box-shadow:0 0 10px var(--secondary-light);}
+.phase .ph-title{font-family:"Cinzel","Noto Serif TC",serif; font-weight:700; color:var(--primary); font-size:15px;}
+.phase .ph-date{font-size:12px; opacity:.65; margin-bottom:4px;}
+.phase.current .ph-title::after{content:" ← 現在"; color:#b3221d; font-size:12px;}
+.week-focus{font-size:13px; background:rgba(0,0,0,.05); border-radius:6px; padding:8px 10px; margin-top:6px; line-height:1.6;}
+
+.toast-container{position:fixed; top:14px; right:14px; z-index:50; display:flex; flex-direction:column; gap:8px; align-items:flex-end;}
+.toast{
+  font-family:"Cinzel","Noto Serif TC",serif; font-size:13px; background:var(--primary); color:#fff; padding:10px 16px;
+  border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,.4); border:1px solid var(--secondary-light);
+  animation:toastIn .4s ease, toastOut .4s ease 2.6s forwards; max-width:80vw;
+}
+.toast.neg{background:#5a2a2a;}
+@keyframes toastIn{from{opacity:0; transform:translateY(-10px) scale(.9);}to{opacity:1; transform:translateY(0) scale(1);}}
+@keyframes toastOut{to{opacity:0; transform:translateY(-10px) scale(.9);}}
+
+.vow-plaque{
+  border:2px solid var(--secondary-light); border-radius:10px; padding:16px 18px; margin-bottom:12px;
+  background:rgba(0,0,0,.2); text-align:center;
+}
+.vow-plaque .vow-title{font-family:"Cinzel Decorative","Noto Serif TC",serif; font-size:15px; color:var(--secondary-light); margin-bottom:8px;}
+.vow-item{font-size:14px; margin:6px 0; opacity:.9;}
+
+.schedule-table{width:100%; border-collapse:collapse; font-size:12.5px;}
+.schedule-table th, .schedule-table td{border:1px solid rgba(0,0,0,.15); padding:6px 7px; text-align:left; vertical-align:top;}
+.schedule-table th{background:rgba(0,0,0,.08); font-family:"Cinzel","Noto Serif TC",serif; font-weight:600;}
+
+.lock-note{font-size:12px; color:#6b3fa0; margin-top:4px;}
+
+/* heatmap */
+.hm-wrap{overflow-x:auto; padding-bottom:4px;}
+.heatmap{display:grid; grid-auto-flow:column; grid-template-rows:repeat(7, 13px); gap:3px; width:max-content;}
+.hm{width:13px; height:13px; border-radius:3px; background:rgba(0,0,0,.08);}
+.hm.l1{background:#9ccdb0;}
+.hm.l2{background:#4e8f68;}
+.hm.l3{background:#1a472a;}
+.hm.future{background:transparent; border:1px dashed rgba(0,0,0,.1);}
+.hm-legend{display:flex; gap:12px; font-size:11px; opacity:.7; margin-top:8px; flex-wrap:wrap;}
+.hm-legend span{display:inline-flex; align-items:center; gap:4px;}
+.hm-legend i{width:11px; height:11px; border-radius:3px; display:inline-block;}
+
+.debug-banner{
+  background:#6b3fa0; color:#fff; text-align:center; font-size:12px; padding:6px; border-radius:8px; margin-bottom:12px;
+}
+
+footer.foot{text-align:center; font-size:12px; opacity:.5; margin-top:30px; padding-top:14px; border-top:1px solid rgba(170,170,170,.2);}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="wrap">
+  <header class="top">
+    <div class="crest">✦ 🐍 ✦</div>
+    <h1>霍格華茲司律修習</h1>
+    <div class="subtitle">O.W.L.（一試）→ N.E.W.T.（二試） · 史萊哲林的每日魔法書</div>
+
+    <div class="stat-bar">
+      <div class="stat"><div class="num" id="statPoints">0</div><div class="lbl">學院點數</div></div>
+      <div class="stat"><div class="num" id="statStreak">0</div><div class="lbl">連續天數 🔥</div></div>
+      <div class="stat"><div class="num" id="statCountdown">—</div><div class="lbl" id="statCountdownLbl">距一試</div></div>
+      <div class="stat"><div class="num" id="statPhase" style="font-size:14px; line-height:1.9;">—</div><div class="lbl">目前階段</div></div>
+    </div>
+  </header>
+
+  <div class="debug-banner" id="debugBanner" style="display:none;"></div>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="dashboard" class="active">📜 首頁</button>
+    <button data-tab="parchment">📝 三行紙</button>
+    <button data-tab="pensieve">🌀 儲思盆</button>
+    <button data-tab="map">🗺️ 學院地圖</button>
+    <button data-tab="rewards">🎁 兌換區</button>
+    <button data-tab="backup">💾 備份</button>
+    <button data-tab="toolbox">🪄 工具箱</button>
+  </nav>
+
+  <!-- DASHBOARD -->
+  <section class="tab-panel active" id="tab-dashboard">
+    <div class="card" id="greetingCard">
+      <h2>🕯️ <span id="greetingText">歡迎回來</span></h2>
+      <p id="todayLine" class="dim" style="margin:4px 0;"></p>
+      <div class="big-countdown" id="countdownLine"></div>
+      <p class="dim" id="phaseLine" style="margin:6px 0 0;"></p>
+    </div>
+
+    <div class="card">
+      <h2>📅 今天的時間表 <span class="dim" id="planFocusTag"></span></h2>
+      <div id="todayPlanBox"></div>
+      <p class="dim" id="planNote" style="margin:8px 0 0;"></p>
+    </div>
+
+    <div class="card">
+      <h2>🔋 今天選一個電量模式</h2>
+      <div class="mode-row" id="modeRow">
+        <div class="mode-btn" data-mode="full"><span class="emoji">🔋</span>滿電<br><span class="dim">照表全做</span></div>
+        <div class="mode-btn" data-mode="half"><span class="emoji">🔅</span>半電<br><span class="dim">3 件事</span></div>
+        <div class="mode-btn" data-mode="low"><span class="emoji">🪫</span>低電<br><span class="dim">只默寫 10 條</span></div>
+      </div>
+      <div class="progressbar"><div id="dayProgress" style="width:0%"></div></div>
+      <ul class="checklist" id="dayChecklist"></ul>
+      <p class="dim" id="dayCompleteMsg" style="display:none;">✓ 今天已過關（+10），不管接下來發生什麼，今天都不算白過。</p>
+    </div>
+
+    <div class="card" id="courseReviewCard" style="display:none;">
+      <h2>🏫 課堂當天複習（趁熱 +10／門）</h2>
+      <ul class="checklist" id="courseChecklist"></ul>
+    </div>
+
+    <div class="card" id="examCard" style="display:none;">
+      <h2>🎯 模考達標</h2>
+      <ul class="checklist" id="examChecklist"></ul>
+      <p class="dim" id="examHint"></p>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h2>⏳ 50 / 10 節奏鐘</h2>
+        <div class="timer-box">
+          <div class="timer-phase" id="timerPhaseLbl">施法中（讀書）</div>
+          <div class="timer-display" id="timerDisplay">50:00</div>
+          <div style="margin-top:8px;">
+            <button class="magic" id="timerStart">開始施法</button>
+            <button class="magic secondary" id="timerReset">重置</button>
+          </div>
+          <p class="dim" style="margin-top:8px;">50 分鐘做事，10 分鐘離開位子——不是坐 3 小時，是有終點的回合。</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🌅 起床固定順序</h2>
+        <ul class="checklist" id="morningChecklist"></ul>
+        <p class="dim">今天最重要的一條：起床不看手機。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🌙 收工儀式</h2>
+      <ul class="checklist" id="closingChecklist"></ul>
+      <p class="dim">有明確的下班，白天才有明確的上班。</p>
+    </div>
+
+    <div class="card">
+      <h2>🦉 出勤紀錄（最近 12 週）</h2>
+      <div class="hm-wrap"><div class="heatmap" id="heatmap"></div></div>
+      <div class="hm-legend">
+        <span><i style="background:#1a472a;"></i>滿電過關</span>
+        <span><i style="background:#4e8f68;"></i>半電過關</span>
+        <span><i style="background:#9ccdb0;"></i>低電過關</span>
+        <span><i style="background:rgba(0,0,0,.08);"></i>沒過關</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE LINE PARCHMENT -->
+  <section class="tab-panel" id="tab-parchment">
+    <div class="card">
+      <h2>📝 三行紙 · 寫給明天的自己</h2>
+      <p class="dim">明天的三行，是今天晚上的你寫的。早上的你電量最低，不該負責做決定。</p>
+      <label class="field-label">① 明天主科（照週課表抄）</label>
+      <input type="text" id="p1" placeholder="例：民法">
+      <label class="field-label">② 明天要做完的一件事（只能寫一件）</label>
+      <input type="text" id="p2" placeholder="具體到能打勾">
+      <label class="field-label">③ 低電量時就只做</label>
+      <input type="text" id="p3" placeholder="例：默寫10條">
+      <div style="margin-top:10px;"><button class="magic" id="saveParchment">封蠟寄出（貓頭鷹）</button></div>
+      <p class="dim" id="parchmentSavedMsg" style="display:none;">✓ 貓頭鷹已出發，明天早上會收到。</p>
+    </div>
+    <div class="card">
+      <h2>📬 今天早上收到的三行紙</h2>
+      <div id="yesterdayParchment"></div>
+    </div>
+  </section>
+
+  <!-- PENSIEVE -->
+  <section class="tab-panel" id="tab-pensieve">
+    <div class="card">
+      <h2>🌀 儲思盆回顧 <span class="dim" id="pensieveSundayTag"></span></h2>
+      <p class="dim">每週日 40 分鐘，固定四題。一週只能倒入一次，寫錯了可以取消重寫。</p>
+      <div id="pensieveFormBox"></div>
+    </div>
+    <div class="card">
+      <h2>💭 記憶絲線（歷史回顧）</h2>
+      <div id="pensieveHistory"></div>
+    </div>
+  </section>
+
+  <!-- MAP / TIMELINE -->
+  <section class="tab-panel" id="tab-map">
+    <div class="card">
+      <h2>🗺️ 學院地圖 · 全年時間軸</h2>
+      <p class="dim">這張大表一週看一次就好——平常日回首頁看「今天的時間表」即可。</p>
+      <div class="timeline" id="timelineBox"></div>
+    </div>
+    <div class="card">
+      <h2>🏆 學院點數規則</h2>
+      <table class="schedule-table">
+        <tr><th>行為</th><th>分</th></tr>
+        <tr><td>完成當日全部進度（依你選的電量模式）</td><td>+10</td></tr>
+        <tr><td>錯題當天入本，不隔夜（收工儀式勾選）</td><td>+5</td></tr>
+        <tr><td>課堂當天複習那門課</td><td>+10 / 門</td></tr>
+        <tr><td>週日回顧寫完四題</td><td>+15</td></tr>
+        <tr><td>連續 7 天不斷線（歷史紀錄都算）</td><td>+30 / 每滿7天</td></tr>
+        <tr><td>模考達標</td><td>+50</td></tr>
+      </table>
+      <p class="dim">勾選就加分，取消勾選會自動扣回——不是懲罰，只是那件事本來就沒發生。點數存到兌換區換獎勵。</p>
+      <div id="pointsDetailBox"></div>
+    </div>
+  </section>
+
+  <!-- REWARDS SHOP -->
+  <section class="tab-panel" id="tab-rewards">
+    <div class="card">
+      <h2>🎁 兌換區</h2>
+      <p class="dim">獎勵是你自己訂的，換掉之後點數會扣掉（消耗品邏輯）。不要用「不讀書」當獎勵。</p>
+      <label class="field-label">獎勵名稱</label>
+      <input type="text" id="rewardName" placeholder="例：看一集動畫">
+      <label class="field-label">兌換所需點數</label>
+      <input type="number" id="rewardCost" placeholder="例：50" min="1">
+      <div style="margin-top:10px;"><button class="magic" id="addReward">+ 新增獎勵</button></div>
+    </div>
+    <div class="card">
+      <h2>🛒 獎勵清單</h2>
+      <div id="rewardShopList"></div>
+    </div>
+    <div class="card">
+      <h2>📜 兌換紀錄</h2>
+      <div id="redemptionHistory"></div>
+    </div>
+  </section>
+
+  <!-- BACKUP -->
+  <section class="tab-panel" id="tab-backup">
+    <div class="card">
+      <h2>💾 資料備份與搬移</h2>
+      <p>讀書紀錄存在<b>這台裝置的瀏覽器</b>裡，電腦和手機不會自動同步。要在兩台裝置間搬資料：在 A 裝置「匯出」下載檔案，傳給自己（AirDrop、LINE 都行），再到 B 裝置「匯入」。</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+        <button class="magic" id="exportBtn">📤 匯出備份檔</button>
+        <button class="magic secondary" id="importBtn">📥 匯入備份檔</button>
+        <input type="file" id="importFile" accept=".json" style="display:none;">
+      </div>
+      <p class="dim" style="margin-top:10px;">建議每週日回顧完順手匯出一次，檔案留著就不怕瀏覽器資料被清掉。</p>
+    </div>
+    <div class="card">
+      <h2>⏱️ 時光器 <span class="dim">· 預覽未來某一天的課表（測試用）</span></h2>
+      <label class="field-label">跳到這一天</label>
+      <input type="date" id="debugDate">
+      <div style="display:flex; gap:10px; margin-top:10px;">
+        <button class="magic small" id="setDebugDate">轉動時光器</button>
+        <button class="magic small secondary" id="clearDebugDate">回到今天</button>
+      </div>
+      <p class="dim" style="margin-top:8px;">開著時光器時勾的紀錄會算在那一天，記得看完轉回來。</p>
+    </div>
+  </section>
+
+  <!-- TOOLBOX -->
+  <section class="tab-panel" id="tab-toolbox">
+    <div class="vow-plaque">
+      <div class="vow-title">⚡ 三個不可破的誓言 ⚡</div>
+      <div class="vow-item">① 每天默寫 10 條條文，就算只讀了 20 分鐘</div>
+      <div class="vow-item">② 錯題不隔夜，今天的今天入本</div>
+      <div class="vow-item">③ 週日回顧不跳過</div>
+    </div>
+    <div class="card">
+      <h2>🪄 TaiLexi 使用手冊</h2>
+      <h3>白話法條本</h3>
+      <p><b>引用次數</b>：天然的考點篩選器，每天默寫的 10 條就從這裡往下抓。<br>
+      <b>相關法條</b>：建體系表時用，自動連出關聯條文。<br>
+      <b>立法理由</b>：二試「附具個人意見」最安全的理由來源。<br>
+      <b>沿革</b>：確認現行法版本；新修條文是命題熱區，沿革日期新就標紅。<br>
+      <b>實務見解</b>：條文旁直接看實務怎麼用。</p>
+      <h3>一試選擇題詳解系統</h3>
+      <p>錯題就地看詳解，但看完要用自己的話寫進錯題本第三行——看懂不等於記住。</p>
+      <h3>判決／函釋／起訴書</h3>
+      <p>憲法讀憲判字、釋字理由書；行政法查行政函釋；刑事法讀起訴書看檢察官怎麼組織論述；二試階段同一爭點抓 3 份判決比較骨架。</p>
+      <div id="taiLexiLock"></div>
+    </div>
+    <div class="card">
+      <h2>📌 兩條保護規則</h2>
+      <p><b>① 不准補。</b>今天沒做完，明天不加倍，落後就改計畫。</p>
+      <p><b>② 停在時間，不停在進度。</b>50 分鐘到了就停，不是讀完這章才能停。</p>
+    </div>
+  </section>
+
+  <footer class="foot">獻給史萊哲林的你 · 表壞掉的時候，回到三個誓言，其他全部可以重排。</footer>
+</div>
+
+<script>
+/* ================================================================
+   可以手動改的日期都集中在這裡
+   ================================================================ */
+const OWL_DATE  = '2027-07-31';   // 司律一試（依 2026 年 8/1 推算，報名時核對）
+const NEWT_DATE = '2027-10-16';   // 司律二試：未定！公告後改這行，並把下面改成 true
+const NEWT_CONFIRMED = false;
+// 全真模考日（春季 4 月起每三週的週六 ＋ 暑假前四週的週六）
+const MOCK_DATES = ['2027-04-03','2027-04-24','2027-05-15','2027-06-05',
+                    '2027-06-12','2027-06-19','2027-06-26','2027-07-03'];
+
+/* ---------- storage helpers ---------- */
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v===null? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ localStorage.setItem(k, JSON.stringify(v)); },
+  del(k){ localStorage.removeItem(k); }
+};
+function toLocalDateStr(dt){
+  const off = dt.getTimezoneOffset();
+  const local = new Date(dt.getTime()-off*60000);
+  return local.toISOString().slice(0,10);
+}
+function realTodayStr(){ return toLocalDateStr(new Date()); }
+function todayStr(offsetDays=0){
+  const dbg = localStorage.getItem('hp_debug_date');
+  const base = dbg? new Date(dbg+"T12:00:00") : new Date();
+  base.setDate(base.getDate()+offsetDays);
+  return toLocalDateStr(base);
+}
+function fmtDate(dstr){
+  const dt = new Date(dstr+"T00:00:00");
+  return `${dt.getMonth()+1}/${dt.getDate()}`;
+}
+function d(s){ return new Date(s+"T00:00:00"); }
+function daysBetween(a,b){ return Math.round((b-a)/86400000); }
+function dateDiff(aStr,bStr){ return daysBetween(d(aStr), d(bStr)); }
+const WEEKDAY_CN = ["日","一","二","三","四","五","六"];
+
+/* ---------- toast / sound ---------- */
+function toast(msg, neg=false){
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast' + (neg? ' neg':'');
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(()=>t.remove(), 3200);
+}
+function chime(down=false){
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.type='sine'; o.frequency.value = down? 440 : 880;
+    g.gain.setValueAtTime(0.001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime+0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.5);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime+0.5);
+  }catch(e){}
+}
+
+/* ---------- day record ---------- */
+function dayKey(dt){ return 'hp_day_'+dt; }
+function getDayObj(dt){
+  const o = LS.get(dayKey(dt), {mode:null, itemsByMode:{}, completed:false, courses:{}, errorLogged:false, examPass:false});
+  if(o.items && !o.itemsByMode){ o.itemsByMode = {}; if(o.mode) o.itemsByMode[o.mode] = o.items; delete o.items; }
+  if(!o.itemsByMode) o.itemsByMode = {};
+  if(!o.courses) o.courses = {};
+  return o;
+}
+function setDayObj(dt, obj){ LS.set(dayKey(dt), obj); }
+function allDayDates(){
+  return Object.keys(localStorage).filter(k=>k.startsWith('hp_day_')).map(k=>k.slice(7)).sort();
+}
+
+/* ---------- points engine：每次都從紀錄重算，勾了就加、取消就消失 ---------- */
+function computeStreakCurrent(){
+  let count = 0;
+  let cur = todayStr();
+  if(!getDayObj(cur).completed){ cur = todayStr(-1); }
+  // walk backwards
+  let probe = cur;
+  while(getDayObj(probe).completed){
+    count++;
+    probe = toLocalDateStr(new Date(d(probe).getTime() - 86400000 + 12*3600000));
+    if(count>3650) break;
+  }
+  return count;
+}
+function computeStreakBonus(){
+  const completed = allDayDates().filter(dt=>getDayObj(dt).completed);
+  let bonus=0, run=0, prev=null;
+  for(const dt of completed){
+    run = (prev && dateDiff(prev,dt)===1)? run+1 : 1;
+    if(run%7===0) bonus+=30;
+    prev = dt;
+  }
+  return bonus;
+}
+function computeEarnedTotal(){
+  let total = 0;
+  for(const dt of allDayDates()){
+    const o = getDayObj(dt);
+    if(o.completed) total += 10;
+    if(o.errorLogged) total += 5;
+    if(o.examPass) total += 50;
+    total += Object.values(o.courses).filter(Boolean).length * 10;
+  }
+  total += Object.keys(localStorage).filter(k=>k.startsWith('hp_pensieve_')).length * 15;
+  total += computeStreakBonus();
+  return total;
+}
+function computeSpent(){
+  return LS.get('hp_redemptions', []).reduce((s,r)=>s+r.cost, 0);
+}
+function getBalance(){ return computeEarnedTotal() - computeSpent(); }
+
+function refreshHeaderStats(){
+  document.getElementById('statPoints').textContent = getBalance();
+  document.getElementById('statStreak').textContent = computeStreakCurrent();
+  renderPointsDetail();
+  renderHeatmap();
+}
+function pointsFeedback(before, label){
+  const after = getBalance();
+  const delta = after - before;
+  refreshHeaderStats();
+  if(delta !== 0){
+    toast(`${delta>0?'+':''}${delta} ${label}`, delta<0);
+    chime(delta<0);
+  }
+  renderRewardShopList();
+}
+
+/* ---------- tabs ---------- */
+document.getElementById('tabs').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById('tab-'+b.dataset.tab).classList.add('active');
+});
+
+/* ---------- greeting & countdown ---------- */
+function renderGreeting(){
+  const h = new Date().getHours();
+  const g = h<5? '夜深了，該睡了' : h<11? '早安，麻瓜世界的太陽升起了' : h<18? '午安，繼續施法' : h<23? '晚安前的最後一段魔法時間' : '夜深了，該睡了';
+  document.getElementById('greetingText').textContent = g;
+  const t = todayStr();
+  const dt = d(t);
+  document.getElementById('todayLine').textContent =
+    `${dt.getFullYear()}/${dt.getMonth()+1}/${dt.getDate()}（星期${WEEKDAY_CN[dt.getDay()]}）`;
+
+  const now = d(t);
+  const cdBox = document.getElementById('countdownLine');
+  const statCd = document.getElementById('statCountdown');
+  const statCdLbl = document.getElementById('statCountdownLbl');
+  if(now <= d(OWL_DATE)){
+    const n = daysBetween(now, d(OWL_DATE));
+    cdBox.innerHTML = `距離 O.W.L. 一試（${fmtDate(OWL_DATE)}）還有 <b>${n}</b> 天`;
+    statCd.textContent = n; statCdLbl.textContent = '距一試';
+  } else if(now <= d(NEWT_DATE)){
+    const n = daysBetween(now, d(NEWT_DATE));
+    cdBox.innerHTML = `距離 N.E.W.T. 二試（${NEWT_CONFIRMED? fmtDate(NEWT_DATE) : '約10月中'}）還有 <b>${n}</b> 天${NEWT_CONFIRMED? '' : '（暫定）'}`;
+    statCd.textContent = n; statCdLbl.textContent = '距二試';
+  } else {
+    cdBox.innerHTML = '都考完了。去過麻瓜的生活吧 🎓';
+    statCd.textContent = '✓'; statCdLbl.textContent = '完賽';
+  }
+}
+
+/* ---------- phases ---------- */
+function dayBefore(dstr){
+  const dt = d(dstr); dt.setDate(dt.getDate()-1);
+  return toLocalDateStr(dt);
+}
+const PHASES = [
+  {id:1, name:'開學前空窗', start:'2026-08-11', end:'2026-09-14', tag:'全職',
+    weeks:['憲法（全科一輪）','民法親屬繼承','民法攤平：總則＋債編','民法攤平：物權＋民法體系表定稿','行政法攤平＋刑法刑訴強執刷題'],
+    weekShort:['憲法全科一輪','民法親屬繼承','民法總則＋債編','民法物權＋體系表定稿','行政法攤平＋刑事刷題']},
+  {id:2, name:'秋季學期', start:'2026-09-15', end:'2027-01-14', tag:'在校',
+    weekRanges:[[1,3],[4,6],[7,8],[9,12],[13,14],[15,17]],
+    weeks:['1–3週：刑法攤平（分則細節、選擇題角落）','4–6週：刑訴攤平＋行政法補完（重點：行政函釋）','7–8週：憲法第二輪（釋字、憲判字理由書）','9–12週：民法第二輪（帶著題目回頭讀）','13–14週：票據法＋證交法','15–17週：小科總掃（國際公法、強執、法學英文）']},
+  {id:3, name:'寒假', start:'2027-01-15', end:'2027-02-11', tag:'全職',
+    weeks:['近10年歷年題全科第1輪刷完，每天8h、200–250題','最後一週只做本階段錯題，不做新題','檢核點：任一主科正確率低於65%→春季該科時數加倍']},
+  {id:4, name:'春季學期', start:'2027-02-12', end:'2027-06-10', tag:'在校',
+    weeks:['歷年題第2輪＋錯題第2輪','4月起每三週一次全真模考（週六）','4月報名核對應考須知配分','4月後票據法＋證交法第二輪','5月中前三門報告交完','5月底智財筆記整理完，之後到8月中不再碰']},
+  {id:5, name:'暑假衝刺', start:'2027-06-11', end: dayBefore(OWL_DATE), tag:'全職',
+    weeks:['前4週：每週一次全真模考，考後兩天檢討','後2週：封盤，不碰新教材，只錯題本第三輪＋條文速讀','考前7天：咒文本＋錯題本＋作息調成考試時間']},
+  {id:'owl', name:'O.W.L. 一試（全選擇題）', start:OWL_DATE, end:OWL_DATE, tag:'考試', weeks:[]},
+  {id:6, name:'N.E.W.T. 特訓', start:'2027-08-15', end:dayBefore(NEWT_DATE), tag:'半在校',
+    weeks:['1–2週：建各科答題模板（爭點→法條→學說／實務→涵攝→結論）','3–7週：每天一題實寫，每週輪一科主攻，憲法排兩週','8週：兩天連續全真模考','9週：國文作文3篇＋智財收尾＋模板背熟']},
+  {id:'newt', name:'N.E.W.T. 二試', start:NEWT_DATE, end:NEWT_DATE, tag:'考試', weeks:[],
+    dateLabel: NEWT_CONFIRMED? null : '約 10 月中（未定，公告後改程式碼開頭的 NEWT_DATE）'}
+];
+function currentPhase(){
+  const now = d(todayStr());
+  for(const p of PHASES){
+    if(now >= d(p.start) && now <= d(p.end)) return p;
+  }
+  if(now < d(PHASES[0].start)) return null;
+  return PHASES[PHASES.length-1];
+}
+// 0-based；以「階段起始那週的週一」為第 0 週起點，週次固定在週一換
+function weekIdx(p){ return Math.floor(daysBetween(d(mondayOf(p.start)), d(todayStr()))/7); }
+
+/* ---------- 真實課表（115-1 秋季 / 春季） ---------- */
+const FALL_CLASSES = {
+  1:[{t:'18:30–21:20', n:'經濟刑法與刑事法遵二', room:'台積835', prof:'連孟琦、陳重言'}],
+  2:[{t:'10:20–12:00', n:'法學研究與寫作', room:'台積430', prof:'林勤富'},
+     {t:'15:30–17:20', n:'著作權法', room:'台積205', prof:'李紀寬'},
+     {t:'18:30–20:20', n:'法德一', room:'台積835', prof:'黃忠正'}],
+  3:[{t:'13:30–15:20', n:'商事法一（公司法）', room:'台積121', prof:'蔡昌憲'},
+     {t:'15:30–17:20', n:'專利法', room:'台積120', prof:'洪淳琦'}],
+  4:[{t:'13:30–16:20', n:'專題演講', room:'台積908', prof:'林昀嫺、洪淳琦'}],
+  5:[{t:'09:10–12:00', n:'民事訴訟法一', room:'台積205', prof:'周承佑'}],
+  6:[], 0:[]
+};
+const SPRING_CLASSES = {
+  1:[],
+  2:[{t:'10:20–12:00', n:'法學研究與寫作二', prof:'林勤富'},
+     {t:'15:30–17:20', n:'法理學', prof:'黃忠正'},
+     {t:'17:30–19:20', n:'法學德文二', prof:'黃忠正'}],
+  3:[{t:'10:20–12:00', n:'國際私法', prof:'黃居正'}],
+  4:[{t:'10:20–12:00', n:'商事法二（保險法）', prof:'陳俊元'},
+     {t:'13:30–15:20', n:'專題演講'}],
+  5:[{t:'09:10–12:00', n:'民事訴訟法二', prof:'周承佑'}],
+  6:[], 0:[]
+};
+const FALL_STUDY = {
+  1:[{t:'09:30–12:30', x:'民法（主攻日・體系）'},{t:'14:00–17:30', x:'民法（主攻日・刷題）'}],
+  2:[{t:'08:30–10:00', x:'碎片日：選擇題＋背條文'},{t:'13:00–15:00', x:'碎片日：選擇題＋背條文'}],
+  3:[{t:'09:30–12:30', x:'刑法'},{t:'17:30–19:00', x:'商事法課後複習（趁熱最有效）'}],
+  4:[{t:'09:30–12:30', x:'行政法'},{t:'16:30–18:30', x:'刑訴'}],
+  5:[{t:'13:00–17:00', x:'民訴做題（接著課做）＋本週錯題彙整'}],
+  6:[{t:'09:30–17:00', x:'民法第二塊＋憲法'}],
+  0:[]  // 週日動態產生（小科輪替）
+};
+const SPRING_STUDY = {
+  1:[{t:'09:00–12:00', x:'民法（主攻日・任何理由都不准動）'},{t:'13:30–17:30', x:'民法（主攻日・續）'},{t:'19:00–20:30', x:'民法收尾＋錯題'}],
+  2:[{t:'08:00–10:00', x:'碎片日：條文默寫＋行政法選擇題'},{t:'12:30–15:20', x:'碎片日：行政法選擇題（續）'}],
+  3:[{t:'08:00–10:00', x:'刑法'},{t:'12:30–13:00', x:'複習國際私法 30 分（它只 20 分，別多給）'},{t:'13:00–18:00', x:'刑法＋行政法'}],
+  4:[{t:'08:00–10:00', x:'刷題'},{t:'15:30–16:30', x:'複習保險法 1h（趁熱）'},{t:'16:30–20:00', x:'刑訴'}],
+  5:[{t:'12:30–17:30', x:'民訴做題（接著課做）＋本週錯題彙整'}],
+  6:[],  // 週六動態（模考 or 民法＋憲法）
+  0:[]
+};
+const SMALL_ROTATION_FALL   = ['國際公法','國際私法','強制執行','法律倫理','法學英文'];
+const SMALL_ROTATION_SPRING = ['國際公法','強制執行','法律倫理','法學英文'];
+const NEWT_ROTATION = ['憲法','憲法（第二週）','民法＋民訴','刑法＋刑訴','行政法＋商事法'];
+
+/* ---------- 今日計畫引擎 ---------- */
+function segRange(t){
+  const m = t.match(/(\d{1,2}):(\d{2})\s*[–-]\s*(\d{1,2}):(\d{2})/);
+  if(!m) return null;
+  return {start:(+m[1])*60+(+m[2]), end:(+m[3])*60+(+m[4])};
+}
+function fulltimeSegs(morning, afternoon, evening){
+  return [
+    {t:'09:00–12:00', label:morning,  kind:'study'},
+    {t:'14:00–17:00', label:afternoon,kind:'study'},
+    {t:'19:00–21:00', label:evening,  kind:'study'}
+  ];
+}
+function getTodayPlan(){
+  const cp = currentPhase();
+  const tStr = todayStr();
+  const wd = d(tStr).getDay();
+  let segments = [], focus = '', note = '', classes = [];
+
+  if(!cp){
+    // 8/11 前：檢事官最後衝刺
+    focus = '檢事官最後衝刺';
+    note  = '8/10 檢事官考完、8/11 起這頁會自動切換成司律模式（第一週：憲法全科一輪）。';
+    segments = fulltimeSegs('申論實寫／體系複習','刷題（檢事官歷年題）','錯題本＋條文默寫加強');
+  }
+  else if(cp.id===1){
+    const w = Math.min(weekIdx(cp), 4);
+    focus = `第 ${w+1} 週主攻：${cp.weekShort[w]}`;
+    note  = '過關標準：能空手畫出民法五編＋憲法的體系表。智財這五週完全不碰。';
+    segments = fulltimeSegs(`體系／攤平：${cp.weekShort[w]}`, `刷題：${cp.weekShort[w]}`, '錯題本＋TaiLexi 查漏');
+  }
+  else if(cp.id===2 || cp.id===4){
+    const isFall = cp.id===2;
+    classes = (isFall? FALL_CLASSES : SPRING_CLASSES)[wd] || [];
+    let study = ((isFall? FALL_STUDY : SPRING_STUDY)[wd] || []).slice();
+    const rotation = isFall? SMALL_ROTATION_FALL : SMALL_ROTATION_SPRING;
+    const w1 = weekIdx(cp)+1;
+
+    if(wd===0){
+      const rot = rotation[(w1-1) % rotation.length];
+      study = [{t:'09:30–13:00', x:`小科輪替（本週：${rot}）＋儲思盆回顧`}];
+      segments.push({t:'下午', label:'整個休息（排定的，不是偷懶）', kind:'rest'});
+    }
+    if(!isFall && wd===6){
+      if(MOCK_DATES.includes(tStr)){
+        study = [{t:'09:00–17:00', x:'全真模考：照真實節次與時間，不看書', exam:true}];
+      } else {
+        study = [{t:'09:30–16:30', x:'民法第二塊＋憲法'}];
+      }
+    }
+    if(MOCK_DATES.includes(todayStr(-1))){
+      study.unshift({t:'優先', x:'昨天模考的檢討：寫一頁「哪一類在流血」，下週只修那一項'});
+    }
+    segments = segments.concat(
+      classes.map(c=>({t:c.t, label:`上課：${c.n}${c.room||c.prof? `（${[c.room,c.prof].filter(Boolean).join('・')}）`:''}`, kind:'class'})),
+      study.map(s=>({t:s.t, label:(s.exam? '':'自習：')+s.x, kind: s.exam? 'exam':'study'}))
+    );
+    focus = isFall
+      ? (function(){ for(let i=0;i<cp.weekRanges.length;i++){ if(w1>=cp.weekRanges[i][0]&&w1<=cp.weekRanges[i][1]) return cp.weeks[i]; } return cp.weeks[cp.weeks.length-1]; })()
+      : '歷年題第 2 輪＋錯題第 2 輪';
+    if(isFall && w1>=13) note = '⚠️ 報告期＋期末考期：當成只剩一半時間排，吃不完往寒假推，不要硬撐。';
+    if(!isFall) note = '5 月中前三門報告全部交完；期末考週司律進度直接排 0。';
+  }
+  else if(cp.id===3){
+    const lastWeek = weekIdx(cp)>=3;
+    focus = '歷年題第 1 輪：每天 200–250 題';
+    note  = '檢核點：任一主科正確率低於 65% → 春季該科時數加倍。';
+    segments = lastWeek
+      ? fulltimeSegs('只做本階段錯題（不做新題）','只做本階段錯題（不做新題）','錯題本總整理')
+      : fulltimeSegs('刷歷年題（TaiLexi 詳解系統）','刷歷年題（續）','錯題整理＋詳解消化');
+  }
+  else if(cp.id===5){
+    const daysLeft = daysBetween(d(tStr), d(OWL_DATE));
+    if(daysLeft<=7){
+      focus = '考前 7 天'; note = '作息照考試時間走，不碰新東西。';
+      segments = fulltimeSegs('咒文本（條文默寫）','錯題本速讀','作息調成考試時間，早點睡');
+    } else if(weekIdx(cp)>=4){
+      focus = '封盤期'; note = '不碰任何新教材。';
+      segments = fulltimeSegs('錯題本第三輪','條文速讀','錯題本＋條文（輪替）');
+    } else {
+      focus = '模考週期：每週六全真模考';
+      note  = '模考檢討比模考本身重要：寫一頁「哪一類在流血」，下週只修那一項。';
+      if(MOCK_DATES.includes(tStr) || wd===6){
+        segments = [{t:'09:00–17:00', label:'全真模考：照真實節次與時間，不看書', kind:'exam'}];
+      } else if(MOCK_DATES.includes(todayStr(-1)) || MOCK_DATES.includes(todayStr(-2))){
+        segments = fulltimeSegs('模考檢討（哪一類在流血）','弱項專修','錯題本＋條文');
+      } else {
+        segments = fulltimeSegs('刷題＋弱科加強','刷題（續）','錯題本＋條文');
+      }
+    }
+  }
+  else if(cp.id===6){
+    const w = weekIdx(cp);
+    note = '二試除國文外都附發法條——分數在論述結構與涵攝，不在背誦。每題有 10 頁作答空間，寫得少不會被同情。';
+    if(w<2){
+      focus = '建各科答題模板（每科一張 A4）';
+      segments = fulltimeSegs('答題模板：爭點→法條→學說／實務→涵攝→結論','模板（續）＋讀判決抄骨架','條文＋立法理由整理');
+    } else if(w<7){
+      const subj = NEWT_ROTATION[w-2];
+      focus = `本週主攻：${subj}（每天一題實寫）`;
+      segments = fulltimeSegs(`一題實寫（用電腦）：${subj}`,`檢討＋更新模板：${subj}`,`條文＋判決骨架：${subj}`);
+    } else if(w===7){
+      focus = '兩天連續全真模考（照 10 月中的節次）';
+      segments = [{t:'照二試節次', label:'全真模考', kind:'exam'}];
+    } else {
+      focus = '收尾週';
+      segments = fulltimeSegs('國文作文練習','智財收尾','各科模板背熟');
+    }
+  }
+  else {
+    focus = cp.name;
+    note = '考試日。深呼吸，你準備了一整年。';
+    segments = [{t:'全天', label:`${cp.name}——狀態調整為最佳，飛行課（時間分配）不要在一題上盤旋`, kind:'exam'}];
+  }
+
+  // 週日通用：全職階段也要儲思盆
+  if(wd===0 && cp && [1,3,5,6].includes(cp.id)){
+    segments.push({t:'晚上', label:'儲思盆回顧（40 分鐘，四題）', kind:'study'});
+  }
+
+  // 依開始時間排序（「優先」放最前，其他無法解析時間的放最後）
+  segments.sort((a,b)=>{
+    const key = s => s.t==='優先'? -1 : (segRange(s.t)? segRange(s.t).start : 9999);
+    return key(a) - key(b);
+  });
+
+  return {segments, focus, note, classes};
+}
+
+let TODAY_PLAN = null;
+
+function renderTodayPlan(){
+  TODAY_PLAN = getTodayPlan();
+  const box = document.getElementById('todayPlanBox');
+  const isRealToday = todayStr() === realTodayStr();
+  const nowMin = new Date().getHours()*60 + new Date().getMinutes();
+  box.innerHTML = TODAY_PLAN.segments.map(s=>{
+    const r = segRange(s.t);
+    const isNow = isRealToday && r && nowMin>=r.start && nowMin<r.end;
+    return `<div class="seg ${s.kind}${isNow?' now':''}"><span class="seg-time">${s.t}</span><span class="seg-label">${s.label}</span></div>`;
+  }).join('') || '<p class="dim">今天沒有排程</p>';
+  document.getElementById('planFocusTag').textContent = TODAY_PLAN.focus? '· '+TODAY_PLAN.focus : '';
+  document.getElementById('planNote').textContent = TODAY_PLAN.note || '';
+}
+
+/* ---------- 電量模式與今日任務 ---------- */
+function itemsForMode(mode){
+  if(mode==='low')  return ['默寫 10 條條文（就這一件，做完就去休息，一樣算過關）'];
+  if(mode==='half') return ['默寫 10 條條文','一塊主科體系（挑今天時間表裡最重要那塊）','錯題本（一句話也算）'];
+  // full：默寫 + 今天時間表的自習/模考塊
+  const blocks = (TODAY_PLAN? TODAY_PLAN.segments : [])
+    .filter(s=>s.kind==='study' || s.kind==='exam')
+    .map(s=>`${s.t}｜${s.label.replace(/^自習：/,'')}`);
+  return ['默寫 10 條條文', ...blocks];
+}
+function renderModeUI(){
+  const state = getDayObj(todayStr());
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active', b.dataset.mode===state.mode));
+  renderChecklist(state);
+}
+function renderChecklist(state){
+  const ul = document.getElementById('dayChecklist');
+  if(!state.mode){
+    ul.innerHTML = '<li class="dim">先選一個電量模式——低電模式做完一樣算過關、連續天數照算。</li>';
+    document.getElementById('dayProgress').style.width='0%';
+    document.getElementById('dayCompleteMsg').style.display='none';
+    return;
+  }
+  const items = itemsForMode(state.mode);
+  const checked = state.itemsByMode[state.mode] || {};
+  ul.innerHTML = items.map((it,i)=>{
+    const c = !!checked[i];
+    return `<li class="${c?'done':''}">
+      <input type="checkbox" id="di${i}" data-idx="${i}" ${c?'checked':''}>
+      <label for="di${i}">${it}</label>
+    </li>`;
+  }).join('');
+  const doneCount = items.filter((_,i)=>checked[i]).length;
+  document.getElementById('dayProgress').style.width = Math.round(doneCount/items.length*100)+'%';
+  document.getElementById('dayCompleteMsg').style.display = state.completed? 'block':'none';
+}
+function recomputeCompleted(state){
+  if(!state.mode) return false;
+  const items = itemsForMode(state.mode);
+  const checked = state.itemsByMode[state.mode] || {};
+  return items.length>0 && items.every((_,i)=>checked[i]);
+}
+document.getElementById('modeRow').addEventListener('click', e=>{
+  const b = e.target.closest('.mode-btn'); if(!b) return;
+  const before = getBalance();
+  const state = getDayObj(todayStr());
+  if(state.mode===b.dataset.mode) return;
+  state.mode = b.dataset.mode;
+  state.completed = recomputeCompleted(state);
+  setDayObj(todayStr(), state);
+  renderModeUI();
+  pointsFeedback(before, '切換電量模式');
+});
+document.getElementById('dayChecklist').addEventListener('change', e=>{
+  const cb = e.target.closest('input[type=checkbox]'); if(!cb) return;
+  const before = getBalance();
+  const state = getDayObj(todayStr());
+  if(!state.itemsByMode[state.mode]) state.itemsByMode[state.mode] = {};
+  state.itemsByMode[state.mode][cb.dataset.idx] = cb.checked;
+  state.completed = recomputeCompleted(state);
+  setDayObj(todayStr(), state);
+  renderChecklist(state);
+  pointsFeedback(before, state.completed? '完成當日全部進度' : (cb.checked? '打勾一項' : '取消一項'));
+});
+
+/* ---------- 課堂當天複習 ---------- */
+function renderCourseReview(){
+  const card = document.getElementById('courseReviewCard');
+  const classes = TODAY_PLAN? TODAY_PLAN.classes : [];
+  if(!classes.length){ card.style.display='none'; return; }
+  card.style.display='block';
+  const obj = getDayObj(todayStr());
+  document.getElementById('courseChecklist').innerHTML = classes.map((c,i)=>{
+    const checked = !!obj.courses[c.n];
+    return `<li class="${checked?'done':''}"><input type="checkbox" id="cr${i}" data-course="${c.n.replace(/"/g,'&quot;')}" ${checked?'checked':''}><label for="cr${i}">${c.n}</label><span class="pt">+10</span></li>`;
+  }).join('');
+}
+document.getElementById('courseChecklist').addEventListener('change', e=>{
+  const cb = e.target.closest('input[type=checkbox]'); if(!cb) return;
+  const before = getBalance();
+  const obj = getDayObj(todayStr());
+  obj.courses[cb.dataset.course] = cb.checked;
+  setDayObj(todayStr(), obj);
+  renderCourseReview();
+  pointsFeedback(before, cb.checked? `複習了「${cb.dataset.course}」` : `取消複習「${cb.dataset.course}」`);
+});
+
+/* ---------- 模考達標 ---------- */
+function renderExamCard(){
+  const cp = currentPhase();
+  const card = document.getElementById('examCard');
+  const show = cp && ([3,4,5,6].includes(cp.id));
+  if(!show){ card.style.display='none'; return; }
+  card.style.display='block';
+  const isMockDay = MOCK_DATES.includes(todayStr());
+  document.getElementById('examHint').textContent = isMockDay
+    ? '今天就是全真模考日——照真實節次、計時、不看書。'
+    : '只在有全真模考的日子勾。「達標」的標準自己在模考前先寫下來。';
+  const obj = getDayObj(todayStr());
+  document.getElementById('examChecklist').innerHTML =
+    `<li class="${obj.examPass?'done':''}"><input type="checkbox" id="examPass" ${obj.examPass?'checked':''}><label for="examPass">今天的全真模考達標</label><span class="pt">+50</span></li>`;
+  document.getElementById('examPass').addEventListener('change', e=>{
+    const before = getBalance();
+    const o = getDayObj(todayStr());
+    o.examPass = e.target.checked;
+    setDayObj(todayStr(), o);
+    renderExamCard();
+    pointsFeedback(before, e.target.checked? '模考達標' : '取消模考達標');
+  });
+}
+
+/* ---------- 起床順序 ---------- */
+const MORNING_ITEMS = ['起床，不看手機','喝水、洗臉、換衣服，不做任何決定','坐下默寫 10 條條文','早餐（現在可以看手機，計時 10 分鐘）','看昨天寫好的三行紙'];
+function renderMorning(){
+  const state = LS.get('hp_morning_'+todayStr(), {});
+  document.getElementById('morningChecklist').innerHTML = MORNING_ITEMS.map((it,i)=>{
+    const checked = !!state[i];
+    return `<li class="${checked?'done':''}"><input type="checkbox" id="mi${i}" data-idx="${i}" ${checked?'checked':''}><label for="mi${i}">${it}</label></li>`;
+  }).join('');
+}
+document.getElementById('morningChecklist').addEventListener('change', e=>{
+  const cb = e.target.closest('input[type=checkbox]'); if(!cb) return;
+  const state = LS.get('hp_morning_'+todayStr(), {});
+  state[cb.dataset.idx] = cb.checked;
+  LS.set('hp_morning_'+todayStr(), state);
+  renderMorning();
+});
+
+/* ---------- 收工儀式 ---------- */
+const CLOSING_ITEMS = [
+  {label:'寫明天的三行紙', points:0},
+  {label:'今天的錯題已經入本（不隔夜，一句話也算）', points:5},
+  {label:'合上書，離開位子', points:0}
+];
+function renderClosing(){
+  const obj = getDayObj(todayStr());
+  const state = LS.get('hp_closing_'+todayStr(), {});
+  document.getElementById('closingChecklist').innerHTML = CLOSING_ITEMS.map((it,i)=>{
+    const checked = i===1? !!obj.errorLogged : !!state[i];
+    return `<li class="${checked?'done':''}"><input type="checkbox" id="close${i}" data-idx="${i}" ${checked?'checked':''}><label for="close${i}">${it.label}</label>${it.points? `<span class="pt">+${it.points}</span>`:''}</li>`;
+  }).join('');
+}
+document.getElementById('closingChecklist').addEventListener('change', e=>{
+  const cb = e.target.closest('input[type=checkbox]'); if(!cb) return;
+  const i = +cb.dataset.idx;
+  if(i===1){
+    const before = getBalance();
+    const o = getDayObj(todayStr());
+    o.errorLogged = cb.checked;
+    setDayObj(todayStr(), o);
+    renderClosing();
+    pointsFeedback(before, cb.checked? '錯題當天入本' : '取消錯題入本');
+  } else {
+    const s = LS.get('hp_closing_'+todayStr(), {});
+    s[i] = cb.checked;
+    LS.set('hp_closing_'+todayStr(), s);
+    renderClosing();
+  }
+});
+
+/* ---------- 計時器 ---------- */
+let timerInterval = null, timerSeconds = 50*60, timerPhaseSt = 'study', timerRunning = false;
+function renderTimer(){
+  const m = Math.floor(timerSeconds/60).toString().padStart(2,'0');
+  const s = (timerSeconds%60).toString().padStart(2,'0');
+  document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+  document.getElementById('timerPhaseLbl').textContent = timerPhaseSt==='study'? '施法中（讀書）' : '離開位子（休息）';
+}
+document.getElementById('timerStart').addEventListener('click', ()=>{
+  if(timerRunning){
+    clearInterval(timerInterval); timerRunning=false;
+    document.getElementById('timerStart').textContent = '開始施法';
+    return;
+  }
+  timerRunning = true;
+  document.getElementById('timerStart').textContent = '暫停';
+  timerInterval = setInterval(()=>{
+    timerSeconds--;
+    if(timerSeconds<=0){
+      chime();
+      if(timerPhaseSt==='study'){
+        timerPhaseSt='rest'; timerSeconds=10*60;
+        toast('下課鈴響了 — 離開位子，別滑手機');
+      } else {
+        timerPhaseSt='study'; timerSeconds=50*60;
+        toast('上課鈴響了 — 回座位');
+      }
+    }
+    renderTimer();
+  },1000);
+});
+document.getElementById('timerReset').addEventListener('click', ()=>{
+  clearInterval(timerInterval); timerRunning=false;
+  timerPhaseSt='study'; timerSeconds=50*60;
+  document.getElementById('timerStart').textContent='開始施法';
+  renderTimer();
+});
+renderTimer();
+
+/* ---------- 三行紙 ---------- */
+function renderYesterdayParchment(){
+  const y = LS.get('hp_parchment_for_'+todayStr(), null);
+  const box = document.getElementById('yesterdayParchment');
+  if(!y){ box.innerHTML = '<p class="dim">昨晚沒有寄出貓頭鷹，今天自己決定吧（下次記得睡前寫）</p>'; return; }
+  box.innerHTML = `<div class="week-focus">
+    <div>① 明天主科：<b>${y.p1||'—'}</b></div>
+    <div>② 要做完的一件事：<b>${y.p2||'—'}</b></div>
+    <div>③ 低電量時只做：<b>${y.p3||'—'}</b></div>
+  </div>`;
+}
+document.getElementById('saveParchment').addEventListener('click', ()=>{
+  const p1 = document.getElementById('p1').value.trim();
+  const p2 = document.getElementById('p2').value.trim();
+  const p3 = document.getElementById('p3').value.trim();
+  if(!p2){ toast('②只能寫一件，但至少要寫'); return; }
+  LS.set('hp_parchment_for_'+todayStr(1), {p1,p2,p3, savedAt: todayStr()});
+  document.getElementById('parchmentSavedMsg').style.display='block';
+  toast('貓頭鷹出發了 🦉');
+});
+
+/* ---------- 儲思盆（每週一次、可取消重寫） ---------- */
+function mondayOf(dateStr){
+  const dt = d(dateStr);
+  const day = dt.getDay();
+  const diff = day===0? -6 : 1-day;
+  dt.setDate(dt.getDate()+diff);
+  return toLocalDateStr(dt);
+}
+function pensieveKey(monday){ return 'hp_pensieve_'+monday; }
+function renderPensieveForm(){
+  const monday = mondayOf(todayStr());
+  const existing = LS.get(pensieveKey(monday), null);
+  const box = document.getElementById('pensieveFormBox');
+  if(existing){
+    box.innerHTML = `
+      <div class="week-focus">
+        <div>1. ${existing.q1||'—'}</div>
+        <div>2. ${existing.q2||'—'}</div>
+        <div>3. ${existing.q3||'—'}</div>
+        <div><b>4. ${existing.q4||'—'}</b></div>
+      </div>
+      <p class="dim">本週（${fmtDate(monday)} 起）已經倒過儲思盆了。</p>
+      <button class="magic secondary small" id="undoPensieve">🗑️ 取消本週回顧（-15）</button>`;
+    document.getElementById('undoPensieve').addEventListener('click', ()=>{
+      const before = getBalance();
+      LS.del(pensieveKey(monday));
+      renderPensieveForm();
+      renderPensieveHistory();
+      pointsFeedback(before, '取消週日回顧');
+    });
+  } else {
+    box.innerHTML = `
+      <label class="field-label">1. 這週哪一科進度落後？</label>
+      <textarea id="pq1" rows="2"></textarea>
+      <label class="field-label">2. 錯題本裡重複出現的是哪個觀念？</label>
+      <textarea id="pq2" rows="2"></textarea>
+      <label class="field-label">3. 下週要調整什麼？</label>
+      <textarea id="pq3" rows="2"></textarea>
+      <label class="field-label">4. 這週我做對了什麼？（不准跳過）</label>
+      <textarea id="pq4" rows="2"></textarea>
+      <div style="margin-top:10px;"><button class="magic" id="savePensieve">倒入儲思盆（+15）</button></div>`;
+    document.getElementById('savePensieve').addEventListener('click', ()=>{
+      const q1 = document.getElementById('pq1').value.trim();
+      const q2 = document.getElementById('pq2').value.trim();
+      const q3 = document.getElementById('pq3').value.trim();
+      const q4 = document.getElementById('pq4').value.trim();
+      if(!q4){ toast('第4題不准跳過'); return; }
+      const before = getBalance();
+      LS.set(pensieveKey(monday), {q1,q2,q3,q4, date: todayStr()});
+      renderPensieveForm();
+      renderPensieveHistory();
+      pointsFeedback(before, '週日回顧寫完四題');
+    });
+  }
+}
+function renderPensieveHistory(){
+  const keys = Object.keys(localStorage).filter(k=>k.startsWith('hp_pensieve_')).sort().reverse();
+  const box = document.getElementById('pensieveHistory');
+  if(!keys.length){ box.innerHTML='<p class="dim">還沒有記憶絲線</p>'; return; }
+  box.innerHTML = keys.map(k=>{
+    const h = LS.get(k, {});
+    return `<div class="week-focus">
+      <b>${fmtDate(k.slice(12))} 那週</b>
+      <div>1. ${h.q1||'—'}</div><div>2. ${h.q2||'—'}</div><div>3. ${h.q3||'—'}</div>
+      <div><b>4. ${h.q4||'—'}</b></div>
+    </div>`;
+  }).join('');
+}
+function checkSunday(){
+  const tag = document.getElementById('pensieveSundayTag');
+  tag.textContent = d(todayStr()).getDay()===0? '· 今天就是週日，開始回顧吧' : '· 建議留到週日再寫';
+}
+
+/* ---------- 時間軸 ---------- */
+function renderTimeline(){
+  const box = document.getElementById('timelineBox');
+  const cp = currentPhase();
+  box.innerHTML = PHASES.map(p=>{
+    const isCurrent = cp && cp.id===p.id;
+    const weeksHtml = p.weeks.length? p.weeks.map(w=>`<div class="week-focus">${w}</div>`).join('') : '';
+    const dateText = p.dateLabel || `${p.start} ~ ${p.end}`;
+    return `<div class="phase ${isCurrent?'current':''}">
+      <div class="ph-title">${p.name}（${p.tag}）</div>
+      <div class="ph-date">${dateText}</div>
+      ${weeksHtml}
+    </div>`;
+  }).join('');
+}
+function renderPhaseChip(){
+  const cp = currentPhase();
+  document.getElementById('statPhase').textContent = cp? cp.name : '倒數中';
+  document.getElementById('phaseLine').textContent = cp
+    ? `目前階段：「${cp.name}」（${cp.tag}）· ${cp.start} ~ ${cp.end}`
+    : `距離「開學前空窗」起跑（2026-08-11）還有 ${daysBetween(d(todayStr()), d('2026-08-11'))} 天`;
+}
+
+/* ---------- 點數明細 ---------- */
+function renderPointsDetail(){
+  const box = document.getElementById('pointsDetailBox');
+  if(!box) return;
+  const o = getDayObj(todayStr());
+  const courseCount = Object.values(o.courses).filter(Boolean).length;
+  const weekDone = !!LS.get(pensieveKey(mondayOf(todayStr())), null);
+  const rows = [
+    ['完成當日全部進度', o.completed? '+10' : '—'],
+    ['錯題當天入本', o.errorLogged? '+5' : '—'],
+    ['課堂當天複習', courseCount? `+${courseCount*10}（${courseCount} 門）` : '—'],
+    ['本週儲思盆', weekDone? '+15' : '—'],
+    ['模考達標', o.examPass? '+50' : '—']
+  ];
+  box.innerHTML = `<h3>今天的得分</h3>
+    <table class="schedule-table">${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>
+    <p class="dim" style="margin-top:8px;">累計獲得 ${computeEarnedTotal()} ｜ 已兌換 ${computeSpent()} ｜ <b>餘額 ${getBalance()}</b>（連續獎勵已含在累計裡）</p>`;
+}
+
+/* ---------- 出勤熱圖 ---------- */
+function renderHeatmap(){
+  const box = document.getElementById('heatmap');
+  if(!box) return;
+  const today = todayStr();
+  const thisMonday = mondayOf(today);
+  const start = toLocalDateStr(new Date(d(thisMonday).getTime() - 77*86400000 + 12*3600000)); // 11 週前的週一
+  let html = '';
+  for(let i=0;i<84;i++){
+    const dtStr = toLocalDateStr(new Date(d(start).getTime() + i*86400000 + 12*3600000));
+    if(dtStr > today){ html += `<div class="hm future"></div>`; continue; }
+    const o = getDayObj(dtStr);
+    let cls = '';
+    if(o.completed){ cls = o.mode==='full'? 'l3' : o.mode==='half'? 'l2' : 'l1'; }
+    html += `<div class="hm ${cls}" title="${dtStr}${o.completed? '（'+(o.mode==='full'?'滿電':o.mode==='half'?'半電':'低電')+'過關）':''}"></div>`;
+  }
+  box.innerHTML = html;
+}
+
+/* ---------- 兌換區 ---------- */
+function renderRewardShopList(){
+  const defs = LS.get('hp_reward_defs', []);
+  const balance = getBalance();
+  const box = document.getElementById('rewardShopList');
+  if(!defs.length){ box.innerHTML = '<p class="dim">還沒有設定獎勵，去上面新增一個吧</p>'; return; }
+  box.innerHTML = defs.map(r=>`
+    <div class="reward-card">
+      <div><div class="rname">${r.name}</div><div class="rcost">需要 ${r.cost} 點</div></div>
+      <div class="ractions">
+        <button class="magic small" data-redeem="${r.id}" ${balance<r.cost?'disabled':''}>兌換</button>
+        <button class="reward-del" data-del="${r.id}" title="刪除這個獎勵">×</button>
+      </div>
+    </div>`).join('');
+}
+function renderRedemptionHistory(){
+  const list = LS.get('hp_redemptions', []).slice().reverse();
+  const box = document.getElementById('redemptionHistory');
+  if(!list.length){ box.innerHTML = '<p class="dim">還沒有兌換紀錄</p>'; return; }
+  box.innerHTML = list.map(r=>`<div class="dim">${fmtDate(r.date)} · 兌換「${r.name}」－${r.cost} 點</div>`).join('');
+}
+document.getElementById('addReward').addEventListener('click', ()=>{
+  const name = document.getElementById('rewardName').value.trim();
+  const cost = parseInt(document.getElementById('rewardCost').value, 10);
+  if(!name || !cost || cost<1){ toast('獎勵名稱和點數都要填'); return; }
+  const defs = LS.get('hp_reward_defs', []);
+  defs.push({id: Date.now().toString(36), name, cost});
+  LS.set('hp_reward_defs', defs);
+  document.getElementById('rewardName').value='';
+  document.getElementById('rewardCost').value='';
+  renderRewardShopList();
+  toast(`已新增獎勵：${name}`);
+});
+document.getElementById('rewardShopList').addEventListener('click', e=>{
+  const redeemId = e.target.dataset.redeem;
+  const delId = e.target.dataset.del;
+  if(redeemId){
+    const defs = LS.get('hp_reward_defs', []);
+    const r = defs.find(x=>x.id===redeemId);
+    if(!r) return;
+    if(getBalance() < r.cost){ toast('點數不夠'); return; }
+    if(!confirm(`用 ${r.cost} 點換「${r.name}」？`)) return;
+    const redemptions = LS.get('hp_redemptions', []);
+    redemptions.push({id: Date.now().toString(36), defId: r.id, name: r.name, cost: r.cost, date: todayStr()});
+    LS.set('hp_redemptions', redemptions);
+    refreshHeaderStats();
+    renderRewardShopList();
+    renderRedemptionHistory();
+    toast(`兌換成功：${r.name} － ${r.cost} 點`, true);
+    chime(true);
+  } else if(delId){
+    if(!confirm('刪除這個獎勵設定？（不影響已經兌換的紀錄）')) return;
+    LS.set('hp_reward_defs', LS.get('hp_reward_defs', []).filter(x=>x.id!==delId));
+    renderRewardShopList();
+  }
+});
+
+/* ---------- 備份：匯出／匯入 ---------- */
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const data = {};
+  Object.keys(localStorage).filter(k=>k.startsWith('hp_')).forEach(k=>data[k]=localStorage.getItem(k));
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `司律修習備份-${realTodayStr()}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('備份檔已下載 📤');
+});
+document.getElementById('importBtn').addEventListener('click', ()=>document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const data = JSON.parse(reader.result);
+      const keys = Object.keys(data).filter(k=>k.startsWith('hp_'));
+      if(!keys.length){ toast('這不是有效的備份檔', true); return; }
+      if(!confirm(`匯入 ${keys.length} 筆紀錄？會覆蓋這台裝置目前的資料。`)) return;
+      Object.keys(localStorage).filter(k=>k.startsWith('hp_')).forEach(k=>localStorage.removeItem(k));
+      keys.forEach(k=>localStorage.setItem(k, data[k]));
+      toast('匯入成功，重新整理中…');
+      setTimeout(()=>location.reload(), 800);
+    }catch(err){ toast('讀取失敗：不是有效的 JSON', true); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+/* ---------- 時光器 ---------- */
+function renderDebugBanner(){
+  const dbg = localStorage.getItem('hp_debug_date');
+  const banner = document.getElementById('debugBanner');
+  if(dbg){
+    banner.style.display='block';
+    banner.textContent = `⏱️ 時光器開啟中：目前顯示的是 ${dbg} 的內容（去「備份」分頁轉回今天）`;
+  } else banner.style.display='none';
+}
+document.getElementById('setDebugDate').addEventListener('click', ()=>{
+  const v = document.getElementById('debugDate').value;
+  if(!v){ toast('先選日期'); return; }
+  localStorage.setItem('hp_debug_date', v);
+  location.reload();
+});
+document.getElementById('clearDebugDate').addEventListener('click', ()=>{
+  localStorage.removeItem('hp_debug_date');
+  location.reload();
+});
+
+/* ---------- TaiLexi 晚間規則 ---------- */
+function renderTaiLexiLock(){
+  const h = new Date().getHours();
+  const box = document.getElementById('taiLexiLock');
+  if(h>=18 || h<5){
+    box.innerHTML = '<p class="dim">🌙 現在是晚上時段，可以打開 TaiLexi 查漏。</p>';
+  } else {
+    box.innerHTML = '<p class="lock-note">🔒 規則：TaiLexi 只在晚上時段開。白天開，你會查到半夜還沒讀完一章。</p>';
+  }
+}
+
+/* ---------- init ---------- */
+function init(){
+  renderDebugBanner();
+  renderGreeting();
+  renderPhaseChip();
+  renderTodayPlan();        // 先算今日計畫（任務清單要用）
+  renderModeUI();
+  renderCourseReview();
+  renderExamCard();
+  renderMorning();
+  renderClosing();
+  renderYesterdayParchment();
+  renderPensieveForm();
+  renderPensieveHistory();
+  checkSunday();
+  renderTimeline();
+  renderTaiLexiLock();
+  renderRewardShopList();
+  renderRedemptionHistory();
+  refreshHeaderStats();     // 內含點數明細＋熱圖
+
+  setInterval(renderTaiLexiLock, 60000);
+  setInterval(renderTodayPlan, 60000);  // 現在進行中的時段會跟著時間移動
+}
+init();
+</script>
+</body>
+</html>
