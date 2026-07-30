@@ -263,7 +263,6 @@ footer.foot{text-align:center; font-size:12px; opacity:.5; margin-top:30px; padd
   <nav class="tabs" id="tabs">
     <button data-tab="dashboard" class="active">📜 首頁</button>
     <button data-tab="parchment">📝 三行紙</button>
-    <button data-tab="pensieve">🌀 儲思盆</button>
     <button data-tab="map">🗺️ 學院地圖</button>
     <button data-tab="rewards">🎁 兌換區</button>
     <button data-tab="backup">💾 備份</button>
@@ -319,6 +318,7 @@ footer.foot{text-align:center; font-size:12px; opacity:.5; margin-top:30px; padd
             <button class="magic secondary" id="timerReset">重置</button>
           </div>
           <p class="dim" style="margin-top:8px;">50 分鐘做事，10 分鐘離開位子——不是坐 3 小時，是有終點的回合。</p>
+          <p class="dim" id="timerRoundsLbl" style="margin-top:4px; font-weight:700;"></p>
         </div>
       </div>
 
@@ -367,56 +367,65 @@ footer.foot{text-align:center; font-size:12px; opacity:.5; margin-top:30px; padd
     </div>
   </section>
 
-  <!-- PENSIEVE -->
-  <section class="tab-panel" id="tab-pensieve">
-    <div class="card">
-      <h2>🌀 儲思盆回顧 <span class="dim" id="pensieveSundayTag"></span></h2>
-      <p class="dim">每週日 40 分鐘，固定四題。一週只能倒入一次，寫錯了可以取消重寫。</p>
-      <div id="pensieveFormBox"></div>
-    </div>
-    <div class="card">
-      <h2>💭 記憶絲線（歷史回顧）</h2>
-      <div id="pensieveHistory"></div>
-    </div>
-  </section>
-
   <!-- MAP / TIMELINE -->
   <section class="tab-panel" id="tab-map">
-    <div class="card">
-      <h2>🗺️ 學院地圖 · 全年時間軸</h2>
-      <p class="dim">這張大表一週看一次就好——平常日回首頁看「今天的時間表」即可。</p>
-      <div class="timeline" id="timelineBox"></div>
-    </div>
     <div class="card">
       <h2>🏆 學院點數規則</h2>
       <table class="schedule-table">
         <tr><th>行為</th><th>分</th></tr>
-        <tr><td>完成當日全部進度（依你選的電量模式）</td><td>+10</td></tr>
+        <tr><td>今天勾選的每一項進度（依電量模式拆分，滿額 10）</td><td>+1～10</td></tr>
         <tr><td>錯題當天入本，不隔夜（收工儀式勾選）</td><td>+5</td></tr>
         <tr><td>課堂當天複習那門課</td><td>+10 / 門</td></tr>
-        <tr><td>週日回顧寫完四題</td><td>+15</td></tr>
         <tr><td>連續 7 天不斷線（歷史紀錄都算）</td><td>+30 / 每滿7天</td></tr>
         <tr><td>模考達標</td><td>+50</td></tr>
+        <tr><td>節奏鐘完成一個 50 分鐘回合</td><td>+3 / 回合</td></tr>
       </table>
-      <p class="dim">勾選就加分，取消勾選會自動扣回——不是懲罰，只是那件事本來就沒發生。點數存到兌換區換獎勵。</p>
+      <p class="dim">勾一項就先拿一項的分，不用等全部做完；取消勾選會自動扣回——不是懲罰，只是那件事本來就沒發生。點數存到兌換區換獎勵。</p>
       <div id="pointsDetailBox"></div>
+    </div>
+    <div class="card">
+      <h2>🔮 咒法對照表</h2>
+      <p class="dim">每個考科在這頁裡都有一個魔法科目名字，時間表、地圖、複習清單都會一起用。</p>
+      <table class="schedule-table">
+        <tr><th>咒法</th><th>科目</th><th>約配分</th></tr>
+        <tr><td>變形學</td><td>民法</td><td>100</td></tr>
+        <tr><td>魔藥學</td><td>行政法</td><td>70</td></tr>
+        <tr><td>黑魔法防禦術</td><td>刑法</td><td>70</td></tr>
+        <tr><td>決鬥課</td><td>刑訴</td><td>50</td></tr>
+        <tr><td>魔法理論</td><td>憲法</td><td>40</td></tr>
+        <tr><td>魔咒學</td><td>民訴</td><td>60</td></tr>
+        <tr><td>古代魔文</td><td>法學英文</td><td>30</td></tr>
+        <tr><td>不可破的誓言</td><td>法律倫理</td><td>30</td></tr>
+        <tr><td>算術占卜</td><td>票據法／公司法</td><td>—</td></tr>
+        <tr><td>占卜學</td><td>保險法</td><td>—</td></tr>
+        <tr><td>國際巫聯</td><td>國際公法</td><td>20</td></tr>
+        <tr><td>奇獸管束</td><td>強制執行</td><td>20</td></tr>
+        <tr><td>天文學</td><td>國際私法</td><td>20</td></tr>
+        <tr><td>鍊金術</td><td>智慧財產法（二試選試）</td><td>—</td></tr>
+      </table>
+      <p class="dim">配分逐年微調，2027 年 4 月報名時的應考須知才是正本。</p>
+    </div>
+    <div class="card">
+      <h2>🗺️ 學院地圖 · 全年時間軸</h2>
+      <p class="dim">這張大表一週看一次就好——平常日回首頁看「今天的時間表」即可。</p>
+      <div class="timeline" id="timelineBox"></div>
     </div>
   </section>
 
   <!-- REWARDS SHOP -->
   <section class="tab-panel" id="tab-rewards">
     <div class="card">
-      <h2>🎁 兌換區</h2>
+      <h2>🛒 獎勵清單</h2>
+      <div id="rewardShopList"></div>
+    </div>
+    <div class="card">
+      <h2>🎁 新增獎勵</h2>
       <p class="dim">獎勵是你自己訂的，換掉之後點數會扣掉（消耗品邏輯）。不要用「不讀書」當獎勵。</p>
       <label class="field-label">獎勵名稱</label>
       <input type="text" id="rewardName" placeholder="例：看一集動畫">
       <label class="field-label">兌換所需點數</label>
       <input type="number" id="rewardCost" placeholder="例：50" min="1">
       <div style="margin-top:10px;"><button class="magic" id="addReward">+ 新增獎勵</button></div>
-    </div>
-    <div class="card">
-      <h2>🛒 獎勵清單</h2>
-      <div id="rewardShopList"></div>
     </div>
     <div class="card">
       <h2>📜 兌換紀錄</h2>
@@ -467,7 +476,7 @@ footer.foot{text-align:center; font-size:12px; opacity:.5; margin-top:30px; padd
       <h3>一試選擇題詳解系統</h3>
       <p>錯題就地看詳解，但看完要用自己的話寫進錯題本第三行——看懂不等於記住。</p>
       <h3>判決／函釋／起訴書</h3>
-      <p>憲法讀憲判字、釋字理由書；行政法查行政函釋；刑事法讀起訴書看檢察官怎麼組織論述；二試階段同一爭點抓 3 份判決比較骨架。</p>
+      <p>憲法〈魔法理論〉讀憲判字、釋字理由書；行政法〈魔藥學〉查行政函釋；刑事法〈黑魔法防禦術・決鬥課〉讀起訴書看檢察官怎麼組織論述；二試階段同一爭點抓 3 份判決比較骨架。</p>
       <div id="taiLexiLock"></div>
     </div>
     <div class="card">
@@ -578,16 +587,35 @@ function computeStreakBonus(){
   }
   return bonus;
 }
+function itemPointSplits(n){
+  if(n<=0) return [];
+  const base = Math.floor(10/n);
+  const remainder = 10 - base*n;
+  const arr = [];
+  for(let i=0;i<n;i++){ arr.push(base + (i<remainder?1:0)); }
+  return arr;
+}
+function dayEarnedFromChecklist(o){
+  if(o.mode && o.itemCounts && o.itemCounts[o.mode]){
+    const n = o.itemCounts[o.mode];
+    const splits = itemPointSplits(n);
+    const checked = o.itemsByMode[o.mode] || {};
+    let sum = 0;
+    for(let i=0;i<n;i++){ if(checked[i]) sum += splits[i]; }
+    return sum;
+  }
+  return o.completed? 10 : 0; // 舊資料相容
+}
 function computeEarnedTotal(){
   let total = 0;
   for(const dt of allDayDates()){
     const o = getDayObj(dt);
-    if(o.completed) total += 10;
+    total += dayEarnedFromChecklist(o);
     if(o.errorLogged) total += 5;
     if(o.examPass) total += 50;
     total += Object.values(o.courses).filter(Boolean).length * 10;
+    total += (o.timerRounds||0) * 3;
   }
-  total += Object.keys(localStorage).filter(k=>k.startsWith('hp_pensieve_')).length * 15;
   total += computeStreakBonus();
   return total;
 }
@@ -657,20 +685,20 @@ function dayBefore(dstr){
 }
 const PHASES = [
   {id:1, name:'開學前空窗', start:'2026-08-11', end:'2026-09-14', tag:'全職',
-    weeks:['憲法（全科一輪）','民法親屬繼承','民法攤平：總則＋債編','民法攤平：物權＋民法體系表定稿','行政法攤平＋刑法刑訴強執刷題'],
-    weekShort:['憲法全科一輪','民法親屬繼承','民法總則＋債編','民法物權＋體系表定稿','行政法攤平＋刑事刷題']},
+    weeks:['憲法〈魔法理論〉（全科一輪）','民法〈變形學〉親屬繼承','民法〈變形學〉攤平：總則＋債編','民法〈變形學〉攤平：物權＋民法體系表定稿','行政法〈魔藥學〉攤平＋刑法〈黑魔法防禦術〉刑訴〈決鬥課〉強執〈奇獸管束〉刷題'],
+    weekShort:['憲法〈魔法理論〉全科一輪','民法〈變形學〉親屬繼承','民法〈變形學〉總則＋債編','民法〈變形學〉物權＋體系表定稿','行政法〈魔藥學〉攤平＋刑事刷題']},
   {id:2, name:'秋季學期', start:'2026-09-15', end:'2027-01-14', tag:'在校',
     weekRanges:[[1,3],[4,6],[7,8],[9,12],[13,14],[15,17]],
-    weeks:['1–3週：刑法攤平（分則細節、選擇題角落）','4–6週：刑訴攤平＋行政法補完（重點：行政函釋）','7–8週：憲法第二輪（釋字、憲判字理由書）','9–12週：民法第二輪（帶著題目回頭讀）','13–14週：票據法＋證交法','15–17週：小科總掃（國際公法、強執、法學英文）']},
+    weeks:['1–3週：刑法〈黑魔法防禦術〉攤平（分則細節、選擇題角落）','4–6週：刑訴〈決鬥課〉攤平＋行政法〈魔藥學〉補完（重點：行政函釋）','7–8週：憲法〈魔法理論〉第二輪（釋字、憲判字理由書）','9–12週：民法〈變形學〉第二輪（帶著題目回頭讀）','13–14週：票據法＋證交法〈算術占卜〉','15–17週：小科總掃（國際公法〈國際巫聯〉、強執〈奇獸管束〉、法學英文〈古代魔文〉）']},
   {id:3, name:'寒假', start:'2027-01-15', end:'2027-02-11', tag:'全職',
     weeks:['近10年歷年題全科第1輪刷完，每天8h、200–250題','最後一週只做本階段錯題，不做新題','檢核點：任一主科正確率低於65%→春季該科時數加倍']},
   {id:4, name:'春季學期', start:'2027-02-12', end:'2027-06-10', tag:'在校',
-    weeks:['歷年題第2輪＋錯題第2輪','4月起每三週一次全真模考（週六）','4月報名核對應考須知配分','4月後票據法＋證交法第二輪','5月中前三門報告交完','5月底智財筆記整理完，之後到8月中不再碰']},
+    weeks:['歷年題第2輪＋錯題第2輪','4月起每三週一次全真模考（週六）','4月報名核對應考須知配分','4月後票據法＋證交法〈算術占卜〉第二輪','5月中前三門報告交完','5月底智財〈鍊金術〉筆記整理完，之後到8月中不再碰']},
   {id:5, name:'暑假衝刺', start:'2027-06-11', end: dayBefore(OWL_DATE), tag:'全職',
     weeks:['前4週：每週一次全真模考，考後兩天檢討','後2週：封盤，不碰新教材，只錯題本第三輪＋條文速讀','考前7天：咒文本＋錯題本＋作息調成考試時間']},
   {id:'owl', name:'O.W.L. 一試（全選擇題）', start:OWL_DATE, end:OWL_DATE, tag:'考試', weeks:[]},
   {id:6, name:'N.E.W.T. 特訓', start:'2027-08-15', end:dayBefore(NEWT_DATE), tag:'半在校',
-    weeks:['1–2週：建各科答題模板（爭點→法條→學說／實務→涵攝→結論）','3–7週：每天一題實寫，每週輪一科主攻，憲法排兩週','8週：兩天連續全真模考','9週：國文作文3篇＋智財收尾＋模板背熟']},
+    weeks:['1–2週：建各科答題模板（爭點→法條→學說／實務→涵攝→結論）','3–7週：每天一題實寫，每週輪一科主攻，憲法〈魔法理論〉排兩週','8週：兩天連續全真模考','9週：國文作文3篇＋智財〈鍊金術〉收尾＋模板背熟']},
   {id:'newt', name:'N.E.W.T. 二試', start:NEWT_DATE, end:NEWT_DATE, tag:'考試', weeks:[],
     dateLabel: NEWT_CONFIRMED? null : '約 10 月中（未定，公告後改程式碼開頭的 NEWT_DATE）'}
 ];
@@ -684,6 +712,27 @@ function currentPhase(){
 }
 // 0-based；以「階段起始那週的週一」為第 0 週起點，週次固定在週一換
 function weekIdx(p){ return Math.floor(daysBetween(d(mondayOf(p.start)), d(todayStr()))/7); }
+
+/* ---------- 咒法對照：科目 → 魔法課名 ---------- */
+const SPELL = {
+  '民法':'變形學', '行政法':'魔藥學', '刑法':'黑魔法防禦術', '刑訴':'決鬥課', '憲法':'魔法理論',
+  '民訴':'魔咒學', '法學英文':'古代魔文', '法律倫理':'不可破的誓言',
+  '票據法':'算術占卜', '證交法':'算術占卜', '公司法':'算術占卜', '保險法':'占卜學',
+  '國際公法':'國際巫聯', '強制執行':'奇獸管束', '強執':'奇獸管束',
+  '國際私法':'天文學', '智慧財產法':'鍊金術', '智財':'鍊金術'
+};
+function sp(name){ return SPELL[name]? `${name}〈${SPELL[name]}〉` : name; }
+const COURSE_SPELL = {
+  '經濟刑法與刑事法遵二':'黑魔法防禦術・高階',
+  '法學研究與寫作':'論述煉成', '法學研究與寫作二':'論述煉成・進階',
+  '著作權法':'鍊金術・靈魂篇', '專利法':'鍊金術・配方篇',
+  '法德一':'不重疊', '法學德文二':'不重疊',
+  '商事法一（公司法）':'算術占卜', '商事法二（保險法）':'占卜學',
+  '專題演講':'魔法研討會',
+  '民事訴訟法一':'魔咒學', '民事訴訟法二':'魔咒學・進階',
+  '法理學':'魔法哲學', '國際私法':'天文學'
+};
+function csp(name){ return COURSE_SPELL[name]? `${name}〈${COURSE_SPELL[name]}〉` : name; }
 
 /* ---------- 真實課表（115-1 秋季 / 春季） ---------- */
 const FALL_CLASSES = {
@@ -709,26 +758,26 @@ const SPRING_CLASSES = {
   6:[], 0:[]
 };
 const FALL_STUDY = {
-  1:[{t:'09:30–12:30', x:'民法（主攻日・體系）'},{t:'14:00–17:30', x:'民法（主攻日・刷題）'}],
+  1:[{t:'09:30–12:30', x:'民法〈變形學〉（主攻日・體系）'},{t:'14:00–17:30', x:'民法〈變形學〉（主攻日・刷題）'}],
   2:[{t:'08:30–10:00', x:'碎片日：選擇題＋背條文'},{t:'13:00–15:00', x:'碎片日：選擇題＋背條文'}],
-  3:[{t:'09:30–12:30', x:'刑法'},{t:'17:30–19:00', x:'商事法課後複習（趁熱最有效）'}],
-  4:[{t:'09:30–12:30', x:'行政法'},{t:'16:30–18:30', x:'刑訴'}],
-  5:[{t:'13:00–17:00', x:'民訴做題（接著課做）＋本週錯題彙整'}],
-  6:[{t:'09:30–17:00', x:'民法第二塊＋憲法'}],
+  3:[{t:'09:30–12:30', x:'刑法〈黑魔法防禦術〉'},{t:'17:30–19:00', x:'商事法〈算術占卜〉課後複習（趁熱最有效）'}],
+  4:[{t:'09:30–12:30', x:'行政法〈魔藥學〉'},{t:'16:30–18:30', x:'刑訴〈決鬥課〉'}],
+  5:[{t:'13:00–17:00', x:'民訴〈魔咒學〉做題（接著課做）＋本週錯題彙整'}],
+  6:[{t:'09:30–17:00', x:'民法〈變形學〉第二塊＋憲法〈魔法理論〉'}],
   0:[]  // 週日動態產生（小科輪替）
 };
 const SPRING_STUDY = {
-  1:[{t:'09:00–12:00', x:'民法（主攻日・任何理由都不准動）'},{t:'13:30–17:30', x:'民法（主攻日・續）'},{t:'19:00–20:30', x:'民法收尾＋錯題'}],
-  2:[{t:'08:00–10:00', x:'碎片日：條文默寫＋行政法選擇題'},{t:'12:30–15:20', x:'碎片日：行政法選擇題（續）'}],
-  3:[{t:'08:00–10:00', x:'刑法'},{t:'12:30–13:00', x:'複習國際私法 30 分（它只 20 分，別多給）'},{t:'13:00–18:00', x:'刑法＋行政法'}],
-  4:[{t:'08:00–10:00', x:'刷題'},{t:'15:30–16:30', x:'複習保險法 1h（趁熱）'},{t:'16:30–20:00', x:'刑訴'}],
-  5:[{t:'12:30–17:30', x:'民訴做題（接著課做）＋本週錯題彙整'}],
+  1:[{t:'09:00–12:00', x:'民法〈變形學〉（主攻日・任何理由都不准動）'},{t:'13:30–17:30', x:'民法〈變形學〉（主攻日・續）'},{t:'19:00–20:30', x:'民法〈變形學〉收尾＋錯題'}],
+  2:[{t:'08:00–10:00', x:'碎片日：條文默寫＋行政法〈魔藥學〉選擇題'},{t:'12:30–15:20', x:'碎片日：行政法〈魔藥學〉選擇題（續）'}],
+  3:[{t:'08:00–10:00', x:'刑法〈黑魔法防禦術〉'},{t:'12:30–13:00', x:'複習國際私法〈天文學〉30 分（它只 20 分，別多給）'},{t:'13:00–18:00', x:'刑法〈黑魔法防禦術〉＋行政法〈魔藥學〉'}],
+  4:[{t:'08:00–10:00', x:'刷題'},{t:'15:30–16:30', x:'複習保險法〈占卜學〉1h（趁熱）'},{t:'16:30–20:00', x:'刑訴〈決鬥課〉'}],
+  5:[{t:'12:30–17:30', x:'民訴〈魔咒學〉做題（接著課做）＋本週錯題彙整'}],
   6:[],  // 週六動態（模考 or 民法＋憲法）
   0:[]
 };
-const SMALL_ROTATION_FALL   = ['國際公法','國際私法','強制執行','法律倫理','法學英文'];
-const SMALL_ROTATION_SPRING = ['國際公法','強制執行','法律倫理','法學英文'];
-const NEWT_ROTATION = ['憲法','憲法（第二週）','民法＋民訴','刑法＋刑訴','行政法＋商事法'];
+const SMALL_ROTATION_FALL   = ['國際公法〈國際巫聯〉','國際私法〈天文學〉','強制執行〈奇獸管束〉','法律倫理〈不可破的誓言〉','法學英文〈古代魔文〉'];
+const SMALL_ROTATION_SPRING = ['國際公法〈國際巫聯〉','強制執行〈奇獸管束〉','法律倫理〈不可破的誓言〉','法學英文〈古代魔文〉'];
+const NEWT_ROTATION = ['憲法〈魔法理論〉','憲法〈魔法理論〉（第二週）','民法〈變形學〉＋民訴〈魔咒學〉','刑法〈黑魔法防禦術〉＋刑訴〈決鬥課〉','行政法〈魔藥學〉＋商事法〈算術占卜〉'];
 
 /* ---------- 今日計畫引擎 ---------- */
 function segRange(t){
@@ -758,7 +807,7 @@ function getTodayPlan(){
   else if(cp.id===1){
     const w = Math.min(weekIdx(cp), 4);
     focus = `第 ${w+1} 週主攻：${cp.weekShort[w]}`;
-    note  = '過關標準：能空手畫出民法五編＋憲法的體系表。智財這五週完全不碰。';
+    note  = '過關標準：能空手畫出民法〈變形學〉五編＋憲法〈魔法理論〉的體系表。智財〈鍊金術〉這五週完全不碰。';
     segments = fulltimeSegs(`體系／攤平：${cp.weekShort[w]}`, `刷題：${cp.weekShort[w]}`, '錯題本＋TaiLexi 查漏');
   }
   else if(cp.id===2 || cp.id===4){
@@ -770,7 +819,7 @@ function getTodayPlan(){
 
     if(wd===0){
       const rot = rotation[(w1-1) % rotation.length];
-      study = [{t:'09:30–13:00', x:`小科輪替（本週：${rot}）＋儲思盆回顧`}];
+      study = [{t:'09:30–13:00', x:`小科輪替（本週：${rot}）`}];
       segments.push({t:'下午', label:'整個休息（排定的，不是偷懶）', kind:'rest'});
     }
     if(!isFall && wd===6){
@@ -784,7 +833,7 @@ function getTodayPlan(){
       study.unshift({t:'優先', x:'昨天模考的檢討：寫一頁「哪一類在流血」，下週只修那一項'});
     }
     segments = segments.concat(
-      classes.map(c=>({t:c.t, label:`上課：${c.n}${c.room||c.prof? `（${[c.room,c.prof].filter(Boolean).join('・')}）`:''}`, kind:'class'})),
+      classes.map(c=>({t:c.t, label:`上課：${csp(c.n)}${c.room||c.prof? `（${[c.room,c.prof].filter(Boolean).join('・')}）`:''}`, kind:'class'})),
       study.map(s=>({t:s.t, label:(s.exam? '':'自習：')+s.x, kind: s.exam? 'exam':'study'}))
     );
     focus = isFall
@@ -845,11 +894,6 @@ function getTodayPlan(){
     segments = [{t:'全天', label:`${cp.name}——狀態調整為最佳，飛行課（時間分配）不要在一題上盤旋`, kind:'exam'}];
   }
 
-  // 週日通用：全職階段也要儲思盆
-  if(wd===0 && cp && [1,3,5,6].includes(cp.id)){
-    segments.push({t:'晚上', label:'儲思盆回顧（40 分鐘，四題）', kind:'study'});
-  }
-
   // 依開始時間排序（「優先」放最前，其他無法解析時間的放最後）
   segments.sort((a,b)=>{
     const key = s => s.t==='優先'? -1 : (segRange(s.t)? segRange(s.t).start : 9999);
@@ -887,8 +931,20 @@ function itemsForMode(mode){
 }
 function renderModeUI(){
   const state = getDayObj(todayStr());
+  if(state.mode){
+    const before = JSON.stringify(state.itemCounts||{});
+    ensureItemCounts(state);
+    if(JSON.stringify(state.itemCounts) !== before) setDayObj(todayStr(), state);
+  }
   document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active', b.dataset.mode===state.mode));
   renderChecklist(state);
+}
+function ensureItemCounts(state){
+  if(!state.mode) return state;
+  const items = itemsForMode(state.mode);
+  if(!state.itemCounts) state.itemCounts = {};
+  state.itemCounts[state.mode] = items.length;
+  return state;
 }
 function renderChecklist(state){
   const ul = document.getElementById('dayChecklist');
@@ -900,11 +956,13 @@ function renderChecklist(state){
   }
   const items = itemsForMode(state.mode);
   const checked = state.itemsByMode[state.mode] || {};
+  const splits = itemPointSplits(items.length);
   ul.innerHTML = items.map((it,i)=>{
     const c = !!checked[i];
     return `<li class="${c?'done':''}">
       <input type="checkbox" id="di${i}" data-idx="${i}" ${c?'checked':''}>
       <label for="di${i}">${it}</label>
+      <span class="pt">+${splits[i]}</span>
     </li>`;
   }).join('');
   const doneCount = items.filter((_,i)=>checked[i]).length;
@@ -924,6 +982,7 @@ document.getElementById('modeRow').addEventListener('click', e=>{
   if(state.mode===b.dataset.mode) return;
   state.mode = b.dataset.mode;
   state.completed = recomputeCompleted(state);
+  ensureItemCounts(state);
   setDayObj(todayStr(), state);
   renderModeUI();
   pointsFeedback(before, '切換電量模式');
@@ -935,6 +994,7 @@ document.getElementById('dayChecklist').addEventListener('change', e=>{
   if(!state.itemsByMode[state.mode]) state.itemsByMode[state.mode] = {};
   state.itemsByMode[state.mode][cb.dataset.idx] = cb.checked;
   state.completed = recomputeCompleted(state);
+  ensureItemCounts(state);
   setDayObj(todayStr(), state);
   renderChecklist(state);
   pointsFeedback(before, state.completed? '完成當日全部進度' : (cb.checked? '打勾一項' : '取消一項'));
@@ -949,7 +1009,7 @@ function renderCourseReview(){
   const obj = getDayObj(todayStr());
   document.getElementById('courseChecklist').innerHTML = classes.map((c,i)=>{
     const checked = !!obj.courses[c.n];
-    return `<li class="${checked?'done':''}"><input type="checkbox" id="cr${i}" data-course="${c.n.replace(/"/g,'&quot;')}" ${checked?'checked':''}><label for="cr${i}">${c.n}</label><span class="pt">+10</span></li>`;
+    return `<li class="${checked?'done':''}"><input type="checkbox" id="cr${i}" data-course="${c.n.replace(/"/g,'&quot;')}" ${checked?'checked':''}><label for="cr${i}">${csp(c.n)}</label><span class="pt">+10</span></li>`;
   }).join('');
 }
 document.getElementById('courseChecklist').addEventListener('change', e=>{
@@ -1035,13 +1095,15 @@ document.getElementById('closingChecklist').addEventListener('change', e=>{
   }
 });
 
-/* ---------- 計時器 ---------- */
+/* ---------- 計時器（完成一個 50 分鐘回合 +3） ---------- */
 let timerInterval = null, timerSeconds = 50*60, timerPhaseSt = 'study', timerRunning = false;
 function renderTimer(){
   const m = Math.floor(timerSeconds/60).toString().padStart(2,'0');
   const s = (timerSeconds%60).toString().padStart(2,'0');
   document.getElementById('timerDisplay').textContent = `${m}:${s}`;
   document.getElementById('timerPhaseLbl').textContent = timerPhaseSt==='study'? '施法中（讀書）' : '離開位子（休息）';
+  const rounds = getDayObj(todayStr()).timerRounds || 0;
+  document.getElementById('timerRoundsLbl').textContent = rounds? `今天已完成 ${rounds} 回合（+${rounds*3}）` : '';
 }
 document.getElementById('timerStart').addEventListener('click', ()=>{
   if(timerRunning){
@@ -1058,6 +1120,11 @@ document.getElementById('timerStart').addEventListener('click', ()=>{
       if(timerPhaseSt==='study'){
         timerPhaseSt='rest'; timerSeconds=10*60;
         toast('下課鈴響了 — 離開位子，別滑手機');
+        const before = getBalance();
+        const o = getDayObj(todayStr());
+        o.timerRounds = (o.timerRounds||0) + 1;
+        setDayObj(todayStr(), o);
+        pointsFeedback(before, '完成 50 分鐘施法回合');
       } else {
         timerPhaseSt='study'; timerSeconds=50*60;
         toast('上課鈴響了 — 回座位');
@@ -1095,77 +1162,12 @@ document.getElementById('saveParchment').addEventListener('click', ()=>{
   toast('貓頭鷹出發了 🦉');
 });
 
-/* ---------- 儲思盆（每週一次、可取消重寫） ---------- */
 function mondayOf(dateStr){
   const dt = d(dateStr);
   const day = dt.getDay();
   const diff = day===0? -6 : 1-day;
   dt.setDate(dt.getDate()+diff);
   return toLocalDateStr(dt);
-}
-function pensieveKey(monday){ return 'hp_pensieve_'+monday; }
-function renderPensieveForm(){
-  const monday = mondayOf(todayStr());
-  const existing = LS.get(pensieveKey(monday), null);
-  const box = document.getElementById('pensieveFormBox');
-  if(existing){
-    box.innerHTML = `
-      <div class="week-focus">
-        <div>1. ${existing.q1||'—'}</div>
-        <div>2. ${existing.q2||'—'}</div>
-        <div>3. ${existing.q3||'—'}</div>
-        <div><b>4. ${existing.q4||'—'}</b></div>
-      </div>
-      <p class="dim">本週（${fmtDate(monday)} 起）已經倒過儲思盆了。</p>
-      <button class="magic secondary small" id="undoPensieve">🗑️ 取消本週回顧（-15）</button>`;
-    document.getElementById('undoPensieve').addEventListener('click', ()=>{
-      const before = getBalance();
-      LS.del(pensieveKey(monday));
-      renderPensieveForm();
-      renderPensieveHistory();
-      pointsFeedback(before, '取消週日回顧');
-    });
-  } else {
-    box.innerHTML = `
-      <label class="field-label">1. 這週哪一科進度落後？</label>
-      <textarea id="pq1" rows="2"></textarea>
-      <label class="field-label">2. 錯題本裡重複出現的是哪個觀念？</label>
-      <textarea id="pq2" rows="2"></textarea>
-      <label class="field-label">3. 下週要調整什麼？</label>
-      <textarea id="pq3" rows="2"></textarea>
-      <label class="field-label">4. 這週我做對了什麼？（不准跳過）</label>
-      <textarea id="pq4" rows="2"></textarea>
-      <div style="margin-top:10px;"><button class="magic" id="savePensieve">倒入儲思盆（+15）</button></div>`;
-    document.getElementById('savePensieve').addEventListener('click', ()=>{
-      const q1 = document.getElementById('pq1').value.trim();
-      const q2 = document.getElementById('pq2').value.trim();
-      const q3 = document.getElementById('pq3').value.trim();
-      const q4 = document.getElementById('pq4').value.trim();
-      if(!q4){ toast('第4題不准跳過'); return; }
-      const before = getBalance();
-      LS.set(pensieveKey(monday), {q1,q2,q3,q4, date: todayStr()});
-      renderPensieveForm();
-      renderPensieveHistory();
-      pointsFeedback(before, '週日回顧寫完四題');
-    });
-  }
-}
-function renderPensieveHistory(){
-  const keys = Object.keys(localStorage).filter(k=>k.startsWith('hp_pensieve_')).sort().reverse();
-  const box = document.getElementById('pensieveHistory');
-  if(!keys.length){ box.innerHTML='<p class="dim">還沒有記憶絲線</p>'; return; }
-  box.innerHTML = keys.map(k=>{
-    const h = LS.get(k, {});
-    return `<div class="week-focus">
-      <b>${fmtDate(k.slice(12))} 那週</b>
-      <div>1. ${h.q1||'—'}</div><div>2. ${h.q2||'—'}</div><div>3. ${h.q3||'—'}</div>
-      <div><b>4. ${h.q4||'—'}</b></div>
-    </div>`;
-  }).join('');
-}
-function checkSunday(){
-  const tag = document.getElementById('pensieveSundayTag');
-  tag.textContent = d(todayStr()).getDay()===0? '· 今天就是週日，開始回顧吧' : '· 建議留到週日再寫';
 }
 
 /* ---------- 時間軸 ---------- */
@@ -1197,12 +1199,13 @@ function renderPointsDetail(){
   if(!box) return;
   const o = getDayObj(todayStr());
   const courseCount = Object.values(o.courses).filter(Boolean).length;
-  const weekDone = !!LS.get(pensieveKey(mondayOf(todayStr())), null);
+  const checklistPts = dayEarnedFromChecklist(o);
+  const rounds = o.timerRounds||0;
   const rows = [
-    ['完成當日全部進度', o.completed? '+10' : '—'],
+    ['今日進度勾選', checklistPts? `+${checklistPts}` : '—'],
     ['錯題當天入本', o.errorLogged? '+5' : '—'],
     ['課堂當天複習', courseCount? `+${courseCount*10}（${courseCount} 門）` : '—'],
-    ['本週儲思盆', weekDone? '+15' : '—'],
+    ['節奏鐘回合', rounds? `+${rounds*3}（${rounds} 回合）` : '—'],
     ['模考達標', o.examPass? '+50' : '—']
   ];
   box.innerHTML = `<h3>今天的得分</h3>
@@ -1362,9 +1365,6 @@ function init(){
   renderMorning();
   renderClosing();
   renderYesterdayParchment();
-  renderPensieveForm();
-  renderPensieveHistory();
-  checkSunday();
   renderTimeline();
   renderTaiLexiLock();
   renderRewardShopList();
