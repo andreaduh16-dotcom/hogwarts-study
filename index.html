@@ -149,8 +149,25 @@ nav.tabs button.active{color:var(--silver-hi); border-bottom-color:var(--green-l
   color:var(--silver-hi); letter-spacing:2px; text-shadow:0 0 26px var(--green-glow); font-variant-numeric:tabular-nums;
 }
 .timer-phase{font-family:"Cinzel","Noto Serif TC",serif; font-size:10.5px; letter-spacing:2px; color:var(--dim); margin-bottom:5px;}
-.timer-btns{display:flex; gap:7px; margin-top:11px; flex-wrap:wrap;}
 .timer-rounds{font-size:11px; color:var(--gold); margin-top:8px; letter-spacing:.4px;}
+/* 主要動作：獨佔一行、加大 */
+.hero-actions{margin-top:15px;}
+button.magic.big{
+  width:100%; font-size:15px; padding:14px 18px; letter-spacing:1.5px; border-radius:11px;
+  box-shadow:0 4px 18px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.2), 0 0 26px rgba(61,143,94,.22);
+}
+.hero-sub-actions{display:flex; gap:7px; margin-top:8px; justify-content:center;}
+/* 低電量出口 */
+.low-hint{
+  margin-top:13px; padding-top:12px; border-top:1px dashed rgba(130,190,155,.2);
+  display:flex; align-items:center; gap:9px; flex-wrap:wrap; justify-content:center;
+  font-size:12px; color:var(--dim);
+}
+.low-hint button{
+  background:rgba(255,255,255,.055); border:1px solid var(--line); color:var(--silver);
+  font-family:"Noto Serif TC",serif; font-size:12px; padding:6px 13px; border-radius:20px; cursor:pointer; transition:.15s;
+}
+.low-hint button:hover{background:rgba(255,255,255,.13); border-color:var(--line-str); color:var(--silver-hi);}
 /* 進度環 */
 .ring-box{text-align:center; flex-shrink:0;}
 .ring{
@@ -532,12 +549,15 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       <span class="sn">🐍</span>
       <h1>霍格華茲司律修習</h1>
     </div>
-    <div class="statline">
+    <div class="statline" id="statLine">
       <span><b id="statPoints">0</b>點</span><i>·</i>
       <span><b id="statStreak">0</b>天🔥</span><i>·</i>
       <span class="lv" id="statLevel">一年級</span><i>·</i>
       <span id="statPhase">—</span><i>·</i>
       <span>距一試<b id="statCountdown">—</b>天</span>
+    </div>
+    <div class="statline" id="statLineNew" style="display:none;">
+      <span id="newUserLine">今天是第一天。做一件事就開始了。</span>
     </div>
     <div class="xp-wrap">
       <div class="xp-bar"><div id="xpFill" style="width:0%"></div></div>
@@ -549,13 +569,10 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
 
   <nav class="tabs" id="tabs">
     <button data-tab="dashboard" class="active">📜 今天</button>
-    <button data-tab="story">📖 故事</button>
-    <button data-tab="album">🍫 畫片冊</button>
-    <button data-tab="parchment">📝 三行紙</button>
-    <button data-tab="map">🗺️ 學院地圖</button>
-    <button data-tab="rewards">🎁 兌換區</button>
-    <button data-tab="backup">💾 備份</button>
-    <button data-tab="toolbox">🪄 工具箱</button>
+    <button data-tab="collection">📖 收藏</button>
+    <button data-tab="rewards">🎁 兌換</button>
+    <button data-tab="map">🗺️ 地圖</button>
+    <button data-tab="more">🪄 更多</button>
   </nav>
 
   <!-- ═══ 今天 ═══ -->
@@ -570,17 +587,23 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
         <div class="hero-timer">
           <div class="timer-phase" id="timerPhaseLbl">施法中（讀書）</div>
           <div class="timer-display" id="timerDisplay">50:00</div>
-          <div class="timer-btns">
-            <button class="magic" id="timerStart">▶ 開始施法</button>
-            <button class="magic secondary" id="focusBtn">🕯️ 沉浸模式</button>
-            <button class="magic secondary" id="timerReset">重置</button>
-          </div>
           <div class="timer-rounds" id="timerRoundsLbl"></div>
         </div>
         <div class="ring-box">
           <div class="ring" id="dayRing" style="--p:0"><span id="ringTxt">0/0</span></div>
           <div class="ring-lbl">今日進度</div>
         </div>
+      </div>
+      <div class="hero-actions">
+        <button class="magic big" id="timerStart">▶ 開始施法 50 分鐘</button>
+        <div class="hero-sub-actions">
+          <button class="magic secondary small" id="focusBtn">🕯️ 沉浸模式</button>
+          <button class="magic secondary small" id="timerReset">重置</button>
+        </div>
+      </div>
+      <div class="low-hint" id="lowHint">
+        <span>今天真的沒電？</span>
+        <button id="lowBtn">🪫 那就只做最小的那一件</button>
       </div>
     </div>
 
@@ -617,7 +640,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     </div>
 
     <!-- 學院盃 -->
-    <div class="card">
+    <div class="card" id="cupCard">
       <h2>🏆 學院盃 <span class="dim" id="cupPeriod"></span></h2>
       <div id="cupBox"></div>
     </div>
@@ -655,6 +678,22 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       </div>
     </details>
 
+    <!-- 三行紙（折疊，晚上自動展開） -->
+    <details class="fold" id="parchmentFold">
+      <summary>📝 三行紙 <span class="fold-sub">睡前寫三行，明天早上的你不用做決定</span></summary>
+      <div class="fold-body">
+        <div id="yesterdayParchment" style="margin-bottom:12px;"></div>
+        <label class="field-label">① 明天主科</label>
+        <input type="text" id="p1" placeholder="例：民法〈變形學〉">
+        <label class="field-label">② 明天要做完的一件事（只寫一件）</label>
+        <input type="text" id="p2" placeholder="具體到能打勾">
+        <label class="field-label">③ 低電量時就只做</label>
+        <input type="text" id="p3" placeholder="例：默寫10條">
+        <div style="margin-top:11px;"><button class="magic" id="saveParchment">🦉 封蠟寄出</button></div>
+        <p class="dim" id="parchmentSavedMsg" style="display:none;">✓ 貓頭鷹已出發，明天早上會收到。</p>
+      </div>
+    </details>
+
     <!-- 預言家日報 -->
     <div class="prophet">
       <div class="prophet-head">✦ 預言家日報 ✦</div>
@@ -675,49 +714,31 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     </div>
   </section>
 
-  <!-- ═══ 故事 ═══ -->
-  <section class="tab-panel" id="tab-story">
-    <div class="card">
-      <h2>📖 消失的第八年生 <span class="dim" id="storyProgress"></span></h2>
-      <p class="dim">你在交誼廳沙發縫裡摸到的那本筆記本。每過一週（該週至少 4 天過關）解鎖下一章。</p>
-    </div>
-    <div id="storyList"></div>
-  </section>
-
-  <!-- ═══ 畫片冊 ═══ -->
-  <section class="tab-panel" id="tab-album">
+  <!-- ═══ 收藏（畫片冊＋故事） ═══ -->
+  <section class="tab-panel" id="tab-collection">
     <div class="card">
       <h2>🍫 巧克力蛙畫片冊 <span class="dim" id="albumCount"></span></h2>
-      <p class="dim">每天過關可以打開一隻巧克力蛙。集滿全套的巫師，據說考運特別好。</p>
+      <p class="dim">每天過關就能開一隻。集滿全套的巫師，據說考運特別好。</p>
       <div style="margin:9px 0;"><button class="magic small" id="extraDrawBtn">🍫 用 30 點再抽一張</button></div>
       <div class="album" id="albumGrid"></div>
     </div>
-  </section>
-
-  <!-- ═══ 三行紙 ═══ -->
-  <section class="tab-panel" id="tab-parchment">
     <div class="card">
-      <h2>📝 三行紙 · 寫給明天的自己</h2>
-      <p class="dim">明天的三行，是今天晚上的你寫的。早上的你電量最低，不該負責做決定。</p>
-      <label class="field-label">① 明天主科（照週課表抄）</label>
-      <input type="text" id="p1" placeholder="例：民法〈變形學〉">
-      <label class="field-label">② 明天要做完的一件事（只能寫一件）</label>
-      <input type="text" id="p2" placeholder="具體到能打勾">
-      <label class="field-label">③ 低電量時就只做</label>
-      <input type="text" id="p3" placeholder="例：默寫10條">
-      <div style="margin-top:11px;"><button class="magic" id="saveParchment">🦉 封蠟寄出</button></div>
-      <p class="dim" id="parchmentSavedMsg" style="display:none;">✓ 貓頭鷹已出發，明天早上會收到。</p>
+      <h2>📖 消失的第八年生 <span class="dim" id="storyProgress"></span></h2>
+      <p class="dim">前輩留在交誼廳沙發縫裡的筆記本。每撐過一週（該週 4 天過關）就能再翻一章。</p>
     </div>
-    <div class="card">
-      <h2>📬 今天早上收到的三行紙</h2>
-      <div id="yesterdayParchment"></div>
-    </div>
+    <div id="storyList"></div>
   </section>
 
   <!-- ═══ 學院地圖 ═══ -->
   <section class="tab-panel" id="tab-map">
     <div class="card">
-      <h2>🏆 學院點數規則</h2>
+      <h2>💎 今天的得分</h2>
+      <div id="pointsDetailBox"></div>
+    </div>
+
+    <details class="fold">
+      <summary>🏆 學院點數規則 <span class="fold-sub">怎麼算分的</span></summary>
+      <div class="fold-body">
       <div class="tbl-wrap"><table class="schedule-table">
         <tr><th>行為</th><th>分</th></tr>
         <tr><td>今天勾選的每一項進度（依電量模式拆分，滿額 10）</td><td>+1～10</td></tr>
@@ -731,11 +752,12 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
         <tr><td>🏛️ 魔法部視察日（課堂複習加倍）</td><td>+10 / 門</td></tr>
       </table></div>
       <p class="dim" style="margin-top:8px;">勾一項就先拿一項的分，不用等全部做完；取消勾選會自動扣回——不是懲罰，只是那件事本來就沒發生。</p>
-      <div id="pointsDetailBox"></div>
-    </div>
-    <div class="card">
-      <h2>🔮 咒法對照表</h2>
-      <p class="dim">每個考科在這裡都有一個魔法科目名字，時間表、任務清單都會一起用。</p>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary>🔮 咒法對照表 <span class="fold-sub">哪一科是哪門魔法</span></summary>
+      <div class="fold-body">
       <div class="tbl-wrap"><table class="schedule-table">
         <tr><th>咒法</th><th>科目</th><th>約配分</th></tr>
         <tr><td>變形學</td><td>民法</td><td>100</td></tr>
@@ -754,7 +776,9 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
         <tr><td>鍊金術</td><td>智慧財產法（二試選試）</td><td>—</td></tr>
       </table></div>
       <p class="dim" style="margin-top:8px;">配分逐年微調，2027 年 4 月報名時的應考須知才是正本。</p>
-    </div>
+      </div>
+    </details>
+
     <div class="card">
       <h2>🗺️ 全年時間軸</h2>
       <p class="dim">這張大表一週看一次就好——平常日回「今天」看 hero 卡即可。</p>
@@ -783,32 +807,8 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     </div>
   </section>
 
-  <!-- ═══ 備份 ═══ -->
-  <section class="tab-panel" id="tab-backup">
-    <div class="card">
-      <h2>💾 資料備份與搬移</h2>
-      <p>讀書紀錄存在<b>這台裝置的瀏覽器</b>裡，電腦和手機不會自動同步。要搬資料：在 A 裝置「匯出」下載檔案，傳給自己（AirDrop、LINE 都行），再到 B 裝置「匯入」。</p>
-      <div style="display:flex; gap:9px; flex-wrap:wrap; margin-top:11px;">
-        <button class="magic" id="exportBtn">📤 匯出備份檔</button>
-        <button class="magic secondary" id="importBtn">📥 匯入備份檔</button>
-        <input type="file" id="importFile" accept=".json" style="display:none;">
-      </div>
-      <p class="dim" style="margin-top:11px;">建議每週日順手匯出一次，檔案留著就不怕瀏覽器資料被清掉。</p>
-    </div>
-    <div class="card">
-      <h2>⏱️ 時光器 <span class="dim">預覽未來某一天（測試用）</span></h2>
-      <label class="field-label">跳到這一天</label>
-      <input type="date" id="debugDate">
-      <div style="display:flex; gap:9px; margin-top:11px;">
-        <button class="magic small" id="setDebugDate">轉動時光器</button>
-        <button class="magic small secondary" id="clearDebugDate">回到今天</button>
-      </div>
-      <p class="dim" style="margin-top:9px;">開著時光器時勾的紀錄會算在那一天，看完記得轉回來。</p>
-    </div>
-  </section>
-
-  <!-- ═══ 工具箱 ═══ -->
-  <section class="tab-panel" id="tab-toolbox">
+  <!-- ═══ 更多 ═══ -->
+  <section class="tab-panel" id="tab-more">
     <div class="grid2">
       <div class="card">
         <h2>🪄 你的魔杖</h2>
@@ -844,6 +844,30 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       <p><b>① 不准補。</b>今天沒做完，明天不加倍，落後就改計畫。</p>
       <p><b>② 停在時間，不停在進度。</b>50 分鐘到了就停，不是讀完這章才能停。</p>
     </div>
+
+    <details class="fold">
+      <summary>💾 備份與搬移 <span class="fold-sub">換裝置、怕資料不見時才需要</span></summary>
+      <div class="fold-body">
+        <p class="dim">紀錄存在這台裝置的瀏覽器裡，手機和電腦不會自動同步。在 A 裝置匯出、傳給自己、再到 B 裝置匯入即可。</p>
+        <div style="display:flex; gap:9px; flex-wrap:wrap; margin-top:10px;">
+          <button class="magic" id="exportBtn">📤 匯出備份檔</button>
+          <button class="magic secondary" id="importBtn">📥 匯入備份檔</button>
+          <input type="file" id="importFile" accept=".json" style="display:none;">
+        </div>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary>⏱️ 時光器 <span class="fold-sub">預覽未來某一天（測試用）</span></summary>
+      <div class="fold-body">
+        <input type="date" id="debugDate">
+        <div style="display:flex; gap:9px; margin-top:10px;">
+          <button class="magic small" id="setDebugDate">轉動時光器</button>
+          <button class="magic small secondary" id="clearDebugDate">回到今天</button>
+        </div>
+        <p class="dim" style="margin-top:9px;">開著時光器時勾的紀錄會算在那一天，看完記得轉回來。</p>
+      </div>
+    </details>
   </section>
 
   <footer class="foot">獻給史萊哲林的你 · 表壞掉的時候，回到三個誓言，其他全部可以重排。</footer>
@@ -982,9 +1006,13 @@ function computeEarnedTotal(){
 }
 function renderEvent(){
   const ev=dayEvent(todayStr());
-  document.getElementById('eventBox').innerHTML=
-    `<div class="event-card ev-${ev.id}"><div class="ee">${ev.e}</div>
-      <div><div class="en">${ev.n}</div><div class="ed">${ev.d}</div></div></div>`;
+  // 平靜的一天沒有實際效果，縮成一行不佔版面
+  document.getElementById('eventBox').innerHTML= ev.id==='calm'
+    ? `<div class="event-card ev-calm" style="padding:8px 14px;">
+         <div class="ee" style="font-size:17px;">${ev.e}</div>
+         <div class="ed" style="font-size:12px;">今天沒有特殊事件——普通地讀一天就好。</div></div>`
+    : `<div class="event-card ev-${ev.id}"><div class="ee">${ev.e}</div>
+        <div><div class="en">${ev.n}</div><div class="ed">${ev.d}</div></div></div>`;
 }
 function computeSpent(){ return LS.get('hp_redemptions',[]).reduce((s,r)=>s+r.cost,0); }
 function getBalance(){ return computeEarnedTotal()-computeSpent(); }
@@ -1023,6 +1051,10 @@ function cupScores(){
   return rows;
 }
 function renderCup(){
+  const card=document.getElementById('cupCard');
+  // 一天紀錄都還沒有的時候不要秀排行榜——第一天就看到自己墊底只會想關掉
+  if(allDayDates().length===0){ card.style.display='none'; return; }
+  card.style.display='block';
   const rows=cupScores(), max=Math.max(...rows.map(r=>r.pts),1);
   const today=d(todayStr());
   const daysLeft = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate() - today.getDate();
@@ -1042,8 +1074,14 @@ function renderCup(){
 function refreshHeaderStats(){
   document.getElementById('statPoints').textContent=getBalance();
   document.getElementById('statStreak').textContent=computeStreakCurrent();
+  // 完全沒紀錄時不要秀一排 0（那只是在提醒你還沒開始）
+  const virgin = allDayDates().length===0;
+  document.getElementById('statLine').style.display = virgin? 'none':'flex';
+  document.getElementById('statLineNew').style.display = virgin? 'flex':'none';
+  document.querySelector('.xp-wrap').style.display = virgin? 'none':'block';
   renderLevel(); renderPointsDetail(); renderHeatmap(); renderCat(); renderAlbum(); renderRing();
   renderCup(); renderPatronus(); renderStory();
+  if(TODAY_PLAN) renderHero();   // hero 文案依當日狀態改變
 }
 function pointsFeedback(before,label){
   const delta=getBalance()-before;
@@ -1261,17 +1299,32 @@ function nowFocus(){
 function renderHero(){
   const f=nowFocus();
   const tagEl=document.getElementById('heroTag'), whatEl=document.getElementById('heroWhat'), whenEl=document.getElementById('heroWhen');
-  const hour=new Date().getHours();
+  const st=getDayObj(todayStr());
   if(f.state==='done'||!f.seg){
-    tagEl.textContent='今天的排程結束';
-    whatEl.textContent= hour>=21? '收工。寫明天的三行紙，然後去睡。' : '排程外的時間——想加做就開一個回合。';
-    whenEl.textContent= TODAY_PLAN.focus? '本階段：'+TODAY_PLAN.focus : '';
+    // 排程外的時間絕不趕人走——永遠給一個現在就能做的最小動作
+    tagEl.textContent = st.completed? '今天已經過關了' : '排程外的時間';
+    whatEl.textContent = st.completed
+      ? '今天的份做完了。想再多做一點也可以，不做也很好。'
+      : '現在開始也算數——開一個回合，做多少算多少。';
+    whenEl.textContent = TODAY_PLAN.focus? '本階段：'+TODAY_PLAN.focus : '';
   } else {
     tagEl.textContent = f.state==='now'? '現在進行中' : f.state==='next'? '接下來' : '這一天的安排';
     whatEl.textContent = f.seg.label.replace(/^自習：/,'').replace(/^上課：/,'📚 ');
     whenEl.textContent = f.seg.t + (TODAY_PLAN.focus? '　·　'+TODAY_PLAN.focus : '');
   }
+  // 已經選了模式就不用再推「沒電」出口
+  const lh=document.getElementById('lowHint');
+  lh.style.display = (st.mode||st.completed)? 'none' : 'flex';
 }
+/* 一鍵最低門檻：切低電模式並捲到那一件事 */
+document.getElementById('lowBtn').addEventListener('click',()=>{
+  const before=getBalance(), st=getDayObj(todayStr());
+  st.mode='low'; st.completed=recomputeCompleted(st); ensureItemCounts(st);
+  setDayObj(todayStr(),st);
+  renderModeUI(); renderHero(); renderFrogCard(); pointsFeedback(before,'切成低電模式');
+  document.getElementById('taskCard').scrollIntoView({behavior:'smooth',block:'center'});
+  toast('低電模式：做完那一件就算過關 🪫');
+});
 function renderRing(){
   const st=getDayObj(todayStr());
   let done=0,total=0;
@@ -1335,11 +1388,12 @@ function renderModeUI(){
 function renderChecklist(st){
   const ul=document.getElementById('dayChecklist');
   if(!st.mode){
-    ul.innerHTML='<li class="dim">↑ 先選一個電量模式。低電模式做完一樣算過關、連續天數照算。</li>';
+    ul.innerHTML='<li class="dim">↑ 選一個今天的電量。選「低電」只要做一件事，一樣算過關、連續天數照算。</li>';
     document.getElementById('dayProgress').style.width='0%';
     document.getElementById('dayCompleteMsg').style.display='none';
     renderRing(); return;
   }
+  document.getElementById('lowHint').style.display='none';
   const items=itemsForMode(st.mode), ck=st.itemsByMode[st.mode]||{}, sp=itemPointSplits(items.length);
   ul.innerHTML=items.map((it,i)=>{
     const c=!!ck[i];
@@ -1496,7 +1550,7 @@ renderTimer();
 function renderYesterdayParchment(){
   const y=LS.get('hp_parchment_for_'+todayStr(),null);
   const box=document.getElementById('yesterdayParchment');
-  if(!y){ box.innerHTML='<p class="dim">昨晚沒有寄出貓頭鷹，今天自己決定吧（下次記得睡前寫）</p>'; return; }
+  if(!y){ box.innerHTML='<p class="dim">今天早上沒有信。今晚寫下三行，明天的你就不用想了。</p>'; return; }
   box.innerHTML=`<div class="week-focus">
     <div>① 明天主科：<b>${y.p1||'—'}</b></div>
     <div>② 要做完的一件事：<b>${y.p2||'—'}</b></div>
@@ -1656,8 +1710,9 @@ function renderAlbum(){
   const grid=document.getElementById('albumGrid'); if(!grid) return;
   const owned=ownedCards();
   const got=CARDS.filter(c=>owned[c.id]).length;
-  document.getElementById('albumCount').textContent=
-    `已收集 ${got}/${CARDS.length}（傳說 ${CARDS.filter(c=>c.r==='l'&&owned[c.id]).length}/4 · 稀有 ${CARDS.filter(c=>c.r==='r'&&owned[c.id]).length}/9）`;
+  document.getElementById('albumCount').textContent= got===0
+    ? '· 過關一次就能開出第一張'
+    : `已收集 ${got}/${CARDS.length}（傳說 ${CARDS.filter(c=>c.r==='l'&&owned[c.id]).length}/4 · 稀有 ${CARDS.filter(c=>c.r==='r'&&owned[c.id]).length}/9）`;
   grid.innerHTML=CARDS.map(c=>{
     const cnt=owned[c.id]||0;
     return cnt
@@ -1765,7 +1820,14 @@ document.getElementById('catName').addEventListener('click',()=>{
 function renderRewardShopList(){
   const defs=LS.get('hp_reward_defs',[]), bal=getBalance();
   const box=document.getElementById('rewardShopList');
-  if(!defs.length){ box.innerHTML='<p class="dim">還沒有設定獎勵，去下面新增一個吧</p>'; return; }
+  if(!defs.length){
+    box.innerHTML=`<p class="dim" style="margin-bottom:10px;">先放幾個進去，點數才有地方花。點一下就加入：</p>
+      <div style="display:flex; gap:7px; flex-wrap:wrap;">
+        ${[['看一集動畫',60],['出去散步吃點好吃的',150],['一個完整的耍廢下午',400],['買一本想看很久的閒書',600]]
+          .map(([n,c])=>`<button class="magic small secondary" data-preset="${n}" data-cost="${c}">${n} · ${c}點</button>`).join('')}
+      </div>`;
+    return;
+  }
   box.innerHTML=defs.map(r=>`
     <div class="reward-card">
       <div><div class="rname">${r.name}</div><div class="rcost">需要 ${r.cost} 點${bal<r.cost?`（還差 ${r.cost-bal}）`:''}</div></div>
@@ -1791,7 +1853,13 @@ document.getElementById('addReward').addEventListener('click',()=>{
   renderRewardShopList(); toast(`已新增獎勵：${name}`);
 });
 document.getElementById('rewardShopList').addEventListener('click',e=>{
-  const rid=e.target.dataset.redeem, did=e.target.dataset.del;
+  const rid=e.target.dataset.redeem, did=e.target.dataset.del, preset=e.target.dataset.preset;
+  if(preset){
+    const defs=LS.get('hp_reward_defs',[]);
+    defs.push({id:Date.now().toString(36),name:preset,cost:+e.target.dataset.cost});
+    LS.set('hp_reward_defs',defs); renderRewardShopList(); toast(`已加入：${preset}`);
+    return;
+  }
   if(rid){
     const defs=LS.get('hp_reward_defs',[]), r=defs.find(x=>x.id===rid);
     if(!r) return;
@@ -1978,7 +2046,9 @@ function unlockedChapters(){
 }
 function renderStory(){
   const n=unlockedChapters();
-  document.getElementById('storyProgress').textContent=`已解鎖 ${n}/${STORY.length} 章`;
+  document.getElementById('storyProgress').textContent= n===0
+    ? '· 撐過第一週就能翻開第一章'
+    : `已解鎖 ${n}/${STORY.length} 章`;
   const lastSeen=LS.get('hp_story_seen',0);
   document.getElementById('storyList').innerHTML = STORY.map((c,i)=>{
     if(i<n) return `<div class="chapter"><div class="ch-no">第 ${i+1} 章${i>=lastSeen?'<span class="ch-new">NEW</span>':''}</div>
@@ -2133,6 +2203,8 @@ function init(){
   renderRewardShopList();
   renderRedemptionHistory();
   refreshHeaderStats();
+  // 晚上把三行紙自動打開（那是睡前該做的事）
+  if(new Date().getHours()>=20) document.getElementById('parchmentFold').open=true;
   maybeIntro();
   // 排程中的時段跟著時鐘走
   setInterval(()=>{ renderTodayPlan(); renderTaiLexiLock(); }, 60000);
