@@ -1545,7 +1545,11 @@ function drawRandomCard(){
   const roll=Math.random();
   const tier= roll<0.08?'l' : roll<0.35?'r' : 'c';
   const pool=CARDS.filter(c=>c.r===tier);
-  return pool[Math.floor(Math.random()*pool.length)];
+  // 稀有度機率不變，但同一階內優先給還沒收集到的——集滿該階之後才會出現重複
+  const owned=ownedCards();
+  const fresh=pool.filter(c=>!owned[c.id]);
+  const use= fresh.length? fresh : pool;
+  return use[Math.floor(Math.random()*use.length)];
 }
 function ownedCards(){ return LS.get('hp_cards',{}); }
 function grantCard(c){ const o=ownedCards(); o[c.id]=(o[c.id]||0)+1; LS.set('hp_cards',o); }
