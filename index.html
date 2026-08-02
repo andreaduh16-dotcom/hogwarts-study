@@ -801,8 +801,14 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
 const OWL_DATE  = '2027-07-31';
 const NEWT_DATE = '2027-10-16';
 const NEWT_CONFIRMED = false;
-const MOCK_DATES = ['2027-04-03','2027-04-24','2027-05-15','2027-06-05',
+// 春季模考 3 場（5/15 起是期末考期，所以最後一場提前到 5/8）＋暑假 4 場
+const MOCK_DATES = ['2027-04-03','2027-04-24','2027-05-08',
                     '2027-06-12','2027-06-19','2027-06-26','2027-07-03'];
+// 期末考期＝期末週＋往前兩週，這三週司律進度排 0
+const FALL_EXAM_START   = '2026-12-05';  // ~ 12/25（期末週 12/19 起）
+const SPRING_EXAM_START = '2027-05-15';  // ~ 6/4（期末週 5/29 起）
+const FALL_FINALS_WEEK  = '2026-12-19';
+const SPRING_FINALS_WEEK= '2027-05-29';
 
 /* ═══ 基礎工具 ═══ */
 const LS = {
@@ -1041,10 +1047,11 @@ const PHASES=[
   {id:2,name:'秋季學期',start:'2026-09-07',end:'2026-12-25',tag:'在校・維持',
    weekRanges:[[1,16]],
    weeks:['這學期的定位是「不要退步」，不是「往前推」——平日沒有司律自習時間。',
+          '⚠️ 16 週裡最後 3 週（12/5–12/25）是期末考期，司律排 0 → **實際只有 13 週**',
           '週六：憲法〈魔法理論〉第二輪（釋字、憲判字的理由書）',
           '週日上午：TaiLexi 刷題 50 題＋錯題；下午完全休息',
           '平日：默寫 10 條。其餘課業本身就是那 130 分（民訴、商事法、國私、著作權、專利）',
-          '期末考週司律進度直接排 0——你在準備的期末考就是司律考科']},
+          '報告要在 12/4 前交完——12/5 起沒有餘裕']},
   {id:3,name:'寒假',start:'2026-12-26',end:'2027-02-14',tag:'全職',
    weeks:['⭐ 這是全年最長的一段全職期（7 週），秋季塞不下的東西全部在這裡補完',
           '第1–2週：行政法〈魔藥學〉攤平（重點：函釋）＋刑法〈黑魔法防禦術〉刑訴〈決鬥課〉攤平',
@@ -1055,9 +1062,10 @@ const PHASES=[
           '檢核點：任一主科正確率低於 65% → 春季週一優先給它']},
   {id:4,name:'春季學期',start:'2027-02-15',end:'2027-06-04',tag:'在校・半推進',
    weeks:['比秋季多一天：週一全天沒課，那是整學期最大的一塊，任何理由都不要動',
+          '⚠️ 16 週裡最後 3 週（5/15–6/4）是期末考期，司律排 0 → **實際只有 13 週**',
           '週一：錯題第二輪（TaiLexi「練習錯題」）',
-          '週六：刷題；4 月起每三週一次全真模考（用「整卷後詳解」模式）',
-          '5 月中前三門報告全部交完——6 月中期末後只剩 7 週，不能有報告殘骸',
+          '週六：刷題；模考三場 4/3、4/24、5/8（用「整卷後詳解」模式）',
+          '報告要在 5/14 前全部交完——5/15 起沒有餘裕',
           '4 月報名時核對應考須知的配分']},
   {id:5,name:'暑假衝刺',start:'2027-06-05',end:dayBefore(OWL_DATE),tag:'全職',
    weeks:['前4週：每週一次全真模考，考後兩天檢討','後2週：封盤，只錯題本第三輪＋條文速讀','考前7天：條文＋錯題本＋作息調成考試時間']},
@@ -1174,6 +1182,26 @@ function getTodayPlan(){
       // 週日上午照表（刷題／錯題），下午是排定的休息
       segments.push({t:'下午',label:'完全休息——連默寫都不用。這是排定的，不是偷懶',kind:'rest'});
     }
+    // ── 期末考期（期末週＋往前兩週）：司律進度排 0 ──
+    const examStart  = isFall? FALL_EXAM_START  : SPRING_EXAM_START;
+    const finalsWeek = isFall? FALL_FINALS_WEEK : SPRING_FINALS_WEEK;
+    const inExam = tStr>=examStart;
+    if(inExam){
+      const isFinalsWeek = tStr>=finalsWeek;
+      study=[{t: wd===0||wd===6? '整天':'課後', x:'準備期末考（民訴、商事法、國私、著作權、專利——這些就是司律考科）'}];
+      if(wd===0) study.push({t:'下午',x:'休息'});
+      segments=segments.concat(
+        classes.map(c=>({t:c.t,label:`上課：${csp(c.n)}${c.room||c.prof?`（${[c.room,c.prof].filter(Boolean).join('・')}）`:''}`,kind:'class'})),
+        [{t:'10 分鐘',label:'默寫 10 條條文（期末期間唯一的司律動作）',kind:'study'}],
+        study.map(s=>({t:s.t,label:s.x,kind:'exam'}))
+      );
+      focus = isFinalsWeek? '期末週——司律進度 0' : '期末考期——司律進度 0';
+      note = '這三週司律進度就是 0，年度總表已經算進去了，你不會欠自己任何東西。'
+           + '而且你在準備的期末考（民訴 60、公司法 30、保險法 20、國私 20）本身就是司律考科。'
+           + '唯一純成本的是法德——考前給固定上限 6 小時，不要無限追加。';
+      return {segments,focus,note,classes};
+    }
+
     if(!isFall&&wd===6){
       study= MOCK_DATES.includes(tStr)
         ? [{t:'09:00–17:00',x:'全真模考：照真實節次與時間，不看書',exam:true}]
@@ -1185,12 +1213,13 @@ function getTodayPlan(){
       study.map(s=>({t:s.t,label:(s.exam?'':'自習：')+s.x,kind:s.exam?'exam':'study'}))
     );
     focus = isFall ? '維持期：週六憲法、週日刷題' : '半推進：週一錯題、週六刷題／模考';
-    if(classes.length){
+    const daysToExam = dateDiff(tStr, examStart);
+    if(daysToExam<=21){
+      note=`⚠️ 再 ${daysToExam} 天進入期末考期（${examStart} 起三週司律排 0）。報告要在那之前交完。`;
+    } else if(classes.length){
       note='有課的日子不排司律自習。你的課業（民訴、商事法、國私、著作權、專利）本身就是那 130 分——不用有罪惡感。';
-    } else if(isFall&&w1>=13){
-      note='⚠️ 報告期＋期末考期：司律進度直接排 0，你在準備的期末考就是司律考科。';
     } else if(!isFall){
-      note='5 月中前三門報告全部交完——6 月中期末後只剩 7 週到一試。';
+      note='5/14 前三門報告全部交完——之後是期末考期，不能有報告殘骸。';
     }
   }
   else if(cp.id===3){
