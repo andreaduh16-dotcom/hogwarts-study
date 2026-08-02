@@ -330,6 +330,8 @@ details.fold .fold-body{padding:0 16px 15px;}
 .prophet{border:1px solid var(--line); border-radius:12px; padding:12px 15px; background:rgba(255,255,255,.028); text-align:center; margin-bottom:12px;}
 .prophet-head{font-family:"Cinzel","Noto Serif TC",serif; font-size:10.5px; letter-spacing:4px; color:var(--dim); padding-bottom:6px; border-bottom:1px solid var(--line); margin-bottom:8px;}
 .prophet-headline{font-size:13.5px; color:var(--silver-hi); line-height:1.65;}
+.prophet-sub{font-size:12px; color:var(--gold); margin-top:7px; padding-top:7px; border-top:1px dashed var(--line); line-height:1.6;}
+.prophet-sub b{color:var(--silver-hi); font-size:14px;}
 
 /* ── 兌換 ── */
 .reward-card{
@@ -585,6 +587,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     <div class="prophet">
       <div class="prophet-head">✦ 預言家日報 ✦</div>
       <div class="prophet-headline" id="prophetHeadline"></div>
+      <div class="prophet-sub" id="prophetSub"></div>
       <p class="dim" id="todayLine" style="margin:7px 0 0;"></p>
     </div>
 
@@ -947,10 +950,14 @@ function computeSpent(){ return LS.get('hp_redemptions',[]).reduce((s,r)=>s+r.co
 function getBalance(){ return computeEarnedTotal()-computeSpent(); }
 
 /* ═══ 學院盃：每月結算，三個對手學院自己會跑分 ═══ */
+/* 對手強度是照「你照計畫做得到的分數」校準的：
+   平日只默寫 = 10／天，週末加錯題 ≈ 15，連續 7 天 +30 → 每日平均約 15.7。
+   對手設在 11–15，所以：穩定做到最低標＝名列前茅；再勾課堂複習＝穩坐第一；
+   斷線就會被超車。（舊值 29–35 是照每週 33 小時的舊計畫設的，贏不了。） */
 const RIVALS=[
-  {id:'gryffindor',n:'葛萊分多',e:'🦁',c:'#9e2a2b',base:32},
-  {id:'ravenclaw', n:'雷文克勞',e:'🦅',c:'#2e4a8f',base:35},
-  {id:'hufflepuff',n:'赫夫帕夫',e:'🦡',c:'#c8a02a',base:29}
+  {id:'gryffindor',n:'葛萊分多',e:'🦁',c:'#9e2a2b',base:14},
+  {id:'ravenclaw', n:'雷文克勞',e:'🦅',c:'#2e4a8f',base:16},
+  {id:'hufflepuff',n:'赫夫帕夫',e:'🦡',c:'#c8a02a',base:12}
 ];
 function rivalDayScore(id,ds){
   const rv=RIVALS.find(x=>x.id===id);
@@ -1724,34 +1731,114 @@ function renderLevel(){
 /* ═══ 預言家日報 ═══ */
 const PROPHET_LINES=[
   '魔法部宣布：今日宜刷題，忌滑手機。',
-  '古靈閣快訊：你的學院點數持續增值中。',
+  '古靈閣快訊：你的學院點數持續增值中，無需支付妖精手續費。',
   '活米村特派：蜂蜜公爵的巧克力蛙到貨，過關即可打開。',
   '霍格華茲特快車準點發車——你的進度也該準點。',
   '魁地奇快報：搶金探子不如搶考點。',
   '意若思鏡使用須知：鏡中的你已上榜，現實的你正在路上。',
-  '魔法生物管制局：拖延獸出沒，請提高警覺。',
-  '本報民調：多數巫師後悔沒早點開始讀書。',
-  '衛斯理笑話商店：「假裝在讀書的羽毛筆」已售罄。',
+  '魔法生物管制局：拖延獸出沒，據報常偽裝成「先滑一下手機」。',
+  '本報民調：87% 的巫師後悔沒早點開始讀書，其餘 13% 拒絕受訪。',
+  '衛斯理笑話商店：「假裝在讀書的羽毛筆」再度售罄。',
   '魔藥課提醒：福來福喜缺貨，實力才是常備藥。',
   '禁忌森林公告：入夜請返回城堡，並寫好三行紙。',
   '校長室便箋：別沉溺於夢，而忘了眼前的生活。',
   '貓頭鷹郵局：寫給明天自己的信，今晚截止收件。',
   '時光器管理處：時間不會重來，但錯題可以重寫。',
-  '分類帽專欄：史萊哲林的野心，要配上行動。',
+  '分類帽專欄：史萊哲林的野心，要配上行動才算數。',
   '考選司公告：O.W.L. 應考人請每日默寫條文十條。',
   '夜騎士公車：再晚也載你，但明天請早起。',
   '記憶保存學會：定期回顧，記憶不打結。',
   '魔藥學教授評語：「尚可。」——這已是他最高的讚美。',
-  '海格通訊：牙牙學會了新把戲，你也學會新法條了嗎？'
+  '海格通訊：牙牙學會了新把戲，你也學會新法條了嗎？',
+  '天文塔氣象：今夜適合抬頭，但只限休息時段。',
+  '有求必應屋目擊報告：它昨天變成了一間安靜的自習室。',
+  '妙麗專欄：「我把時間都用在圖書館」——她說得雲淡風輕。',
+  '飛七公告：走廊禁止奔跑，書桌前禁止分心。',
+  '斜角巷書訊：《一千零一種拖延的藉口》再版，讀者反應熱烈。',
+  '崔老妮預言：我看見……你翻開了下一頁。',
+  '披風失竊啟事：隱形斗篷不會讓進度也隱形。',
+  '國際巫師聯盟：各國一致同意，法條還是得自己背。',
+  '聖蒙果通報：長期熬夜可能導致咒語走火，請正常作息。',
+  '魔法部人事處：正氣師招募中，唯一門檻是考上。',
+  '鳳凰社密令：今日任務——把昨天不會的變成今天會的。',
+  '麥教授備忘：變形學的精髓是「持續」，不是「聰明」。',
+  '哭泣的桃金孃：至少你的錯題本比我的處境有希望。',
+  '對角巷特報：奧利凡德說，魔杖挑主人也挑毅力。',
+  '黑湖觀測站：水面下的東西，跟你的進度一樣需要耐心。',
+  '三根掃帚酒吧：奶油啤酒配的是完成的一天，不是逃掉的一天。',
+  '霍格華茲圖書館：禁書區今日開放，但你需要的其實在普通區。',
+  '巫師棋錦標賽：贏的人不是最會走，是最少悔棋。',
+  '魔法部交通司：呼嚕網壅塞中，建議提早出門與提早開始。',
+  '爆竹薯條快報：吃完會打嗝，讀完會上榜。',
+  '護法咒教室：想著最快樂的事——例如放榜那天。',
+  '古代神秘文字研究：法學英文也算一種古代魔文。',
+  '報名處提醒：明年四月的應考須知才是正本，記得回頭核對。',
+  '魔法部訴訟司：涵攝寫得好，法官看得懂。',
+  '藥草學溫室：曼德拉草要每天照顧，進度也是。',
+  '幻影移形考照中心：三 D 原則——決心、目標、從容。三者缺一不可。',
+  '學院盃計分板：分數是每天一點一點加上去的，不是一次灌進去的。',
+  '魔法史課堂：今天又有人睡著了。你別。',
+  '厲害的巫師專欄：「我不是最有天分的，我只是還在。」',
+  '鄧不利多語錄：選擇比天賦更能定義我們。今天也是一個選擇。',
+  '活點地圖啟示：我鄭重發誓我不懷好意——但今天只對進度不懷好意。',
+  '守護神訓練營：連續三十天，牠就會出現。',
+  '複方湯劑注意事項：沒有捷徑可以變成已經讀完的自己。',
+  '魔法部檔案室：起訴書裡藏著檢察官的論述骨架。',
+  '霍格華茲校規補述：期末考也算魔法考核的一環。',
+  '路平教授備課：面對恐懼的咒語是「滑稽滑稽」，面對進度的是「開始開始」。',
+  '貓頭鷹棚舍：嘿美說牠可以等，但不要讓牠等太久。',
+  '魔法部辟邪司：最強的黑魔法是「明天再說」。'
 ];
+
+/* 動態訊息：反映你當下的真實狀態，所以每天都不一樣 */
+function prophetDynamic(t){
+  const out=[];
+  const streak=computeStreakCurrent();
+  const cp=currentPhase();
+  const owned=Object.keys(ownedCards()).length;
+  const bal=getBalance();
+  const now=d(t);
+
+  if(now<=d(OWL_DATE)){
+    const n=daysBetween(now,d(OWL_DATE));
+    out.push(`距離 O.W.L. 一試還有 <b>${n}</b> 天`);
+  }
+  if(streak>=3) out.push(`你已經連續 <b>${streak}</b> 天沒有斷線`);
+  else if(streak===0) out.push('連續紀錄從今天重新開始');
+  if(cp) out.push(`目前階段：${cp.name}（${cp.tag}）`);
+  if(bal>0) out.push(`學院點數存款：<b>${bal}</b> 點`);
+  if(owned>0) out.push(`巧克力蛙畫片已收集 <b>${owned}/${CARDS.length}</b> 張`);
+  if(allDayDates().length){
+    const rows=cupScores(), rank=rows.findIndex(r=>r.me)+1;
+    out.push(`學院盃：史萊哲林目前第 <b>${rank}</b> 名`);
+  }
+  // 期末考期倒數
+  if(cp&&(cp.id===2||cp.id===4)){
+    const es=cp.id===2? FALL_EXAM_START : SPRING_EXAM_START;
+    const dd=dateDiff(t,es);
+    if(dd>0&&dd<=30) out.push(`距離期末考期還有 <b>${dd}</b> 天，報告要在那之前交完`);
+  }
+  return out;
+}
+
 function renderProphet(){
   const t=todayStr();
-  let h=0; for(const ch of t) h=(h*31+ch.charCodeAt(0))>>>0;
-  document.getElementById('prophetHeadline').textContent=PROPHET_LINES[h%PROPHET_LINES.length];
+  // 用與長度互質的步長走訪，跑完全部 N 條才會重複（不是隨機、也不是連號）
+  const N=PROPHET_LINES.length;
+  const dayNum=Math.round(d(t).getTime()/86400000);
+  let step=17; while(gcdNum(step,N)!==1) step++;
+  document.getElementById('prophetHeadline').textContent=PROPHET_LINES[((dayNum*step)%N+N)%N];
+
+  // 動態那行也輪替，跟頭條錯開
+  const dyn=prophetDynamic(t);
+  const sub=document.getElementById('prophetSub');
+  if(sub) sub.innerHTML= dyn.length? dyn[dayNum%dyn.length] : '';
+
   const dt=d(t);
   document.getElementById('todayLine').textContent=
     `${dt.getFullYear()} 年 ${dt.getMonth()+1} 月 ${dt.getDate()} 日（星期${WEEKDAY_CN[dt.getDay()]}）`;
 }
+function gcdNum(a,b){ while(b){ [a,b]=[b,a%b]; } return a; }
 
 /* ═══ 貓 ═══ */
 function renderCat(){
