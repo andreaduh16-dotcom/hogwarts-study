@@ -519,7 +519,87 @@ details.fold .fold-body{padding:0 16px 15px;}
 .rar-r{border-color:#8a6bb5; box-shadow:0 0 18px rgba(138,107,181,.42), 0 6px 22px rgba(0,0,0,.45);}
 .frog-reveal{animation:cardIn .7s cubic-bezier(.2,1.4,.4,1);}
 @keyframes cardIn{from{transform:scale(.2) rotate(-9deg); opacity:0;}to{transform:none; opacity:1;}}
-.album{display:grid; grid-template-columns:repeat(auto-fill,minmax(88px,1fr)); gap:9px;}
+.album-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(88px,1fr)); gap:9px; padding:4px 0 12px;}
+/* 分類收納夾 */
+.album-cat{border-bottom:1px solid var(--line); }
+.album-cat:last-child{border-bottom:none;}
+.album-cat>summary{
+  cursor:pointer; list-style:none; padding:10px 2px; display:flex; align-items:center; gap:9px;
+  font-family:"Cinzel","Noto Serif TC",serif; font-size:13px; font-weight:700; color:var(--silver-hi);
+}
+.album-cat>summary::-webkit-details-marker{display:none;}
+.album-cat>summary::after{content:'▾'; margin-left:auto; color:var(--dim); font-size:11px; transition:.25s;}
+.album-cat[open]>summary::after{transform:rotate(180deg);}
+.album-cat>summary:hover{color:var(--gold);}
+.ac-ico{font-size:16px;}
+.ac-n{font-family:"Cinzel",serif; font-size:11px; color:var(--dim); font-weight:400; letter-spacing:.5px;}
+.ac-n.full{color:var(--gold);}
+
+/* ══════ 咒語書 ══════ */
+.spellbook{display:flex; flex-direction:column; gap:8px; margin-top:4px;}
+.spell{
+  position:relative; overflow:hidden; display:flex; align-items:flex-start; gap:11px;
+  padding:11px 12px; border-radius:11px; border:1px solid var(--line);
+  background:rgba(255,255,255,.032); transition:border-color .25s, box-shadow .25s, background .25s;
+}
+.spell .sp-rune{font-size:25px; line-height:1.1; flex-shrink:0; width:32px; text-align:center;}
+.spell .sp-body{flex:1; min-width:0;}
+.sp-head{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
+.sp-n{font-family:"Cinzel","Noto Serif TC",serif; font-size:14px; font-weight:700; color:var(--silver-hi); letter-spacing:.4px;}
+.sp-en{font-family:"Cinzel",serif; font-size:10.5px; letter-spacing:1.6px; color:var(--green-lt); font-style:italic;}
+.sp-eff{font-size:11px; color:var(--dim); margin-top:2px; letter-spacing:.4px;}
+.sp-use{font-size:12.5px; line-height:1.65; margin-top:5px; color:var(--silver);}
+.sp-use b{color:#f0dfa8;}
+.sp-done{
+  flex-shrink:0; align-self:center; font-family:"Cinzel",serif; font-size:10px; letter-spacing:1.4px;
+  color:var(--gold); border:1px solid rgba(201,169,78,.42); border-radius:20px; padding:3px 10px;
+  background:rgba(201,169,78,.1);
+}
+.spell .sp-learn{flex-shrink:0; align-self:center;}
+/* 三種狀態 */
+.spell.locked{opacity:.42;}
+.spell.locked .sp-n{color:var(--dim); font-family:"Noto Serif TC",serif;}
+.spell.ready{
+  border-color:rgba(201,169,78,.55);
+  background:linear-gradient(100deg, rgba(201,169,78,.11), rgba(201,169,78,.035));
+  box-shadow:0 0 20px rgba(201,169,78,.14);
+  animation:spellReady 2.8s ease-in-out infinite;
+}
+@keyframes spellReady{
+  0%,100%{box-shadow:0 0 18px rgba(201,169,78,.12);}
+  50%{box-shadow:0 0 30px rgba(201,169,78,.26);}
+}
+.spell.learned{border-color:rgba(201,169,78,.3); background:rgba(201,169,78,.055);}
+.spell.learned .sp-rune{filter:drop-shadow(0 0 9px rgba(201,169,78,.6));}
+.sp-ready-n{color:var(--gold); font-weight:700;}
+
+/* 施咒動畫 */
+.spell.casting{border-color:var(--gold); box-shadow:0 0 40px rgba(201,169,78,.5); animation:none;}
+.cast-fx{position:absolute; inset:0; pointer-events:none; display:grid; place-items:center;}
+.cast-word{
+  position:absolute; font-family:"Cinzel",serif; font-size:16px; letter-spacing:3px; font-weight:700;
+  color:#fff6da; text-shadow:0 0 18px rgba(201,169,78,.95), 0 0 40px rgba(201,169,78,.65);
+  animation:castWord .9s cubic-bezier(.2,.9,.3,1) forwards; white-space:nowrap;
+}
+@keyframes castWord{
+  0%{transform:scale(.6); opacity:0;}
+  30%{transform:scale(1.06); opacity:1;}
+  70%{transform:scale(1.1); opacity:1;}
+  100%{transform:scale(1.3); opacity:0;}
+}
+.cast-fx i{
+  position:absolute; width:5px; height:5px; border-radius:50%;
+  background:radial-gradient(circle,#fff6da,#c9a94e 60%,transparent 72%);
+  animation:castSpark var(--dd,.5s) ease-out forwards;
+}
+@keyframes castSpark{
+  0%{transform:rotate(var(--a)) translateX(0) scale(1); opacity:1;}
+  100%{transform:rotate(var(--a)) translateX(120px) scale(.2); opacity:0;}
+}
+@media (prefers-reduced-motion:reduce){
+  .spell.ready{animation:none;}
+  .cast-fx i{display:none;}
+}
 .slot{background:rgba(255,255,255,.05); border:1.5px solid var(--line); border-radius:10px; padding:9px 4px; text-align:center; min-height:92px;}
 .slot .semoji{font-size:27px;}
 .slot .nm{font-size:10.5px; font-weight:700; margin-top:2px; color:var(--silver-hi);}
@@ -906,10 +986,16 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
   <!-- ═══ 收藏（畫片冊＋故事） ═══ -->
   <section class="tab-panel" id="tab-collection">
     <div class="card">
+      <h2>✨ 咒語書 <span class="dim" id="spellMeta"></span></h2>
+      <p class="dim">學院等級升上去，就會想起新的咒語。每一個咒語都對應一個真實的讀書處境——<b>按「練習」施一次才算學會。</b></p>
+      <div class="spellbook" id="spellBook"></div>
+    </div>
+
+    <div class="card">
       <h2>🍫 巧克力蛙畫片冊 <span class="dim" id="albumCount"></span></h2>
-      <p class="dim">每天過關就能開一隻。集滿全套的巫師，據說考運特別好。</p>
+      <p class="dim">每天過關就能開一隻。共五類、90 張：巫師與角色、魔法生物、魔法物品、霍格華茲場所、魔藥。</p>
       <div style="margin:9px 0;"><button class="magic small" id="extraDrawBtn">🍫 用 30 點再抽一張</button></div>
-      <div class="album" id="albumGrid"></div>
+      <div id="albumGrid"></div>
     </div>
     <div class="card">
       <h2>📖 消失的第八年生 <span class="dim" id="storyProgress"></span></h2>
@@ -2149,41 +2235,109 @@ function renderHeatmap(){
 }
 
 /* ═══ 巧克力蛙 ═══ */
+/* cat：w 巫師與角色｜b 魔法生物｜o 魔法物品｜p 霍格華茲場所｜x 魔藥 */
+const CAT_NAME={w:'巫師與角色',b:'魔法生物',o:'魔法物品',p:'霍格華茲場所',x:'魔藥'};
+const CAT_ICON={w:'🧙',b:'🐾',o:'🪄',p:'🏰',x:'⚗️'};
 const CARDS=[
-  {id:'dumbledore',n:'鄧不利多',e:'🧙‍♂️',r:'l',line:'「做對的選擇，比做容易的選擇難。」'},
-  {id:'voldemort',n:'佛地魔',e:'🐍',r:'l',line:'「連他都不敢小看考試範圍。」'},
-  {id:'harry',n:'哈利波特',e:'⚡',r:'l',line:'「活下來的男孩，也得乖乖考試。」'},
-  {id:'merlin',n:'梅林',e:'✨',r:'l',line:'「梅林的鬍子！你今天過關了！」'},
-  {id:'snape',n:'石內卜',e:'🧪',r:'r',line:'「上我的課，不准恍神。」'},
-  {id:'mcgonagall',n:'麥教授',e:'🎩',r:'r',line:'「變形學第一課：先變出讀書的自己。」'},
-  {id:'sirius',n:'天狼星',e:'🐕',r:'r',line:'「我是無辜的，但你的進度不能無辜。」'},
-  {id:'lupin',n:'路平',e:'🌕',r:'r',line:'「今晚月圓，早點收工。」'},
-  {id:'moody',n:'瘋眼穆敵',e:'👁️',r:'r',line:'「隨時警戒——尤其是選擇題的陷阱。」'},
-  {id:'hermione',n:'妙麗',e:'📚',r:'r',line:'「我早就讀完三輪了，你呢？」'},
-  {id:'ron',n:'榮恩',e:'♟️',r:'r',line:'「吃完這隻蛙再繼續。」'},
-  {id:'draco',n:'跩哥馬份',e:'🐉',r:'r',line:'「我爸會聽說你今天的進度。」'},
-  {id:'bellatrix',n:'貝拉雷斯壯',e:'🔪',r:'r',line:'「敢斷線試試看。」'},
-  {id:'hagrid',n:'海格',e:'🌂',r:'c',line:'「你是個巫師，也是個考生。」'},
-  {id:'neville',n:'奈威',e:'🌿',r:'c',line:'「勇氣是對自己說：今天也讀。」'},
-  {id:'luna',n:'露娜',e:'🦋',r:'c',line:'「騎士墜鬼馬也覺得你很努力。」'},
-  {id:'ginny',n:'金妮',e:'🏏',r:'c',line:'「快攻！把今天的塊清掉。」'},
-  {id:'twins',n:'弗雷與喬治',e:'🎆',r:'c',line:'「惡作劇完成——進度也要完成。」'},
-  {id:'cedric',n:'西追',e:'🏆',r:'c',line:'「正直地讀，光明地考。」'},
-  {id:'cho',n:'張秋',e:'🕊️',r:'c',line:'「去年的錯題，別再錯第二次。」'},
-  {id:'lockhart',n:'洛哈',e:'💇',r:'c',line:'「我五度榮獲最迷人微笑獎。」'},
-  {id:'trelawney',n:'崔老妮',e:'🔮',r:'c',line:'「我預見……你會上榜。」'},
-  {id:'flitwick',n:'孚立維',e:'🎼',r:'c',line:'「是 Levi-O-sa，不是 Levio-SA。」'},
-  {id:'sprout',n:'芽菜教授',e:'🌱',r:'c',line:'「進度像魔蘋果，每天都要澆水。」'},
-  {id:'pomfrey',n:'龐芮夫人',e:'💊',r:'c',line:'「累了就睡，明天再戰。」'},
-  {id:'filch',n:'飛七',e:'🗝️',r:'c',line:'「書桌前，禁止滑手機。」'},
-  {id:'norris',n:'拿樂絲太太',e:'🐈‍⬛',r:'c',line:'「牠在盯著你讀書。」'},
-  {id:'peeves',n:'皮皮鬼',e:'🃏',r:'c',line:'「搗蛋也要挑下課時間！」'},
-  {id:'nick',n:'差點沒頭的尼克',e:'👻',r:'c',line:'「五百年過去了，考試還在。」'},
-  {id:'dobby',n:'多比',e:'🧦',r:'c',line:'「多比是自由的小精靈！」'},
-  {id:'kreacher',n:'怪角',e:'🪞',r:'c',line:'「主人今天有讀書，怪角欣慰。」'},
-  {id:'fawkes',n:'佛客使',e:'🐦‍🔥',r:'c',line:'「燒盡重生——錯題也一樣。」'},
-  {id:'buckbeak',n:'巴嘴',e:'🦅',r:'c',line:'「先鞠躬，再刷題。」'},
-  {id:'hedwig',n:'嘿美',e:'🦉',r:'c',line:'「你的成績單將由我送達。」'}
+  /* ── 巫師與角色 ── */
+  {id:'dumbledore',n:'鄧不利多',e:'🧙‍♂️',r:'l',cat:'w',line:'「做對的選擇，比做容易的選擇難。」'},
+  {id:'voldemort',n:'佛地魔',e:'🐍',r:'l',cat:'w',line:'「連他都不敢小看考試範圍。」'},
+  {id:'harry',n:'哈利波特',e:'⚡',r:'l',cat:'w',line:'「活下來的男孩，也得乖乖考試。」'},
+  {id:'merlin',n:'梅林',e:'✨',r:'l',cat:'w',line:'「梅林的鬍子！你今天過關了！」'},
+  {id:'snape',n:'石內卜',e:'🧪',r:'r',cat:'w',line:'「上我的課，不准恍神。」'},
+  {id:'mcgonagall',n:'麥教授',e:'🎩',r:'r',cat:'w',line:'「變形學第一課：先變出讀書的自己。」'},
+  {id:'sirius',n:'天狼星',e:'🐕',r:'r',cat:'w',line:'「我是無辜的，但你的進度不能無辜。」'},
+  {id:'lupin',n:'路平',e:'🌕',r:'r',cat:'w',line:'「今晚月圓，早點收工。」'},
+  {id:'moody',n:'瘋眼穆敵',e:'👁️',r:'r',cat:'w',line:'「隨時警戒——尤其是選擇題的陷阱。」'},
+  {id:'hermione',n:'妙麗',e:'📚',r:'r',cat:'w',line:'「我早就讀完三輪了，你呢？」'},
+  {id:'ron',n:'榮恩',e:'♟️',r:'r',cat:'w',line:'「吃完這隻蛙再繼續。」'},
+  {id:'draco',n:'跩哥馬份',e:'🐉',r:'r',cat:'w',line:'「我爸會聽說你今天的進度。」'},
+  {id:'bellatrix',n:'貝拉雷斯壯',e:'🔪',r:'r',cat:'w',line:'「敢斷線試試看。」'},
+  {id:'hagrid',n:'海格',e:'🌂',r:'c',cat:'w',line:'「你是個巫師，也是個考生。」'},
+  {id:'neville',n:'奈威',e:'🌿',r:'c',cat:'w',line:'「勇氣是對自己說：今天也讀。」'},
+  {id:'luna',n:'露娜',e:'🦋',r:'c',cat:'w',line:'「騎士墜鬼馬也覺得你很努力。」'},
+  {id:'ginny',n:'金妮',e:'🏏',r:'c',cat:'w',line:'「快攻！把今天的塊清掉。」'},
+  {id:'twins',n:'弗雷與喬治',e:'🎆',r:'c',cat:'w',line:'「惡作劇完成——進度也要完成。」'},
+  {id:'cedric',n:'西追',e:'🏆',r:'c',cat:'w',line:'「正直地讀，光明地考。」'},
+  {id:'cho',n:'張秋',e:'🕊️',r:'c',cat:'w',line:'「去年的錯題，別再錯第二次。」'},
+  {id:'lockhart',n:'洛哈',e:'💇',r:'c',cat:'w',line:'「我五度榮獲最迷人微笑獎。」'},
+  {id:'trelawney',n:'崔老妮',e:'🔮',r:'c',cat:'w',line:'「我預見……你會上榜。」'},
+  {id:'flitwick',n:'孚立維',e:'🎼',r:'c',cat:'w',line:'「是 Levi-O-sa，不是 Levio-SA。」'},
+  {id:'sprout',n:'芽菜教授',e:'🌱',r:'c',cat:'w',line:'「進度像魔蘋果，每天都要澆水。」'},
+  {id:'pomfrey',n:'龐芮夫人',e:'💊',r:'c',cat:'w',line:'「累了就睡，明天再戰。」'},
+  {id:'filch',n:'飛七',e:'🗝️',r:'c',cat:'w',line:'「書桌前，禁止滑手機。」'},
+  {id:'peeves',n:'皮皮鬼',e:'🃏',r:'c',cat:'w',line:'「搗蛋也要挑下課時間！」'},
+  {id:'nick',n:'差點沒頭的尼克',e:'👻',r:'c',cat:'w',line:'「五百年過去了，考試還在。」'},
+  {id:'binns',n:'賓斯教授',e:'📜',r:'c',cat:'w',line:'「他死了都還在上課，你只是想睡而已。」'},
+  {id:'slughorn',n:'史拉轟',e:'🍯',r:'c',cat:'w',line:'「有天份的學生我都記得——記得交進度。」'},
+  {id:'grey',n:'灰衣貴婦',e:'🩶',r:'r',cat:'w',line:'「雷文克勞的答案，藏在最安靜的地方。」'},
+  {id:'salazar',n:'薩拉查·史萊哲林',e:'🟢',r:'l',cat:'w',line:'「野心不是缺點。缺點是只有野心。」'},
+
+  /* ── 魔法生物 ── */
+  {id:'fawkes',n:'佛客使',e:'🐦‍🔥',r:'r',cat:'b',line:'「燒盡重生——錯題也一樣。」'},
+  {id:'buckbeak',n:'巴嘴',e:'🦅',r:'c',cat:'b',line:'「先鞠躬，再刷題。」'},
+  {id:'hedwig',n:'嘿美',e:'🦉',r:'c',cat:'b',line:'「你的成績單將由我送達。」'},
+  {id:'norris',n:'拿樂絲太太',e:'🐈‍⬛',r:'c',cat:'b',line:'「牠在盯著你讀書。」'},
+  {id:'dobby',n:'多比',e:'🧦',r:'c',cat:'b',line:'「多比是自由的小精靈！」'},
+  {id:'kreacher',n:'怪角',e:'📿',r:'c',cat:'b',line:'「主人今天有讀書，怪角欣慰。」'},
+  {id:'fluffy',n:'路威（三頭犬）',e:'🐺',r:'c',cat:'b',line:'「三顆頭都在問：今天默寫了嗎？」'},
+  {id:'basilisk',n:'蛇怪',e:'🟩',r:'r',cat:'b',line:'「別直視它——也別直視還沒讀的範圍。」'},
+  {id:'dragon',n:'匈牙利角尾龍',e:'🐲',r:'r',cat:'b',line:'「第一關最難。過了就不怕了。」'},
+  {id:'dementor',n:'催狂魔',e:'🌫️',r:'r',cat:'b',line:'「它吃掉的是動力，不是時間。」'},
+  {id:'thestral',n:'騎士墜鬼馬',e:'🖤',r:'c',cat:'b',line:'「看得見它的人，都熬過了什麼。」'},
+  {id:'niffler',n:'嗅嗅',e:'🦡',r:'c',cat:'b',line:'「牠找金子，你找分數。」'},
+  {id:'mandrake',n:'曼德拉草',e:'🪴',r:'c',cat:'b',line:'「叫得越慘，長得越好。」'},
+  {id:'aragog',n:'阿辣哥',e:'🕷️',r:'c',cat:'b',line:'「禁忌森林裡也有人在複習。」'},
+  {id:'centaur',n:'翡冷翠',e:'🏹',r:'c',cat:'b',line:'「星象說：你今天會坐下來。」'},
+  {id:'boggart',n:'幻形怪',e:'🎭',r:'r',cat:'b',line:'「它變成你最怕的那一科。滑稽滑稽！」'},
+  {id:'pygmypuff',n:'蒲絨絨',e:'🧶',r:'c',cat:'b',line:'「什麼都不做，只負責可愛。」'},
+  {id:'merpeople',n:'人魚',e:'🧜',r:'c',cat:'b',line:'「黑湖底下也有一小時要撐完。」'},
+
+  /* ── 魔法物品 ── */
+  {id:'timeturner',n:'時光器',e:'⏳',r:'l',cat:'o',line:'「你不會有這個。所以今天的時間只能今天用。」'},
+  {id:'cloak',n:'隱形斗篷',e:'🧥',r:'l',cat:'o',line:'「進度不會因為看不見就消失。」'},
+  {id:'stone',n:'神秘的魔法石',e:'💎',r:'l',cat:'o',line:'「沒有捷徑。這就是那顆石頭的教訓。」'},
+  {id:'sortinghat',n:'分類帽',e:'🎓',r:'r',cat:'o',line:'「史萊哲林——我就知道。」'},
+  {id:'pensieve',n:'儲思盆',e:'🫗',r:'r',cat:'o',line:'「錯題本就是你的儲思盆。」'},
+  {id:'marauders',n:'劫盜地圖',e:'🗺️',r:'r',cat:'o',line:'「我鄭重發誓，我不懷好意——但我會讀書。」'},
+  {id:'firebolt',n:'火閃電',e:'🧹',r:'r',cat:'o',line:'「快，但還是得自己抓到金探子。」'},
+  {id:'sword',n:'葛萊芬多寶劍',e:'⚔️',r:'r',cat:'o',line:'「真正需要的時候才會出現。」'},
+  {id:'diadem',n:'雷文克勞冠冕',e:'👑',r:'r',cat:'o',line:'「智慧是最大的財富——也要背條文。」'},
+  {id:'snitch',n:'金探子',e:'🟡',r:'c',cat:'o',line:'「我在結束時開啟。」'},
+  {id:'howler',n:'咆哮信',e:'✉️',r:'c',cat:'o',line:'「你！今天！還沒！默寫！」'},
+  {id:'remembrall',n:'記憶球',e:'🔴',r:'c',cat:'o',line:'「它會變紅，但不會告訴你忘了什麼。」'},
+  {id:'extendable',n:'伸縮耳',e:'👂',r:'c',cat:'o',line:'「偷聽出題老師在想什麼。」'},
+  {id:'quill',n:'羽毛筆與羊皮紙',e:'🪶',r:'c',cat:'o',line:'「手寫的東西，記得比較久。」'},
+  {id:'cauldron',n:'坩堝',e:'⚗️',r:'c',cat:'o',line:'「照步驟來，不要憑感覺加料。」'},
+  {id:'wizardchess',n:'巫師棋',e:'🎲',r:'c',cat:'o',line:'「要贏，得先願意犧牲一步。」'},
+  {id:'wand',n:'魔杖',e:'🪄',r:'c',cat:'o',line:'「是魔杖選擇巫師——但條文得你自己選。」'},
+
+  /* ── 霍格華茲場所 ── */
+  {id:'greathall',n:'大禮堂',e:'🕯️',r:'c',cat:'p',line:'「天花板永遠是外面的天空。」'},
+  {id:'ror',n:'有求必應屋',e:'🚪',r:'r',cat:'p',line:'「你需要它的時候，它才會出現。」'},
+  {id:'forest',n:'禁忌森林',e:'🌲',r:'c',cat:'p',line:'「還沒讀的範圍就長這樣。」'},
+  {id:'restricted',n:'圖書館禁書區',e:'📕',r:'r',cat:'p',line:'「妙麗最愛的地方。」'},
+  {id:'quidditch',n:'魁地奇球場',e:'🥅',r:'c',cat:'p',line:'「休息也要排進表裡。」'},
+  {id:'blacklake',n:'黑湖',e:'🌊',r:'c',cat:'p',line:'「深呼吸，撐完這一小時。」'},
+  {id:'astronomy',n:'天文塔',e:'🔭',r:'c',cat:'p',line:'「抬頭看看，你只是暫時在低谷。」'},
+  {id:'slytherincr',n:'史萊哲林交誼廳',e:'🏰',r:'r',cat:'p',line:'「湖水的綠光打在牆上。回家了。」'},
+  {id:'platform',n:'九又四分之三月台',e:'🚂',r:'c',cat:'p',line:'「用力撞過去，牆是假的。」'},
+  {id:'diagon',n:'斜角巷',e:'🏬',r:'c',cat:'p',line:'「開學前的補給日。」'},
+  {id:'gringotts',n:'古靈閣',e:'🏦',r:'r',cat:'p',line:'「你的點數存在這裡。」'},
+  {id:'leaky',n:'破釜酒吧',e:'🍺',r:'c',cat:'p',line:'「麻瓜看不到的那扇門。」'},
+  {id:'honeydukes',n:'蜂蜜公爵',e:'🍬',r:'c',cat:'p',line:'「巧克力對催狂魔有效，這是官方認證。」'},
+  {id:'shrieking',n:'尖叫屋',e:'🏚️',r:'c',cat:'p',line:'「聽起來很可怕，其實是有人在難過。」'},
+  {id:'hospitalwing',n:'醫療翼',e:'🛏️',r:'c',cat:'p',line:'「休息不是逃避，是療程。」'},
+
+  /* ── 魔藥 ── */
+  {id:'felix',n:'福來福喜',e:'🍀',r:'l',cat:'x',line:'「幸運藥水——但你還是得自己走進考場。」'},
+  {id:'veritaserum',n:'吐真劑',e:'💧',r:'r',cat:'x',line:'「老實說，今天到底讀了幾分鐘？」'},
+  {id:'polyjuice',n:'複方湯劑',e:'🧴',r:'r',cat:'x',line:'「變成別人也沒用，考的是你會的。」'},
+  {id:'amortentia',n:'迷情劑',e:'💗',r:'c',cat:'x',line:'「聞起來像新書的味道。」'},
+  {id:'draught',n:'生死水',e:'⚱️',r:'c',cat:'x',line:'「睡飽比硬撐有效。」'},
+  {id:'pepperup',n:'提神劑',e:'☕',r:'c',cat:'x',line:'「耳朵會冒煙，但精神會回來。」'},
+  {id:'skelegro',n:'生骨藥',e:'🦴',r:'c',cat:'x',line:'「重建很痛，但骨頭會長回來。」'},
+  {id:'wolfsbane',n:'縛狼汁',e:'🌙',r:'r',cat:'x',line:'「控制不了月圓，但控制得了準備。」'}
 ];
 const RARITY_NAME={l:'傳說',r:'稀有',c:'普通'};
 function drawRandomCard(){
@@ -2238,14 +2392,26 @@ function renderAlbum(){
   const grid=document.getElementById('albumGrid'); if(!grid) return;
   const owned=ownedCards();
   const got=CARDS.filter(c=>owned[c.id]).length;
+  const nL=CARDS.filter(c=>c.r==='l').length, nR=CARDS.filter(c=>c.r==='r').length;
+  const gL=CARDS.filter(c=>c.r==='l'&&owned[c.id]).length, gR=CARDS.filter(c=>c.r==='r'&&owned[c.id]).length;
   document.getElementById('albumCount').textContent= got===0
     ? '· 過關一次就能開出第一張'
-    : `已收集 ${got}/${CARDS.length}（傳說 ${CARDS.filter(c=>c.r==='l'&&owned[c.id]).length}/4 · 稀有 ${CARDS.filter(c=>c.r==='r'&&owned[c.id]).length}/9）`;
-  grid.innerHTML=CARDS.map(c=>{
-    const cnt=owned[c.id]||0;
-    return cnt
-      ? `<div class="slot rar-${c.r}"><div class="semoji">${c.e}</div><div class="nm">${c.n}</div><div class="cnt">${RARITY_NAME[c.r]}${cnt>1?` ×${cnt}`:''}</div></div>`
-      : `<div class="slot unknown"><div class="semoji">❔</div><div class="nm">？？？</div><div class="cnt">${RARITY_NAME[c.r]}</div></div>`;
+    : `已收集 ${got}/${CARDS.length}（傳說 ${gL}/${nL} · 稀有 ${gR}/${nR}）`;
+  // 分類收納：一次只看一疊，比 90 格攤開好找
+  grid.innerHTML=Object.keys(CAT_NAME).map(k=>{
+    const pool=CARDS.filter(c=>c.cat===k);
+    const mine=pool.filter(c=>owned[c.id]).length;
+    const done=mine===pool.length;
+    return `<details class="album-cat"${done?'':' open'}>
+      <summary><span class="ac-ico">${CAT_ICON[k]}</span>${CAT_NAME[k]}
+        <span class="ac-n${done?' full':''}">${mine}/${pool.length}${done?' ✓':''}</span></summary>
+      <div class="album-grid">${pool.map(c=>{
+        const cnt=owned[c.id]||0;
+        return cnt
+          ? `<div class="slot rar-${c.r}"><div class="semoji">${c.e}</div><div class="nm">${c.n}</div><div class="cnt">${RARITY_NAME[c.r]}${cnt>1?` ×${cnt}`:''}</div></div>`
+          : `<div class="slot unknown"><div class="semoji">❔</div><div class="nm">？？？</div><div class="cnt">${RARITY_NAME[c.r]}</div></div>`;
+      }).join('')}</div>
+    </details>`;
   }).join('');
   document.getElementById('extraDrawBtn').disabled = getBalance()<30;
 }
@@ -2282,8 +2448,106 @@ function renderLevel(){
     lbl.textContent=`累積 ${xp} 經驗 · 距「${next.t}」還差 ${next.xp-xp}`;
   } else { fill.style.width='100%'; lbl.textContent=`累積 ${xp} 經驗 · 已至頂點`; }
   const last=LS.get('hp_last_level_shown',0);
-  if(idx>last){ LS.set('hp_last_level_shown',idx); celebrate(true); toast(`⬆️ 升上${lv.t}！`); }
+  if(idx>last){
+    LS.set('hp_last_level_shown',idx); celebrate(true);
+    const newly=SPELLS.filter(s=>s.lv>last&&s.lv<=idx).length;
+    toast(newly? `⬆️ 升上${lv.t}！解鎖 ${newly} 個新咒語` : `⬆️ 升上${lv.t}！`);
+  }
   else if(idx<last){ LS.set('hp_last_level_shown',idx); }
+  renderSpells();
+}
+function currentLevelIdx(){
+  const xp=computeEarnedTotal();
+  let idx=0; for(let i=0;i<LEVELS.length;i++) if(xp>=LEVELS[i].xp) idx=i;
+  return idx;
+}
+
+/* ═══ 咒語：按學年解鎖，練過才算學會 ═══ */
+/* lv = 需要的學年索引（對應 LEVELS）。每個咒語都綁一個真實的讀書處境。 */
+const SPELLS=[
+  {id:'lumos',n:'路摸思',en:'Lumos',e:'🕯️',lv:0,eff:'杖尖亮起',
+   use:'不知道從哪開始的時候：先默寫 10 條。最小的光就夠你看見下一步。'},
+  {id:'wingardium',n:'溫咖癲啦唯啊薩',en:'Wingardium Leviosa',e:'🪶',lv:0,eff:'讓物體浮起',
+   use:'先抬最重的那一塊——今天最不想做的那件事排第一個。'},
+  {id:'reparo',n:'復復修',en:'Reparo',e:'🔧',lv:1,eff:'修復破損之物',
+   use:'斷線之後：修好它，不要打掉重來。昨天沒做不影響今天能不能做。'},
+  {id:'diffindo',n:'吩吩綻',en:'Diffindo',e:'✂️',lv:1,eff:'切割',
+   use:'一章太大就切開。切到「這一段我現在就能做完」為止。'},
+  {id:'alohomora',n:'阿八拉象',en:'Alohomora',e:'🗝️',lv:2,eff:'解鎖',
+   use:'卡住的科目先開一道縫：TaiLexi 隨便做 5 題，不設目標。'},
+  {id:'expelliarmus',n:'去去，武器走',en:'Expelliarmus',e:'🪄',lv:2,eff:'繳械',
+   use:'解除干擾。手機放到另一個房間——不是翻面，是另一個房間。'},
+  {id:'accio',n:'速速前',en:'Accio',e:'🧲',lv:3,eff:'召喚物品',
+   use:'開始前先把要用的東西全部叫到桌上。找資料的十分鐘會吃掉整段專注。'},
+  {id:'petrificus',n:'整整，石化',en:'Petrificus Totalus',e:'🧊',lv:3,eff:'全身鎖死',
+   use:'把自己定住 25 分鐘。不查手機、不換科目、不站起來。'},
+  {id:'obliviate',n:'空空，遺忘',en:'Obliviate',e:'🌫️',lv:4,eff:'消除記憶',
+   use:'今天爛掉就讓它過去。**不准補**——這是保護規則，不是安慰。'},
+  {id:'occlumency',n:'鎖心術',en:'Occlumency',e:'🛡️',lv:4,eff:'封閉心靈',
+   use:'把別人的進度擋在外面。相對錄取比的是排名，不是誰的限動比較努力。'},
+  {id:'patronum',n:'疾疾，護法現身',en:'Expecto Patronum',e:'🦌',lv:5,eff:'驅逐催狂魔',
+   use:'催狂魔日唯一的解法：想起你為什麼要考。不是逼自己，是提醒自己。'},
+  {id:'evanesco',n:'消消失',en:'Evanesco',e:'🫥',lv:5,eff:'使物消失',
+   use:'桌上除了現在這一科，其他全部收走。看得到就會想切換。'},
+  {id:'apparition',n:'現影術',en:'Apparition',e:'💨',lv:6,eff:'瞬間移動',
+   use:'決心、目標、從容——三個 D。直接坐到位子上，不要繞路先整理房間。'},
+  {id:'serpensortia',n:'蛇蛇攻',en:'Serpensortia',e:'🐍',lv:6,eff:'召喚巨蛇',
+   use:'史萊哲林的野心用在這裡：把最強的那一科練到沒人敢碰。'},
+  {id:'legilimency',n:'破心術',en:'Legilimency',e:'👁️',lv:7,eff:'讀取心靈',
+   use:'讀出題人的心：這題在考哪個要件？看穿題目比背熟課本有用。'},
+  {id:'protego',n:'速速護，護法現身',en:'Protego Maxima',e:'🏰',lv:8,eff:'最強護盾',
+   use:'考前七天的封盤就是這個咒。城牆立起來，新教材一律擋在外面。'},
+  {id:'finite',n:'咒立停',en:'Finite Incantatem',e:'🛑',lv:9,eff:'解除一切咒語',
+   use:'考完就放下。出考場那一刻，所有效果解除——不要對答案。'},
+  {id:'unforgivable',n:'三個不可饒恕咒',en:'The Unforgivable Curses',e:'☠️',lv:10,eff:'使用者將被關進阿茲卡班',
+   use:'熬夜、補進度、跟別人比。這三個會殺死計畫，而且對施咒者本人生效。'}
+];
+function learnedSpells(){ return LS.get('hp_spells',{}); }
+function spellState(s){
+  if(learnedSpells()[s.id]) return 'learned';
+  return currentLevelIdx()>=s.lv? 'ready' : 'locked';
+}
+function renderSpells(){
+  const box=document.getElementById('spellBook'); if(!box) return;
+  const idx=currentLevelIdx();
+  const learned=SPELLS.filter(s=>spellState(s)==='learned').length;
+  const ready=SPELLS.filter(s=>spellState(s)==='ready').length;
+  const meta=document.getElementById('spellMeta');
+  if(meta) meta.innerHTML= `目前 <b>${LEVELS[idx].t}</b>　·　已學會 <b>${learned}/${SPELLS.length}</b>`
+    + (ready? `　·　<span class="sp-ready-n">${ready} 個可以學了</span>` : '');
+  box.innerHTML=SPELLS.map(s=>{
+    const st=spellState(s);
+    const need=LEVELS[s.lv].t;
+    return `<div class="spell ${st}">
+      <div class="sp-rune">${st==='locked'?'🔒':s.e}</div>
+      <div class="sp-body">
+        <div class="sp-head">
+          <span class="sp-n">${st==='locked'?'？？？':s.n}</span>
+          <span class="sp-en">${st==='locked'?'':s.en}</span>
+        </div>
+        ${st==='locked'
+          ? `<div class="sp-use dim">升上<b>${need}</b>才學得會。</div>`
+          : `<div class="sp-eff">${s.eff}</div><div class="sp-use">${s.use.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')}</div>`}
+      </div>
+      ${st==='ready'? `<button class="magic small sp-learn" data-spell="${s.id}">練習</button>`
+        : st==='learned'? `<span class="sp-done">已學會</span>` : ''}
+    </div>`;
+  }).join('');
+  box.querySelectorAll('.sp-learn').forEach(b=>b.addEventListener('click',()=>{
+    const s=SPELLS.find(x=>x.id===b.dataset.spell); if(!s) return;
+    castSpell(b.closest('.spell'), s);
+  }));
+}
+function castSpell(el, s){
+  const o=learnedSpells(); o[s.id]=todayStr(); LS.set('hp_spells',o);
+  el.classList.add('casting');
+  const fx=document.createElement('div');
+  fx.className='cast-fx';
+  fx.innerHTML=`<span class="cast-word">${s.en}</span>`
+    + Array.from({length:14},(_,i)=>`<i style="--a:${i*(360/14)}deg;--dd:${(0.35+Math.random()*0.3).toFixed(2)}s"></i>`).join('');
+  el.appendChild(fx);
+  chime(false);
+  setTimeout(()=>{ renderSpells(); toast(`✨ 學會了：${s.n}`); }, 900);
 }
 
 /* ═══ 預言家日報 ═══ */
