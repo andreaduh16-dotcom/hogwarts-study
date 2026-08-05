@@ -295,20 +295,43 @@ details.fold .fold-body{padding:0 16px 15px;}
 /* 最後一欄（數值）靠右、用等寬數字 */
 .schedule-table td:last-child{text-align:right; white-space:nowrap; color:var(--silver-hi); font-variant-numeric:tabular-nums;}
 .schedule-table th:last-child{text-align:right;}
+/* .txt＝最後一欄是文字不是數值，讓它正常換行，不要撐出橫向捲動 */
+.schedule-table.txt td:last-child,.schedule-table.txt th:last-child{text-align:left; white-space:normal;}
+.schedule-table.txt td{line-height:1.55;}
 .card.parch .schedule-table th{color:var(--gold);}
-.tbl-wrap{overflow-x:auto;}
+.tbl-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
 
 /* ── 時間軸 ── */
 .timeline{position:relative; margin-left:9px; padding-left:19px; border-left:2px solid var(--line-str);}
 .phase{position:relative; margin-bottom:19px;}
 .phase::before{content:''; position:absolute; left:-26px; top:3px; width:13px; height:13px; border-radius:50%; background:var(--stone2); border:2px solid var(--line-str);}
 .phase.current::before{background:var(--green-lt); border-color:var(--green-lt); box-shadow:0 0 13px var(--green-lt);}
+.phase.done::before{background:var(--line-str); border-color:var(--line-str);}
 .phase .ph-title{font-family:"Cinzel","Noto Serif TC",serif; font-weight:600; color:var(--silver-hi); font-size:13.5px;}
 .phase.current .ph-title{color:var(--gold);}
+.phase.done .ph-title,.phase.done .ph-date{opacity:.5;}
 .phase .ph-date{font-size:11px; color:var(--dim); margin-bottom:4px;}
 .phase.current .ph-title::after{content:' ← 現在'; color:var(--gold); font-size:11px;}
 .week-focus{font-size:12.5px; background:rgba(255,255,255,.045); border-radius:7px; padding:8px 10px; margin-top:5px; line-height:1.6; border-left:2px solid var(--line);}
 .card.parch .week-focus{background:rgba(0,0,0,.22); border-left-color:rgba(201,169,78,.3);}
+
+/* ── 階段詳解（地圖頁：這階段到底要幹嘛） ── */
+.ph-goal{font-size:12.5px; line-height:1.65; margin:6px 0 8px; padding:9px 11px; border-radius:8px;
+  background:rgba(92,192,132,.09); border-left:2px solid var(--green-lt); color:var(--silver-hi);}
+.phase.current .ph-goal{background:rgba(201,169,78,.1); border-left-color:var(--gold);}
+.ph-sub{font-family:"Cinzel","Noto Serif TC",serif; font-size:10.5px; letter-spacing:1.3px;
+  color:var(--green-lt); margin:11px 0 5px; display:flex; align-items:center; gap:8px;}
+.ph-sub::after{content:''; flex:1; height:1px; background:var(--line);}
+.phase.current .ph-sub{color:var(--gold);}
+.ph-rhythm{width:100%; border-collapse:collapse; font-size:12px;}
+.ph-rhythm td{padding:5px 8px; border-bottom:1px solid rgba(255,255,255,.05); vertical-align:top; line-height:1.55;}
+.ph-rhythm tr:last-child td{border-bottom:none;}
+.ph-rhythm td:first-child{white-space:nowrap; color:var(--green-lt); font-weight:600; width:1%;}
+.phase.current .ph-rhythm td:first-child{color:var(--gold);}
+.ph-check{font-size:12px; line-height:1.6; margin-top:8px; padding:8px 11px; border-radius:8px;
+  background:rgba(255,255,255,.04); border:1px dashed var(--line-str); color:var(--silver-hi);}
+.ph-warn{font-size:12px; line-height:1.6; margin-top:7px; padding:8px 11px; border-radius:8px;
+  background:rgba(214,109,109,.09); border-left:2px solid #d66d6d; color:#f0c9c9;}
 
 /* ── Toast ── */
 .toast-container{position:fixed; top:12px; right:12px; z-index:60; display:flex; flex-direction:column; gap:7px; align-items:flex-end;}
@@ -326,7 +349,11 @@ details.fold .fold-body{padding:0 16px 15px;}
 /* ── 誓言 ── */
 .vow-plaque{border:1px solid var(--line-str); border-radius:14px; padding:15px 17px; margin-bottom:12px; background:linear-gradient(160deg,rgba(24,48,35,.55),rgba(14,28,21,.55)); text-align:center; box-shadow:inset 0 0 34px rgba(61,143,94,.09);}
 .vow-title{font-family:"Cinzel","Noto Serif TC",serif; font-size:13.5px; color:var(--gold); margin-bottom:8px; letter-spacing:2px;}
-.vow-item{font-size:13px; margin:5px 0; color:var(--silver);}
+.vow-item{font-size:13px; margin:5px 0; color:var(--silver); line-height:1.6;}
+.vow-rule{margin-top:12px; padding-top:11px; border-top:1px solid var(--line-str);}
+.vow-rule .vow-item{font-size:12px; color:var(--dim); text-align:left; padding-left:2px;
+  text-indent:-.9em; margin-left:.9em;}
+.vow-rule .vow-item b{color:var(--silver);}
 
 /* ── 熱圖 ── */
 .hm-wrap{overflow-x:auto; padding-bottom:3px; scrollbar-width:thin;}
@@ -690,8 +717,8 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     <details class="fold">
       <summary>🔮 咒法對照表 <span class="fold-sub">哪一科是哪門魔法</span></summary>
       <div class="fold-body">
-      <div class="tbl-wrap"><table class="schedule-table">
-        <tr><th>咒法</th><th>科目</th><th>一試（600）</th><th>一試在哪卷</th><th>二試（1000）</th></tr>
+      <div class="tbl-wrap"><table class="schedule-table txt">
+        <tr><th>咒法</th><th>科目</th><th>一試（600）</th><th>在哪卷</th><th>二試（1000）</th></tr>
         <tr><td>變形學</td><td>民法</td><td>100</td><td>三</td><td rowspan="2">300（民法民訴合卷，分兩節各 150）</td></tr>
         <tr><td>魔咒學</td><td>民訴</td><td>60</td><td>三</td></tr>
         <tr><td>魔藥學</td><td>行政法</td><td>70</td><td>二</td><td rowspan="2">200（憲行合卷）</td></tr>
@@ -711,9 +738,8 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
         <tr><td>鍊金術</td><td>智慧財產法（選試）</td><td>—</td><td>—</td><td>100</td></tr>
       </table></div>
       <p class="dim" style="margin-top:8px;">
-        <b>一試 600 分</b>全部單選、每題 2 分，取全程到考人數前 33%（相對錄取，目標是贏三分之二的人）。<br>
-        <b>看得出來的事</b>：民法＋民訴一試佔 160、二試佔 300，兩試都是最大宗——〈變形學〉和〈魔咒學〉永遠優先。<br>
-        <b>第四卷是雜貨店</b>：六科湊 140 分，每科都不多，但加起來比民法還重，而且都是「讀一點就有分、不讀就是零」的科目。<br>
+        <b>民法＋民訴</b>一試佔 160、二試佔 300，兩試都是最大宗——〈變形學〉和〈魔咒學〉永遠優先。<br>
+        <b>第四卷是雜貨店</b>：六科湊 140 分，加起來比民法還重，而且都是「讀一點就有分、不讀就是零」的科目。<br>
         配分逐年微調，2027 年 4 月報名時的應考須知才是正本。
       </p>
       </div>
@@ -722,8 +748,9 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     <details class="fold">
       <summary>⏱️ 考試節次 <span class="fold-sub">真實時間表——模考照這個計時</span></summary>
       <div class="fold-body">
-      <h3>O.W.L. 一試 · 2027/7/31（一天四卷）</h3>
-      <div class="tbl-wrap"><table class="schedule-table">
+      <h3>O.W.L. 一試 · 2027/7/31（週六・一天四卷・600 分）</h3>
+      <p class="dim" style="margin:-4px 0 8px;">全部單一選擇題、每題 2 分，取全程到考人數<b>前 33%</b>——相對錄取，目標是贏三分之二的人。</p>
+      <div class="tbl-wrap"><table class="schedule-table txt">
         <tr><th>考卷</th><th>時間</th><th>科目與配分</th></tr>
         <tr><td>第一卷<br><span class="dim">綜合法學（一）</span></td><td>09:00–10:30<br><span class="dim">90 分鐘</span></td><td>刑法 70、刑訴 50、法倫 30</td></tr>
         <tr><td>第二卷<br><span class="dim">綜合法學（一）</span></td><td>11:10–12:40<br><span class="dim">90 分鐘</span></td><td>行政法 70、憲法 40、國公 20、國私 20</td></tr>
@@ -732,7 +759,8 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       </table></div>
       <p class="dim" style="margin-top:8px;">⚠️ <b>午休是 12:40–14:00</b>，不是你平常的 12:00。考前那週要把午餐時間往後調，不然考當天第三卷開始前你已經餓了。</p>
 
-      <h3 style="margin-top:16px;">N.E.W.T. 二試 · 2027/10/24–10/25（兩天七節）</h3>
+      <h3 style="margin-top:16px;">N.E.W.T. 二試 · 2027/10/24–10/25（週日＋週一・兩天七節・1000 分）</h3>
+      <p class="dim" style="margin:-4px 0 8px;">申論題，<b>電腦作答</b>。除國文外都附發法條——分數在論述結構與涵攝，不在背誦。</p>
       <div class="tbl-wrap"><table class="schedule-table">
         <tr><th>日期</th><th>時間</th><th>科目</th><th>配分</th></tr>
         <tr><td rowspan="3">第一天<br>10/24</td><td>08:00–11:00<span class="dim">（3hr）</span></td><td>憲法、行政法</td><td>200</td></tr>
@@ -744,15 +772,16 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
         <tr><td>16:40–18:40<span class="dim">（2hr）</span></td><td>選試：智慧財產法〈鍊金術〉</td><td>100</td></tr>
       </table></div>
       <p class="dim" style="margin-top:8px;">
-        兩天都是 08:00 寫到 18:40。二試除國文外<b>都附發法條</b>——分數在論述結構與涵攝，不在背誦。<br>
-        選試四選一（智財／勞社／財稅／海商海洋），你的路線是<b>智慧財產法〈鍊金術〉</b>，因為著作權法和專利法你本來就在修。
+        <b>兩天都是 08:00 寫到 18:40。</b>第二天下午寫智財時，你已經連續兩天各打了 10 小時的字——這是體力的考試。<b>電腦作答</b>，所以階段 6 全程用電腦練，順便把打字速度練起來。<br>
+        選試四選一（智財／勞社／財稅／海商海洋），你走<b>智慧財產法〈鍊金術〉</b>，因為著作權法和專利法你本來就在修，等於別人要多讀一科、你不用。<br>
+        <b>10/25 是星期一</b>——2027 秋季選課，星期一不要排課。
       </p>
       </div>
     </details>
 
     <div class="card">
-      <h2>🗺️ 全年時間軸</h2>
-      <p class="dim">這張大表一週看一次就好——平常日回「今天」看 hero 卡即可。</p>
+      <h2>🗺️ 全年計畫</h2>
+      <p class="dim">八個階段，每一段都寫清楚「要幹嘛、每天怎麼跑、什麼算過關」。<b>不確定現在該做什麼就翻到這裡</b>；只想知道今天做什麼，回「📜 今天」。</p>
       <div class="timeline" id="timelineBox"></div>
     </div>
   </section>
@@ -795,6 +824,11 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       <div class="vow-item">① 每天默寫 10 條條文，就算那天只讀了 20 分鐘</div>
       <div class="vow-item">② 錯題不隔夜，今天的今天入本</div>
       <div class="vow-item">③ 週日回顧不跳過</div>
+      <div class="vow-rule">
+        <div class="vow-title" style="margin:0 0 7px; font-size:11.5px; letter-spacing:1.6px;">兩條保護規則</div>
+        <div class="vow-item"><b>不准補。</b>今天沒做完，明天不加倍——落後就改計畫，不是加班</div>
+        <div class="vow-item"><b>停在時間，不停在進度。</b>時間到就停，不是「讀完這章才能停」</div>
+      </div>
     </div>
     <details class="fold">
       <summary>📖 名詞解釋 <span class="fold-sub">看不懂計畫裡的詞就開這裡</span></summary>
@@ -837,7 +871,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       <h3>🧪 沒有模考班／補習班可以報名？照樣能模考</h3>
       <p>模考的核心不是「有人監考」，是<b>照真實節次時間、一次寫完一整份、事後才對答案</b>。這三件事你自己就能做：</p>
       <p><b>一試：</b>TaiLexi 一試平台開<b>「真分科」</b>模式（照真實考科組合出題）＋<b>「整卷後詳解」</b>（全部寫完才看解答），照〈學院地圖〉裡「考試節次」那張真實時間表計時、中途不查書不暫停。手機調飛航、鬧鐘設節次時間，跟真的考場沒兩樣。<br>
-      <b>二試：</b>從 288 題歷屆子題挑一整份考科，紙筆照節次時間實寫（不要在電腦上打字，考場是手寫），寫完再對著詳解電子書自己批改一輪；<b>每月 2 次免費 AI 批改額度</b>留給你覺得寫得最沒把握的那篇，AI 批改的「改寫示範」比自己對答案更準。</p>
+      <b>二試：</b>從 288 題歷屆子題挑一整份考科，<b>用電腦</b>照節次時間實寫（考場是電腦作答，就用電腦練），寫完再對著詳解電子書自己批改一輪；<b>每月 2 次免費 AI 批改額度</b>留給你覺得寫得最沒把握的那篇，AI 批改的「改寫示範」比自己對答案更準。</p>
       <p class="dim">差別只在少了「別人盯著你」——但緊張感和體力分配才是模考真正練的東西，自己計時一樣練得到。</p>
 
       <h3>📝 二試平台 · 階段 6 主場</h3>
@@ -853,12 +887,6 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       <p>AI 法學搜索引擎（用白話描述案情找相似判決）、法條大師、引用次數、關鍵段落、歷審判決分析、<b>攻防對照</b>（練申論很有用，申論就是寫兩造攻防）、<b>檢方模組</b>（你 8/10 考檢事官，現在就能用）。</p>
       <div id="taiLexiLock"></div>
     </div>
-    <div class="card">
-      <h2>📌 兩條保護規則</h2>
-      <p><b>① 不准補。</b>今天沒做完，明天不加倍，落後就改計畫。</p>
-      <p><b>② 停在時間，不停在進度。</b>50 分鐘到了就停，不是讀完這章才能停。</p>
-    </div>
-
     <details class="fold">
       <summary>💾 備份與搬移 <span class="fold-sub">換裝置、怕資料不見時才需要</span></summary>
       <div class="fold-body">
@@ -1132,60 +1160,7 @@ function mondayOf(s){
   dt.setDate(dt.getDate()+(day===0?-6:1-day));
   return toLocalDateStr(dt);
 }
-const PHASES=[
-  {id:1,name:'開學前空窗',start:'2026-08-11',end:'2026-09-06',tag:'全職',
-   weeks:['第1週：憲法〈魔法理論〉全科一輪——全年覆蓋最薄，趁還有整天時間做掉',
-          '第2週：民法〈變形學〉親屬繼承——檢事官沒考到的真空，數字多、選擇題愛考',
-          '第3週：民法〈變形學〉攤平（總則＋債＋物權）＋五編體系表定稿',
-          '第4週：預習秋季課程——民訴一（60分）為主、公司法（30分）次之',
-          '⚠️ 行政法與刑事法攤平已移到寒假（寒假有 7 週，放得下）'],
-   weekShort:['憲法〈魔法理論〉全科一輪','民法〈變形學〉親屬繼承','民法〈變形學〉攤平＋體系表定稿','預習秋季課程（民訴一為主）']},
-  {id:2,name:'秋季學期',start:'2026-09-07',end:'2026-12-25',tag:'在校・維持',
-   weekRanges:[[1,16]],
-   weeks:['這學期的定位是「不要退步」，不是「往前推」——平日沒有司律自習時間。',
-          '⚠️ 16 週裡最後 3 週（12/5–12/25）是期末考期，司律排 0 → **實際只有 13 週**',
-          '週六：憲法〈魔法理論〉第二輪（釋字、憲判字的理由書）',
-          '週日上午：TaiLexi 刷題 50 題＋錯題；下午完全休息',
-          '平日：默寫 10 條。其餘課業本身就是那 130 分（民訴、商事法、國私、著作權、專利）',
-          '報告要在 12/4 前交完——12/5 起沒有餘裕']},
-  {id:3,name:'寒假',start:'2026-12-26',end:'2027-02-14',tag:'全職',
-   weeks:['⭐ 這是全年最長的一段全職期（7 週），秋季塞不下的東西全部在這裡補完',
-          '第1–2週：行政法〈魔藥學〉攤平（重點：函釋）＋刑法〈黑魔法防禦術〉刑訴〈決鬥課〉攤平',
-          '第3–5週：TaiLexi 一試題庫 2,968 題第一輪（開「智能不重複」＋「即時詳解」）',
-          '2,968 題 ÷ 18 天 ≈ 每天 165 題；若吃力就拉到 4 週、每天 124 題',
-          '第6週：看歷史成績，正確率最低的兩科單獨再刷',
-          '第7週：只做錯題不做新題（用「練習錯題」功能）',
-          '檢核點：任一主科正確率低於 65% → 春季週一優先給它']},
-  {id:4,name:'春季學期',start:'2027-02-15',end:'2027-06-04',tag:'在校・半推進',
-   weeks:['比秋季多一天：週一全天沒課，那是整學期最大的一塊，任何理由都不要動',
-          '⚠️ 16 週裡最後 3 週（5/15–6/4）是期末考期，司律排 0 → **實際只有 13 週**',
-          '週一：錯題第二輪（TaiLexi「練習錯題」）',
-          '週六：刷題；模考三場 4/3、4/24、5/8（用「整卷後詳解」模式）',
-          '報告要在 5/14 前全部交完——5/15 起沒有餘裕',
-          '4 月報名時核對應考須知的配分']},
-  {id:5,name:'暑假衝刺',start:'2027-06-05',end:dayBefore(OWL_DATE),tag:'全職',
-   weeks:['前4週：每週一次全真模考，考後兩天檢討','後2週：封盤，只錯題本第三輪＋條文速讀','考前7天：條文＋錯題本＋作息調成考試時間']},
-  {id:'owl',name:'O.W.L. 一試',start:OWL_DATE,end:OWL_DATE,tag:'考試',weeks:[]},
-  {id:6,name:'N.E.W.T. 特訓',start:'2027-08-15',end:dayBefore(NEWT_DATE),tag:'半在校',
-   weeks:['1–2週：建各科答題模板（爭點→法條→學說／實務→涵攝→結論）','3–7週：每天一題實寫，憲法〈魔法理論〉排兩週','8週：兩天連續全真模考','9週：國文作文3篇＋智財〈鍊金術〉收尾']},
-  {id:'newt',name:'N.E.W.T. 二試',start:NEWT_DATE,end:NEWT_END_DATE,tag:'考試',weeks:[]}
-];
-function currentPhase(){
-  const now=d(todayStr());
-  for(const p of PHASES) if(now>=d(p.start)&&now<=d(p.end)) return p;
-  if(now<d(PHASES[0].start)) return null;
-  return PHASES[PHASES.length-1];
-}
-function weekIdx(p){ return Math.floor(daysBetween(d(mondayOf(p.start)), d(todayStr()))/7); }
-
-/* ═══ 咒法對照 ═══ */
-const COURSE_SPELL={
-  '經濟刑法與刑事法遵二':'黑魔法防禦術・高階','法學研究與寫作':'論述煉成','法學研究與寫作二':'論述煉成・進階',
-  '著作權法':'鍊金術・靈魂篇','專利法':'鍊金術・配方篇','法德一':'不重疊','法學德文二':'不重疊',
-  '商事法一（公司法）':'算術占卜','商事法二（保險法）':'占卜學','專題演講':'魔法研討會',
-  '民事訴訟法一':'魔咒學','民事訴訟法二':'魔咒學・進階','法理學':'魔法哲學','國際私法':'天文學'
-};
-function csp(n){ return COURSE_SPELL[n]? `${n}〈${COURSE_SPELL[n]}〉` : n; }
+/* 全職期每天的固定骨架——階段 1、3、5、6 共用，寫一次就好 */
 /* 考科（不是課名）→ 咒法 */
 const EXAM_SPELL={
   '民法':'變形學','民訴':'魔咒學','行政法':'魔藥學','刑法':'黑魔法防禦術','刑訴':'決鬥課',
@@ -1215,6 +1190,115 @@ const NEWT_PAPERS=[
   {day:2,t:'14:00–16:00',hr:2,name:'公司、保險與證交',pts:100},
   {day:2,t:'16:40–18:40',hr:2,name:'選試：智慧財產法',pts:100}
 ];
+
+const FULLTIME_RHYTHM=[
+  ['09:00–09:15','默寫 10 條條文'],
+  ['09:15–11:00','主攻科目：讀體系／攤平'],
+  ['11:00–11:15','休息，離開位子'],
+  ['11:15–12:00','刷題——<b>就是上午讀的那一科</b>（TaiLexi 即時詳解）'],
+  ['12:00–13:00','午餐'],
+  ['13:00–13:20','飯後緩衝，想放空就放空（排定的，不是摸魚）'],
+  ['13:20–14:20','接續刷同一科（同一件事做完，不是新的一段）'],
+  ['14:20–14:50','錯題入本'],
+  ['14:50 之後','<b>收工。</b>晚上是你的，不排']
+];
+const PHASES=[
+  {id:1,name:'開學前空窗',start:'2026-08-11',end:'2026-09-06',tag:'全職',len:'4 週',
+   goal:'唯一一段「整天都是你的、而且還沒開學」的時間。要補的是檢事官沒考到的兩個洞——憲法和民法身分法——順便把秋季的課先預習掉。',
+   rhythm:FULLTIME_RHYTHM,
+   weeks:['<b>第 1 週｜憲法〈魔法理論〉全科一輪</b>——全年覆蓋最薄的一科，趁還有整天時間做掉。一試 40 分、二試跟行政法合卷 200 分。',
+          '<b>第 2 週｜民法〈變形學〉親屬繼承</b>——檢事官的財產法不含身分法，這是民法唯一的真空。數字特別多（期間、年齡、比例），選擇題最愛考。',
+          '<b>第 3 週｜民法〈變形學〉攤平</b>（總則＋債＋物權）＋<b>五編體系表定稿</b>。記憶最熱的時候拉廣度，五編一起收。',
+          '<b>第 4 週｜預習秋季課程</b>——民訴一（60 分）為主、公司法（30 分）次之。開學後平日沒有司律自習時間，走進教室如果是「第一次接觸」，那堂課只能拿來理解；有框架的話，同樣兩小時就變成複習。'],
+   check:'過關標準：能<b>空手畫出</b>民法五編＋憲法的體系表。畫不出來就再給一週，不要硬往下走。',
+   warn:'智財〈鍊金術〉這四週完全不碰，秋季有著作權法和專利法兩門課接手。也不要預習法德一，它跟司律零重疊。行政法與刑事法的攤平已移到寒假（那裡有 7 週，放得下）。',
+   weekShort:['憲法〈魔法理論〉全科一輪','民法〈變形學〉親屬繼承','民法〈變形學〉攤平＋體系表定稿','預習秋季課程（民訴一為主）']},
+
+  {id:2,name:'秋季學期',start:'2026-09-07',end:'2026-12-25',tag:'在校・維持',len:'16 週（扣掉期末考期，實際 13 週）',
+   goal:'定位是「<b>不要退步</b>」，不是「往前推」。平日沒有司律自習時間——但你在修的課（民訴 60、公司法 30、保險法 20、國私 20）本身就是那 130 分，上課就是在讀司律，不用有罪惡感。',
+   rhythm:[['週一～週五','<b>只做默寫 10 條。</b>其餘時間＝上課＋課業，那就是進度'],
+           ['週六','憲法〈魔法理論〉第二輪——讀釋字與憲判字的<b>理由書</b>（選擇題常從理由書出題，不是主文）'],
+           ['週日上午','TaiLexi 刷題 50 題＋當天錯題入本'],
+           ['週日下午','<b>完全休息</b>，連默寫都不用。這是排定的，不是偷懶']],
+   weeks:['這學期只做兩件事：<b>憲法二輪</b>和<b>開始刷題</b>。以前的版本在這裡排了刑法攤平、刑訴攤平、民法二輪、票據證交、小科總掃——那需要每週 33 小時，你沒有。',
+          '默寫 10 條的來源＝TaiLexi 的 <b>272 條高頻必考法條</b>（六年內出現 3 次以上），27 天跑完一輪。'],
+   check:'報告要在 <b>12/4 前</b>全部交完——12/5 起沒有餘裕。',
+   warn:'16 週裡最後 3 週（12/5–12/25）是期末考期，司律進度排 0 → <b>實際只有 13 週</b>。年度總表已經算進去了，那三週你不會欠自己任何東西。'},
+
+  {id:3,name:'寒假',start:'2026-12-26',end:'2027-02-14',tag:'全職',len:'7.3 週',
+   goal:'⭐ <b>全年最長的一段全職期（7.3 週）</b>。秋季塞不下的東西全部在這裡補完，並跑完一試題庫第一輪。這一段做得好不好，幾乎決定一試結果。',
+   rhythm:FULLTIME_RHYTHM,
+   weeks:['<b>第 1–2 週｜攤平</b>：行政法〈魔藥學〉（重點補「<b>函釋</b>」——教科書不寫，但行政法選擇題很愛考）＋ 刑法〈黑魔法防禦術〉刑訴〈決鬥課〉（分則細節、選擇題角落）。重點是<b>廣度不是深度</b>。',
+          '<b>第 3–5 週｜一試題庫第一輪 2,968 題</b>：開「智能不重複」＋「即時詳解」。2,968 ÷ 18 天 ≈ <b>每天 165 題</b>；吃力就拉到 4 週、每天 124 題。寒假有 7 週，來得及。',
+          '<b>第 6 週｜弱科補強</b>：看 TaiLexi 歷史成績，正確率最低的兩科單獨再刷一輪。',
+          '<b>第 7 週｜只做錯題，不做新題</b>（用「練習錯題」功能）。'],
+   check:'檢核點：<b>任一主科正確率低於 65%</b> → 春季的週一優先給它。',
+   warn:'不要為了追 165 題/天而放棄詳解——刷完沒消化等於沒刷。寧可放慢到 124 題。'},
+
+  {id:4,name:'春季學期',start:'2027-02-15',end:'2027-06-04',tag:'在校・半推進',len:'16 週（扣掉期末考期，實際 13 週）',
+   goal:'比秋季多一天：<b>週一全天沒課</b>。那是整學期最大的一塊，任何理由都不要動它。',
+   rhythm:[['週一（全天沒課）','<b>主攻日</b>：錯題第二輪（TaiLexi「練習錯題」），約 4 小時，照全職期的日表走'],
+           ['週二～週五','默寫 10 條。其餘＝上課＋課業'],
+           ['週六','刷題；<b>模考日</b>照真實四卷節次（09:00–17:40）自己計時'],
+           ['週日上午','刷題／錯題；下午休息']],
+   weeks:['<b>全真模考三場：4/3、4/24、5/8</b>（週六）。用 TaiLexi「真分科」＋「<b>整卷後詳解</b>」模式，照真實時間，中途不查書。',
+          '最後一場提前到 5/8，是因為 5/15 起就是期末考期了。',
+          '<b>模考後兩天專做檢討</b>：寫一頁只回答一個問題——<b>哪一類在流血？</b>觀念錯 → 回去讀那章；看錯題目 → 練圈「非／不／下列何者」；時間不夠 → 練跳題。<b>一次只修一項。</b>'],
+   check:'4 月報名時，用應考須知<b>核對配分有沒有調整</b>，並確認二試選試填的是智慧財產法。報告要在 <b>5/14 前</b>全部交完。',
+   warn:'16 週裡最後 3 週（5/15–6/4）是期末考期，司律排 0 → <b>實際只有 13 週</b>。考完 6/4，隔天 6/5 就進暑假衝刺，中間沒有緩衝——所以報告一定要在 5/14 前清完。'},
+
+  {id:5,name:'暑假衝刺',start:'2027-06-05',end:dayBefore(OWL_DATE),tag:'全職',len:'8 週',
+   goal:'從「還在學」切換到「只在修」。這 8 週不再增加知識面積，只把已經有的東西練到能在考場上取出來。',
+   rhythm:[['前 4 週・每週六','<b>自辦全真模考</b>，照 09:00–17:40 四卷節次。TaiLexi 開「真分科」＋「整卷後詳解」'],
+           ['模考後兩天','專做檢討：寫一頁「哪一類在流血」，下週只修那一項'],
+           ['其餘日','刷題＋弱科加強（照全職期日表）'],
+           ['後 2 週','<b>封盤</b>：不碰任何新教材。只有錯題本第三輪＋272 條高頻條文速讀'],
+           ['考前 7 天','條文＋錯題本，<b>午餐改成 12:40–14:00</b>，作息整個調成考試時間']],
+   weeks:['<b>沒有模考班不影響。</b>模考的核心不是有人監考，是三件事：照真實節次時間、一次寫完不查書、事後才對答案——這三件你自己都做得到。',
+          '模考真正在練的是<b>體力分配</b>：09:00 撐到 17:40，最後一卷（第四卷六科雜貨店）你還要能算票據法。'],
+   check:'封盤後如果還很想讀新東西，那是焦慮不是需求——去睡覺。',
+   warn:'考前 7 天把午餐往後推到 12:40。真實考場午休就是 12:40–14:00，你平常 12:00 吃飯，考當天最大分數的第三卷（民法 100＋民訴 60）開始前會已經餓過頭。'},
+
+  {id:'owl',name:'O.W.L. 一試',start:OWL_DATE,end:OWL_DATE,tag:'考試',len:'一天四卷',
+   goal:'一天四卷，600 分，全部單選、每題 2 分。取全程到考人數<b>前 33%</b>——你不用考滿分，你要贏三分之二的人。',
+   rhythm:OWL_PAPERS.map(p=>[p.t.replace('–','–'),`<b>${p.no}</b>　${p.subs.map(s=>s[0]+' '+s[1]).join('、')}`]),
+   weeks:[],
+   warn:'午休是 12:40–14:00。飛行課（時間分配）——不要在一題上盤旋，不會的先跳過。'},
+
+  {id:6,name:'N.E.W.T. 特訓',start:'2027-08-15',end:dayBefore(NEWT_DATE),tag:'半在校',len:'10 週',
+   goal:'從<b>選擇題腦</b>切換到<b>申論腦</b>。好消息是真正的新東西只有兩樣：<b>憲法申論</b>和<b>國文作文</b>；其他科目一試都讀過了，差別只在輸出方式。',
+   rhythm:[['第 1–2 週','建各科<b>答題模板</b>：爭點→法條→學說／實務→涵攝→結論。每科一張 A4'],
+           ['第 3–7 週','<b>每天一題實寫</b>（用電腦，二試是電腦作答）。每週輪一科，<b>憲法排兩週</b>'],
+           ['每週一次','挑<b>一篇</b>送 TaiLexi AI 批改，重點看「<b>改寫示範</b>」——把它的句型抄進自己的模板'],
+           ['第 8 週','<b>週六＋週日連兩天全真模考</b>，照 10/24–10/25 的真實節次'],
+           ['第 9–10 週','國文作文 3 篇 ＋ 智財〈鍊金術〉收尾 ＋ 模板背熟']],
+   weeks:['<b>申論的三個現實：</b>① 除國文外都<b>附發法條</b> → 分數不在背誦，在論述結構與涵攝。② 刑法、商事法常要求「附具個人意見」→ 每個爭點備一句「本文認為……，理由是……」。③ 每題有 10 頁作答空間 → <b>寫得少不會被同情。</b>',
+          '國文作文是全年<b>唯一沒有任何覆蓋</b>的科目，100 分。不要拖到最後三天。'],
+   check:'過關標準：每科都有一張<b>能默寫出來</b>的 A4 模板。',
+   warn:'⚠️ <b>全程用電腦練</b>——二試是電腦作答，順便把打字速度練起來。免費 AI 批改每月只有 2 次，所以每週只送一篇。批改紀錄是<b>本機儲存</b>，換瀏覽器或清快取就消失，批改完立刻複製到自己的筆記。'},
+
+  {id:'newt',name:'N.E.W.T. 二試',start:NEWT_DATE,end:NEWT_END_DATE,tag:'考試',len:'兩天七節',
+   goal:'兩天七節，1000 分，申論<b>電腦作答</b>。除國文外都附發法條。',
+   rhythm:NEWT_PAPERS.map(p=>[`${p.day===1?'10/24':'10/25'} ${p.t}`,`${p.name}　<b>${p.pts} 分</b>`]),
+   weeks:[],
+   warn:'兩天都是 08:00 寫到 18:40。這不是知識的考試，是體力的考試。'}
+];
+function currentPhase(){
+  const now=d(todayStr());
+  for(const p of PHASES) if(now>=d(p.start)&&now<=d(p.end)) return p;
+  if(now<d(PHASES[0].start)) return null;
+  return PHASES[PHASES.length-1];
+}
+function weekIdx(p){ return Math.floor(daysBetween(d(mondayOf(p.start)), d(todayStr()))/7); }
+
+/* ═══ 咒法對照 ═══ */
+const COURSE_SPELL={
+  '經濟刑法與刑事法遵二':'黑魔法防禦術・高階','法學研究與寫作':'論述煉成','法學研究與寫作二':'論述煉成・進階',
+  '著作權法':'鍊金術・靈魂篇','專利法':'鍊金術・配方篇','法德一':'不重疊','法學德文二':'不重疊',
+  '商事法一（公司法）':'算術占卜','商事法二（保險法）':'占卜學','專題演講':'魔法研討會',
+  '民事訴訟法一':'魔咒學','民事訴訟法二':'魔咒學・進階','法理學':'魔法哲學','國際私法':'天文學'
+};
+function csp(n){ return COURSE_SPELL[n]? `${n}〈${COURSE_SPELL[n]}〉` : n; }
 function endOf(t){ return t.split('–')[1]; }
 function startOf(t){ return t.split('–')[0]; }
 /* 自辦全真模考：照真實節次，中間的空檔也照真的排 */
@@ -1234,7 +1318,7 @@ function owlMockSegs(){
 function newtMockSegs(day){
   const ps=NEWT_PAPERS.filter(p=>p.day===day), segs=[];
   ps.forEach((p,i)=>{
-    segs.push({t:p.t,kind:'exam',label:`${esp(p.name)}　${p.pts} 分（${p.hr} 小時）`});
+    segs.push({t:p.t,kind:'exam',label:`${esp(p.name)}　${p.pts} 分（${p.hr} 小時・電腦作答）`});
     const nx=ps[i+1];
     if(nx) segs.push({t:`${endOf(p.t)}–${startOf(nx.t)}`,kind:'rest',
       label:'休息——不要檢討上一節，這節寫壞了下一節照樣要拿分'});
@@ -1321,8 +1405,11 @@ function getTodayPlan(){
         '預習商事法一（公司法）〈算術占卜〉——公司種類、機關、負責人責任',
         '整理兩科的架構筆記，開學直接帶進課堂');
     } else {
-      note='過關標準：能空手畫出民法五編＋憲法的體系表。智財〈鍊金術〉這四週完全不碰。';
-      segments=fulltimeSegs(`體系／攤平：${cp.weekShort[w]}`,`刷題：${cp.weekShort[w]}`,'錯題本＋TaiLexi 查漏');
+      note='過關標準：能空手畫出民法五編＋憲法的體系表。智財〈鍊金術〉這四週完全不碰。'
+         + '⚠️ 一天只有一科：下午刷的題就是上午讀的那一科，不要換科目——讀完立刻刷才記得住。';
+      segments=fulltimeSegs(`體系／攤平：${cp.weekShort[w]}`,
+                            `刷題：${cp.weekShort[w]}`,
+                            `錯題入本：${cp.weekShort[w]}`);
     }
   }
   else if(cp.id===2||cp.id===4){
@@ -1385,12 +1472,14 @@ function getTodayPlan(){
     // 寒假 12/26 起算，用「距開始天數」分段——12/26 是週六，若照週一切week 0 只會有 2 天
     const day=daysBetween(d(cp.start), d(tStr));
     if(day<14){
+      const subj = day<7? '行政法〈魔藥學〉' : '刑法〈黑魔法防禦術〉＋刑訴〈決鬥課〉';
       focus='補完秋季吃不下的攤平';
       note='秋季平日沒時間，行政法與刑事法的攤平留到這裡。重點是廣度不是深度。';
       segments=fulltimeSegs(
-        day<7? '行政法〈魔藥學〉攤平——重點補「函釋」，教科書不寫但選擇題愛考'
-             : '刑法〈黑魔法防禦術〉＋刑訴〈決鬥課〉攤平（分則細節、選擇題角落）',
-        '該科 TaiLexi 刷題（即時詳解模式）','錯題入本');
+        day<7? `${subj}攤平——重點補「函釋」，教科書不寫但選擇題愛考`
+             : `${subj}攤平（分則細節、選擇題角落）`,
+        `刷題：${subj}（TaiLexi 即時詳解）`,
+        `錯題入本：${subj}`);
     } else if(day<35){
       focus='一試題庫第一輪：2,968 題';
       note='開「智能不重複」＋「即時詳解」。每天約 165 題；吃力就放慢，寒假有 7 週，來得及。';
@@ -1436,7 +1525,7 @@ function getTodayPlan(){
   }
   else if(cp.id===6){
     const w=weekIdx(cp);
-    note='二試除國文外都附發法條——分數在論述結構與涵攝，不在背誦。';
+    note='二試除國文外都附發法條——分數在論述結構與涵攝，不在背誦。⚠️ 全部用電腦練，二試是電腦作答。';
     if(w<2){ focus='建各科答題模板（每科一張 A4）';
       segments=fulltimeSegs('答題模板：爭點→法條→學說／實務→涵攝→結論','模板（續）＋讀判決抄骨架','條文＋立法理由整理');
     } else if(w<7){ const s=NEWT_ROTATION[w-2]; focus=`本週主攻：${s}（每天一題實寫）`;
@@ -1446,8 +1535,8 @@ function getTodayPlan(){
         const md=wd===6?1:2;
         focus=`兩天連續全真模考・第${md==1?'一':'二'}天（照 10/24–10/25 真實節次）`;
         segments=newtMockSegs(md);
-        note='⚠️ 用你確認過的作答方式練（電腦 or 紙筆——4 月報名時看應考須知，不要練錯媒介）。'
-           + '第一天 08:00 寫到 18:40，這兩天真正在測的是「連續兩天還寫不寫得動」。免費 AI 批改額度留給你最沒把握的那一篇。';
+        note='用電腦作答，跟考場一致。第一天 08:00 寫到 18:40，'
+           + '這兩天真正在測的是「連續兩天還寫不寫得動」。免費 AI 批改額度留給你最沒把握的那一篇。';
       } else {
         focus='模考週：週六日連兩天全真模考，平日養體力';
         segments=fulltimeSegs('各科模板複習（不寫新題，留體力給週末）','條文＋判決骨架','早睡，把作息壓到 08:00 能寫字');
@@ -1725,13 +1814,26 @@ document.getElementById('saveParchment').addEventListener('click',()=>{
 
 /* ═══ 時間軸 ═══ */
 function renderTimeline(){
-  const cp=currentPhase();
+  const cp=currentPhase(), today=d(todayStr());
   document.getElementById('timelineBox').innerHTML=PHASES.map(p=>{
     const cur=cp&&cp.id===p.id;
-    const w=p.weeks.length? p.weeks.map(x=>`<div class="week-focus">${x}</div>`).join('') : '';
-    return `<div class="phase ${cur?'current':''}">
+    const done=!cur && today>d(p.end);
+    const span=p.start===p.end? p.start : `${p.start} ~ ${p.end}`;
+    const len= p.len? `　·　${p.len}` : '';
+    let h=`<div class="phase ${cur?'current':''}${done?' done':''}">
       <div class="ph-title">${p.name}（${p.tag}）</div>
-      <div class="ph-date">${p.dateLabel||`${p.start} ~ ${p.end}`}</div>${w}</div>`;
+      <div class="ph-date">${span}${len}</div>`;
+    if(p.goal)   h+=`<div class="ph-goal">${p.goal}</div>`;
+    if(p.rhythm&&p.rhythm.length){
+      h+=`<div class="ph-sub">${p.tag==='考試'?'當天節次':'每天／每週怎麼跑'}</div>`
+       + `<table class="ph-rhythm">${p.rhythm.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>`;
+    }
+    if(p.weeks&&p.weeks.length){
+      h+=`<div class="ph-sub">重點</div>`+p.weeks.map(x=>`<div class="week-focus">${x}</div>`).join('');
+    }
+    if(p.check) h+=`<div class="ph-check">✓ ${p.check}</div>`;
+    if(p.warn)  h+=`<div class="ph-warn">⚠️ ${p.warn}</div>`;
+    return h+'</div>';
   }).join('');
 }
 function renderPhaseChip(){
