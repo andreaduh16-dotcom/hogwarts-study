@@ -644,11 +644,93 @@ details.fold .fold-body{padding:0 16px 15px;}
 .slot.rar-r{border-color:#8a6bb5; background:rgba(138,107,181,.08);}
 
 /* ── 貓 ── */
-.cat-box{display:flex; align-items:center; gap:13px;}
-.cat-emoji{font-size:42px; flex-shrink:0; filter:drop-shadow(0 0 10px rgba(61,143,94,.28));}
-.cat-bubble{background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:12px; padding:9px 12px; font-size:13px; flex:1; line-height:1.6;}
-.cat-name{font-weight:700; cursor:pointer; color:var(--gold); text-decoration:underline dotted; text-underline-offset:3px;}
-.cat-meta{font-size:10.5px; color:var(--dim); margin-top:3px;}
+/* ══════ 魔寵 ══════ */
+.cat-stage{display:flex; align-items:center; gap:13px;}
+.cat-pet{
+  flex-shrink:0; position:relative; padding:0; border:none; background:none; cursor:pointer;
+  width:104px; height:108px; line-height:0;
+  transition:transform .18s;
+}
+.cat-pet:active{transform:scale(.96);}
+.cat-svg{width:100%; height:100%; overflow:visible;}
+/* 貓的顏色跟著成長階段變 */
+.cat-svg{--fur:#3c4a42; --fur2:#2c3830; --eye:#8fd6a8; --collar:transparent; --glow:0;}
+.c-shadow{fill:rgba(0,0,0,.32);}
+.c-body,.c-face{fill:var(--fur); stroke:var(--fur2); stroke-width:1.5;}
+.c-paw{fill:var(--fur2);}
+.c-ear{fill:var(--fur); stroke:var(--fur2); stroke-width:1.5; stroke-linejoin:round;}
+.c-ear-in{fill:#6b4a52; opacity:.75;}
+.c-eye{fill:var(--eye);}
+.c-pupil{fill:#0a1410;}
+.c-glint{fill:#fff; opacity:.9;}
+.c-eyes-shut{stroke:var(--fur2); stroke-width:2.2; fill:none; stroke-linecap:round; display:none;}
+.c-nose{fill:#c98a94;}
+.c-mouth{stroke:var(--fur2); stroke-width:1.6; fill:none; stroke-linecap:round;}
+.c-whisk{stroke:rgba(230,240,234,.5); stroke-width:1.1; fill:none; stroke-linecap:round;}
+.c-tail{stroke:var(--fur); stroke-width:9; fill:none; stroke-linecap:round; transform-origin:88px 104px;}
+.c-collar{stroke:var(--collar); stroke-width:2.6; fill:none; stroke-linecap:round;}
+.c-gem{fill:var(--collar); stroke:none;}
+.c-zzz{fill:var(--dim); font-family:"Cinzel",serif; font-size:13px; display:none;}
+/* 成長階段 */
+.cat-svg.st1{--fur:#44544a; --eye:#9fe0b6;}
+.cat-svg.st2{--fur:#4a5c50; --eye:#a8e8bf; --collar:rgba(201,169,78,.75);}
+.cat-svg.st3{--fur:#2f4038; --eye:#c9e9a0; --collar:var(--gold); --glow:1;}
+.cat-svg.st4{--fur:#26362f; --eye:#d8f0b0; --collar:var(--gold); --glow:1;}
+.cat-svg.st3 .c-eye,.cat-svg.st4 .c-eye{filter:drop-shadow(0 0 5px var(--eye));}
+.cat-svg.st4 .c-face,.cat-svg.st4 .c-body{filter:drop-shadow(0 0 10px rgba(201,169,78,.4));}
+/* 心情 */
+.cat-svg.mood-sleep .c-eyes-open{display:none;}
+.cat-svg.mood-sleep .c-eyes-shut{display:block;}
+.cat-svg.mood-sleep .c-zzz{display:block; animation:catZzz 3s ease-in-out infinite;}
+.cat-svg.mood-happy .c-eyes-open{display:none;}
+.cat-svg.mood-happy .c-eyes-shut{display:block;}
+.cat-svg.mood-sulk{opacity:.72;}
+.cat-svg.mood-sulk .c-head{transform:translateY(4px);}
+.cat-svg.mood-sulk .c-pupil{ry:3;}
+/* 動作 */
+.c-tail{animation:catTail 3.4s ease-in-out infinite;}
+.cat-svg.mood-sleep .c-tail{animation:none;}
+.cat-svg.mood-happy .c-head{animation:catNod 1.8s ease-in-out infinite;}
+@keyframes catTail{0%,100%{transform:rotate(0deg);}50%{transform:rotate(-13deg);}}
+@keyframes catNod{0%,100%{transform:translateY(0);}50%{transform:translateY(-2.5px);}}
+@keyframes catZzz{0%,100%{opacity:.25;}50%{opacity:.9;}}
+.cat-svg.purr{animation:catPurr .5s ease;}
+@keyframes catPurr{0%,100%{transform:scale(1);}35%{transform:scale(1.06) rotate(-2deg);}70%{transform:scale(1.03) rotate(2deg);}}
+/* 摸摸的愛心 */
+.cat-hearts{position:absolute; inset:0; pointer-events:none;}
+.cat-hearts i{position:absolute; left:50%; top:24%; font-style:normal; font-size:14px;
+  animation:heartUp 1s ease-out forwards;}
+@keyframes heartUp{
+  0%{transform:translate(-50%,0) scale(.5); opacity:0;}
+  25%{opacity:1;}
+  100%{transform:translate(calc(-50% + var(--hx,0px)),-52px) scale(1.15); opacity:0;}
+}
+/* 右側 */
+.cat-side{flex:1; min-width:0;}
+.cat-nameline{display:flex; align-items:center; gap:6px; margin-bottom:6px;}
+.cat-name{font-family:"Cinzel","Noto Serif TC",serif; font-weight:700; color:var(--gold); font-size:14px;
+  cursor:pointer; letter-spacing:.5px;}
+.cat-name:hover{text-decoration:underline dotted; text-underline-offset:3px;}
+.cat-edit{background:none; border:none; color:var(--dim); cursor:pointer; font-size:12px; padding:2px 4px; line-height:1;}
+.cat-edit:hover{color:var(--gold);}
+.cat-rename-input{width:100%; max-width:150px; font-size:13px; padding:4px 8px;}
+.cat-bubble{
+  position:relative; background:rgba(255,255,255,.05); border:1px solid var(--line);
+  border-radius:12px; padding:9px 12px; font-size:12.5px; line-height:1.65; color:var(--silver);
+}
+.cat-bubble::before{
+  content:''; position:absolute; left:-6px; top:14px; width:10px; height:10px;
+  background:rgba(255,255,255,.05); border-left:1px solid var(--line); border-bottom:1px solid var(--line);
+  transform:rotate(45deg);
+}
+.cat-bond{margin-top:9px;}
+.cb-bar{height:5px; border-radius:4px; background:rgba(0,0,0,.38); overflow:hidden; border:1px solid rgba(255,255,255,.05);}
+.cb-bar>div{height:100%; background:linear-gradient(90deg,var(--green-lt),var(--gold)); transition:width .6s; box-shadow:0 0 8px rgba(201,169,78,.35);}
+.cb-lbl{font-size:10.5px; color:var(--dim); margin-top:4px; letter-spacing:.3px;}
+@media (max-width:400px){.cat-pet{width:88px; height:92px;}}
+@media (prefers-reduced-motion:reduce){
+  .c-tail,.cat-svg.mood-happy .c-head,.c-zzz,.cat-svg.purr{animation:none !important;}
+}
 
 /* ── 預言家日報 ── */
 .prophet{border:1px solid var(--line); border-radius:12px; padding:12px 15px; background:rgba(255,255,255,.028); text-align:center; margin-bottom:12px;}
@@ -952,12 +1034,57 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     <div class="grid2">
       <div class="card"><h2>🍫 今日的巧克力蛙</h2><div id="frogBox"></div></div>
       <div class="card">
-        <h2>🐈 你的貓</h2>
-        <div class="cat-box">
-          <div class="cat-emoji" id="catEmoji">🐱</div>
-          <div class="cat-bubble">
-            <span class="cat-name" id="catName" title="點擊改名">（點我取名）</span>：<span id="catLine"></span>
-            <div class="cat-meta" id="catMeta"></div>
+        <h2>🐈 你的魔寵 <span class="dim" id="catStage"></span></h2>
+        <div class="cat-stage" id="catStageBox">
+          <button class="cat-pet" id="catPet" title="摸摸牠" aria-label="摸摸牠">
+            <svg class="cat-svg" id="catSvg" viewBox="0 0 120 124" aria-hidden="true">
+              <ellipse class="c-shadow" cx="60" cy="115" rx="30" ry="5"/>
+              <path class="c-tail" d="M86 104 C106 104 112 86 104 72"/>
+              <path class="c-body" d="M60 56 C41 56 31 76 31 96 C31 108 44 113 60 113 C76 113 89 108 89 96 C89 76 79 56 60 56 Z"/>
+              <path class="c-paw" d="M45 108 a6 5 0 0 1 12 0 Z"/>
+              <path class="c-paw" d="M63 108 a6 5 0 0 1 12 0 Z"/>
+              <g class="c-head">
+                <path class="c-ear" d="M39 25 L34 5 L56 17 Z"/>
+                <path class="c-ear" d="M81 25 L86 5 L64 17 Z"/>
+                <path class="c-ear-in" d="M42 23 L39 11 L52 18 Z"/>
+                <path class="c-ear-in" d="M78 23 L81 11 L68 18 Z"/>
+                <circle class="c-face" cx="60" cy="41" r="27"/>
+                <g class="c-eyes-open">
+                  <ellipse class="c-eye" cx="49" cy="40" rx="6.2" ry="7.4"/>
+                  <ellipse class="c-eye" cx="71" cy="40" rx="6.2" ry="7.4"/>
+                  <ellipse class="c-pupil" cx="49" cy="40" rx="2.4" ry="6.4"/>
+                  <ellipse class="c-pupil" cx="71" cy="40" rx="2.4" ry="6.4"/>
+                  <circle class="c-glint" cx="47" cy="37" r="1.5"/>
+                  <circle class="c-glint" cx="69" cy="37" r="1.5"/>
+                </g>
+                <g class="c-eyes-shut">
+                  <path d="M43 41 Q49 34 55 41"/><path d="M65 41 Q71 34 77 41"/>
+                </g>
+                <path class="c-nose" d="M56 50 L64 50 L60 55 Z"/>
+                <path class="c-mouth" d="M60 55 Q55.5 60 51.5 56.5 M60 55 Q64.5 60 68.5 56.5"/>
+                <g class="c-whisk">
+                  <path d="M44 52 L26 48"/><path d="M44 56 L26 58"/>
+                  <path d="M76 52 L94 48"/><path d="M76 56 L94 58"/>
+                </g>
+              </g>
+              <g class="c-collar">
+                <path d="M44 63 Q60 73 76 63"/>
+                <circle class="c-gem" cx="60" cy="70" r="3.4"/>
+              </g>
+              <g class="c-zzz"><text x="90" y="30">z</text><text x="98" y="18">z</text></g>
+            </svg>
+            <span class="cat-hearts" id="catHearts"></span>
+          </button>
+          <div class="cat-side">
+            <div class="cat-nameline">
+              <span class="cat-name" id="catName" title="點一下改名">（點我取名）</span>
+              <button class="cat-edit" id="catRename" title="改名" aria-label="改名">✎</button>
+            </div>
+            <div class="cat-bubble" id="catLine"></div>
+            <div class="cat-bond">
+              <div class="cb-bar"><div id="catBondFill"></div></div>
+              <div class="cb-lbl" id="catMeta"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -2790,30 +2917,119 @@ function renderProphet(){
 function gcdNum(a,b){ while(b){ [a,b]=[b,a%b]; } return a; }
 
 /* ═══ 貓 ═══ */
+/* 成長看「總共餵養過幾天」，不是連續——斷線不會讓牠退化。 */
+const CAT_STAGES=[
+  {t:'幼貓',   need:0,   next:20},
+  {t:'小貓',   need:20,  next:60},
+  {t:'成貓',   need:60,  next:150},
+  {t:'魔寵',   need:150, next:300},
+  {t:'學院守護',need:300, next:null}
+];
+function catStageIdx(fed){ let i=0; for(let k=0;k<CAT_STAGES.length;k++) if(fed>=CAT_STAGES[k].need) i=k; return i; }
+function catName(){ return LS.get('hp_cat_name',null); }
+/* 牠說的話跟著真實處境走：階段、時間、電量、考試倒數、期末考期 */
+function catSay(ctx){
+  const {mood,streak,fed,st,done,any,hour,toOWL,cp}=ctx;
+  const nm=catName()||'牠';
+  if(mood==='sleep') return ['Zzz……牠先睡了。你也該收工了。','牠在你的筆記上捲成一團，微微起伏。','夜深了。明天的你會感謝現在去睡的你。'];
+  if(mood==='happy'){
+    const a=['呼嚕呼嚕——今天過關了。','牠踩上你剛闔起來的書，宣示主權。','牠蹭了蹭你的手，尾巴豎得直直的。'];
+    if(streak>=30) a.push(`連續 ${streak} 天了。${nm}已經完全把這裡當成家。`);
+    if(streak>=14) a.push('牠信任你了——這種信任是每天一點一點累積的。');
+    if(st>=3) a.push('牠的眼睛在暗處微微發光，像在替你守夜。');
+    if(cp&&cp.tag==='考試') a.push('牠安靜地坐著，沒有打擾你。今天是大日子。');
+    return a;
+  }
+  if(mood==='watch'){
+    const a=['牠蹲在桌角看著你，尾巴輕輕掃。','牠在等你把這一段做完。','牠假裝在睡，其實一隻眼睛開著。'];
+    if(toOWL!=null&&toOWL<=30) a.push(`剩 ${toOWL} 天。牠比你還緊張，但牠不會說。`);
+    return a;
+  }
+  if(mood==='sulk'){
+    const a=[`${nm}在門口等你回來讀書……`,'牠背對著你坐著。不是生氣，是在等。','碗是空的。牠看看碗，又看看你。'];
+    if(fed>0) a.push(`你們一起走過 ${fed} 天。牠還在等第 ${fed+1} 天。`);
+    return a;
+  }
+  const a=['牠打了個哈欠：今天還沒開始呢。','牠把你的筆撥到地上，提醒你該坐下了。'];
+  if(hour>=20) a.push('牠看看時鐘，又看看你。今天還來得及做一件事。');
+  return a;
+}
 function renderCat(){
-  const name=LS.get('hp_cat_name',null);
-  document.getElementById('catName').textContent= name||'（點我取名）';
-  const streak=computeStreakCurrent(), o=getDayObj(todayStr());
+  const box=document.getElementById('catSvg'); if(!box) return;
+  const streak=computeStreakCurrent(), fed=completedDayCount(), o=getDayObj(todayStr());
   const any=Object.values(o.itemsByMode[o.mode]||{}).some(Boolean)||o.completed;
   const hour=new Date().getHours();
-  let emoji,line;
-  if(hour>=23||hour<6){ emoji='😴'; line='Zzz……（牠先睡了，你也快去睡）'; }
-  else if(o.completed){
-    emoji= streak>=14?'😻': streak>=7?'😸':'😺';
-    line= streak>=14?'呼嚕呼嚕——牠已經完全信任你了。': streak>=7?'牠開心地在你的書上踩來踩去。':'今天過關了，牠蹭了蹭你的手。';
+  const st=catStageIdx(fed), stage=CAT_STAGES[st];
+  let mood;
+  if(hour>=23||hour<6) mood='sleep';
+  else if(o.completed)  mood='happy';
+  else if(any)          mood='watch';
+  else if(streak===0&&fed>0) mood='sulk';
+  else mood='idle';
+
+  // SVG 元素的 className 是 SVGAnimatedString，不能直接指定字串
+  box.setAttribute('class','cat-svg st'+st+' mood-'+mood);
+  document.getElementById('catStage').textContent=`· ${stage.t}`;
+  const nm=catName();
+  document.getElementById('catName').textContent= nm||'（點我取名）';
+
+  const cp=currentPhase();
+  const toOWL = d(todayStr())<=d(OWL_DATE)? daysBetween(d(todayStr()),d(OWL_DATE)) : null;
+  const pool=catSay({mood,streak,fed,st,done:o.completed,any,hour,toOWL,cp});
+  // 同一天同一種心情講同一句，不會每次重畫就跳字
+  document.getElementById('catLine').textContent = pool[hashNum(todayStr()+mood+streak)%pool.length];
+
+  const fill=document.getElementById('catBondFill'), lbl=document.getElementById('catMeta');
+  if(stage.next){
+    const span=stage.next-stage.need;
+    fill.style.width=Math.min(100,Math.round((fed-stage.need)/span*100))+'%';
+    lbl.textContent=`一起走過 ${fed} 天　·　再 ${stage.next-fed} 天長成「${CAT_STAGES[st+1].t}」`;
+  } else {
+    fill.style.width='100%';
+    lbl.textContent=`一起走過 ${fed} 天　·　牠已經是這座城堡的一部分了`;
   }
-  else if(any){ emoji='🐱'; line='牠蹲在書桌角落看著你，尾巴輕輕搖。'; }
-  else if(streak===0){ emoji='😿'; line='牠在門口等你回來讀書……'; }
-  else { emoji='🐈'; line='牠打了個哈欠：今天還沒開始呢。'; }
-  document.getElementById('catEmoji').textContent=emoji;
-  document.getElementById('catLine').textContent=line;
-  document.getElementById('catMeta').textContent= streak>0? `已連續餵養 ${streak} 天` : '連續餵養中斷了，今天重新開始';
 }
-document.getElementById('catName').addEventListener('click',()=>{
-  const cur=LS.get('hp_cat_name','');
-  const n=prompt('幫你的貓取個名字：',cur||'');
-  if(n&&n.trim()){ LS.set('hp_cat_name',n.trim()); renderCat(); }
+/* 摸摸 */
+document.getElementById('catPet').addEventListener('click',()=>{
+  const svg=document.getElementById('catSvg');
+  svg.classList.remove('purr'); void svg.offsetWidth; svg.classList.add('purr');
+  const box=document.getElementById('catHearts');
+  const marks=['💚','✨','💛'];
+  for(let i=0;i<3;i++){
+    const el=document.createElement('i');
+    el.textContent=marks[Math.floor(Math.random()*marks.length)];
+    el.style.setProperty('--hx',(Math.random()*44-22).toFixed(0)+'px');
+    el.style.animationDelay=(i*0.11)+'s';
+    box.appendChild(el);
+    setTimeout(()=>el.remove(),1300);
+  }
 });
+/* 改名：站內輸入，不用瀏覽器的 prompt */
+function startRename(){
+  const line=document.querySelector('.cat-nameline');
+  if(line.querySelector('input')) return;
+  const cur=catName()||'';
+  line.innerHTML=`<input type="text" class="cat-rename-input" id="catNameInput" maxlength="12"
+    placeholder="幫牠取個名字" value="${cur.replace(/"/g,'&quot;')}">`;
+  const inp=document.getElementById('catNameInput');
+  inp.focus(); inp.select();
+  const save=()=>{
+    const v=inp.value.trim();
+    if(v) LS.set('hp_cat_name',v);
+    line.innerHTML=`<span class="cat-name" id="catName" title="點一下改名"></span>
+      <button class="cat-edit" id="catRename" title="改名" aria-label="改名">✎</button>`;
+    bindRename(); renderCat();
+    if(v) toast(`🐈 牠現在叫「${v}」了`);
+  };
+  inp.addEventListener('keydown',e=>{ if(e.key==='Enter') save(); if(e.key==='Escape'){ inp.value=cur; save(); } });
+  inp.addEventListener('blur',save);
+}
+function bindRename(){
+  const n=document.getElementById('catName'), b=document.getElementById('catRename');
+  if(n) n.addEventListener('click',startRename);
+  if(b) b.addEventListener('click',startRename);
+}
+bindRename();
 
 /* ═══ 兌換區 ═══ */
 function renderRewardShopList(){
