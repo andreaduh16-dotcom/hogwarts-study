@@ -536,14 +536,40 @@ details.fold .fold-body{padding:0 16px 15px;}
 .ac-n.full{color:var(--gold);}
 
 /* ══════ 咒語書 ══════ */
-.spellbook{display:flex; flex-direction:column; gap:8px; margin-top:4px;}
-.spell{
-  position:relative; overflow:hidden; display:flex; align-items:flex-start; gap:11px;
-  padding:11px 12px; border-radius:11px; border:1px solid var(--line);
-  background:rgba(255,255,255,.032); transition:border-color .25s, box-shadow .25s, background .25s;
+.spellbook{margin-top:4px;}
+.sp-badge{
+  font-family:"Cinzel",serif; font-size:9.5px; letter-spacing:1px; color:#2a2410;
+  background:var(--gold); border-radius:9px; padding:2px 7px; margin-left:6px; font-weight:700;
 }
-.spell .sp-rune{font-size:25px; line-height:1.1; flex-shrink:0; width:32px; text-align:center;}
-.spell .sp-body{flex:1; min-width:0;}
+.spell-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(88px,1fr)); gap:8px; padding:2px 0 12px;}
+.sp-tile{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  padding:11px 5px; min-height:86px; border-radius:11px; cursor:pointer; font:inherit;
+  border:1px solid var(--line); background:rgba(255,255,255,.045); color:var(--silver);
+  transition:border-color .2s, box-shadow .2s, transform .15s, background .2s;
+}
+.sp-tile:hover{transform:translateY(-1px); border-color:rgba(201,169,78,.5);}
+.sp-tile .sp-rune{font-size:26px; line-height:1;}
+.sp-tname{font-size:10.5px; font-weight:700; line-height:1.35; color:var(--silver-hi); text-align:center;}
+.sp-tile.locked{opacity:.4;}
+.sp-tile.locked .sp-tname{color:var(--dim); font-weight:400;}
+.sp-tile.ready{
+  border-color:rgba(201,169,78,.6);
+  background:linear-gradient(180deg, rgba(201,169,78,.16), rgba(201,169,78,.05));
+  animation:spellReady 2.8s ease-in-out infinite;
+}
+.sp-tile.learned{border-color:rgba(201,169,78,.34); background:rgba(201,169,78,.07);}
+.sp-tile.learned .sp-rune{filter:drop-shadow(0 0 8px rgba(201,169,78,.6));}
+.sp-tile.sel{border-color:var(--gold); box-shadow:0 0 18px rgba(201,169,78,.3);}
+/* 點開的細節：佔滿整列，接在該格下面 */
+.sp-detail{
+  grid-column:1/-1; position:relative; overflow:hidden;
+  border:1px solid rgba(201,169,78,.34); border-radius:11px; padding:12px 13px;
+  background:linear-gradient(180deg, rgba(201,169,78,.09), rgba(0,0,0,.16));
+  animation:spDetailIn .22s ease;
+}
+@keyframes spDetailIn{from{opacity:0; transform:translateY(-5px);}to{opacity:1; transform:none;}}
+.sp-done-row{margin-top:8px;}
 .sp-head{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
 .sp-n{font-family:"Cinzel","Noto Serif TC",serif; font-size:14px; font-weight:700; color:var(--silver-hi); letter-spacing:.4px;}
 .sp-en{font-family:"Cinzel",serif; font-size:10.5px; letter-spacing:1.6px; color:var(--green-lt); font-style:italic;}
@@ -556,25 +582,14 @@ details.fold .fold-body{padding:0 16px 15px;}
   background:rgba(201,169,78,.1);
 }
 .spell .sp-learn{flex-shrink:0; align-self:center;}
-/* 三種狀態 */
-.spell.locked{opacity:.42;}
-.spell.locked .sp-n{color:var(--dim); font-family:"Noto Serif TC",serif;}
-.spell.ready{
-  border-color:rgba(201,169,78,.55);
-  background:linear-gradient(100deg, rgba(201,169,78,.11), rgba(201,169,78,.035));
-  box-shadow:0 0 20px rgba(201,169,78,.14);
-  animation:spellReady 2.8s ease-in-out infinite;
-}
 @keyframes spellReady{
-  0%,100%{box-shadow:0 0 18px rgba(201,169,78,.12);}
-  50%{box-shadow:0 0 30px rgba(201,169,78,.26);}
+  0%,100%{box-shadow:0 0 14px rgba(201,169,78,.14);}
+  50%{box-shadow:0 0 26px rgba(201,169,78,.32);}
 }
-.spell.learned{border-color:rgba(201,169,78,.3); background:rgba(201,169,78,.055);}
-.spell.learned .sp-rune{filter:drop-shadow(0 0 9px rgba(201,169,78,.6));}
 .sp-ready-n{color:var(--gold); font-weight:700;}
 
 /* 施咒動畫 */
-.spell.casting{border-color:var(--gold); box-shadow:0 0 40px rgba(201,169,78,.5); animation:none;}
+.sp-detail.casting{border-color:var(--gold); box-shadow:0 0 40px rgba(201,169,78,.5);}
 .cast-fx{position:absolute; inset:0; pointer-events:none; display:grid; place-items:center;}
 .cast-word{
   position:absolute; font-family:"Cinzel",serif; font-size:16px; letter-spacing:3px; font-weight:700;
@@ -597,9 +612,29 @@ details.fold .fold-body{padding:0 16px 15px;}
   100%{transform:rotate(var(--a)) translateX(120px) scale(.2); opacity:0;}
 }
 @media (prefers-reduced-motion:reduce){
-  .spell.ready{animation:none;}
+  .sp-tile.ready{animation:none;}
   .cast-fx i{display:none;}
 }
+
+/* ══════ 故事：最新一章攤開，其餘收進目錄 ══════ */
+.chapter.latest{border-color:rgba(201,169,78,.4); background:rgba(201,169,78,.055);}
+.ch-tag{
+  font-family:"Cinzel",serif; font-size:9px; letter-spacing:1.4px; color:var(--gold);
+  border:1px solid rgba(201,169,78,.42); border-radius:9px; padding:1px 7px; margin-left:7px;
+}
+.chapter.done-all{border-color:rgba(201,169,78,.34); background:rgba(201,169,78,.05); text-align:center;}
+.ch-index{padding-top:2px;}
+.ch-item{border-bottom:1px solid rgba(255,255,255,.06);}
+.ch-item:last-child{border-bottom:none;}
+.ch-item>summary{
+  cursor:pointer; list-style:none; padding:9px 2px; font-size:13px; color:var(--silver);
+  display:flex; align-items:baseline; gap:9px; line-height:1.5;
+}
+.ch-item>summary::-webkit-details-marker{display:none;}
+.ch-item>summary:hover{color:var(--gold);}
+.ci-no{font-family:"Cinzel",serif; font-size:10px; letter-spacing:1px; color:var(--dim); flex-shrink:0; min-width:44px;}
+.ch-item[open]>summary{color:#f0dfa8;}
+.ch-item .ch-text{padding:2px 2px 12px;}
 .slot{background:rgba(255,255,255,.05); border:1.5px solid var(--line); border-radius:10px; padding:9px 4px; text-align:center; min-height:92px;}
 .slot .semoji{font-size:27px;}
 .slot .nm{font-size:10.5px; font-weight:700; margin-top:2px; color:var(--silver-hi);}
@@ -993,7 +1028,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
 
     <div class="card">
       <h2>🍫 巧克力蛙畫片冊 <span class="dim" id="albumCount"></span></h2>
-      <p class="dim">每天過關就能開一隻。共五類、90 張：巫師與角色、魔法生物、魔法物品、霍格華茲場所、魔藥。</p>
+      <p class="dim">每天過關就能開一隻。共五類、120 張：巫師與角色 40、魔法生物 24、魔法物品 23、霍格華茲場所 20、魔藥 13。</p>
       <div style="margin:9px 0;"><button class="magic small" id="extraDrawBtn">🍫 用 30 點再抽一張</button></div>
       <div id="albumGrid"></div>
     </div>
@@ -2272,6 +2307,40 @@ const CARDS=[
   {id:'slughorn',n:'史拉轟',e:'🍯',r:'c',cat:'w',line:'「有天份的學生我都記得——記得交進度。」'},
   {id:'grey',n:'灰衣貴婦',e:'🩶',r:'r',cat:'w',line:'「雷文克勞的答案，藏在最安靜的地方。」'},
   {id:'salazar',n:'薩拉查·史萊哲林',e:'🟢',r:'l',cat:'w',line:'「野心不是缺點。缺點是只有野心。」'},
+  {id:'tonks',n:'東施·唐克絲',e:'💜',r:'c',cat:'w',line:'「換個髮色也好，換個心情再開始。」'},
+  {id:'kingsley',n:'金斯萊',e:'🎙️',r:'c',cat:'w',line:'「保持冷靜，繼續前進。」'},
+  {id:'arthur',n:'亞瑟·衛斯理',e:'🔌',r:'c',cat:'w',line:'「這個叫『番茄鐘』的麻瓜發明，真是迷人。」'},
+  {id:'molly',n:'茉莉·衛斯理',e:'🍲',r:'c',cat:'w',line:'「先吃飯。餓著肚子讀不進去。」'},
+  {id:'aberforth',n:'阿不福思',e:'🐐',r:'c',cat:'w',line:'「我哥哥太會講大道理了。你就照做就好。」'},
+  {id:'myrtle',n:'愛哭鬼麥朵',e:'🚽',r:'c',cat:'w',line:'「哭完再回去讀，這裡沒人會笑你。」'},
+  {id:'grindelwald',n:'葛林戴華德',e:'🔺',r:'r',cat:'w',line:'「為了更偉大的利益——但別拿它當熬夜的藉口。」'},
+  {id:'riddle',n:'湯姆·瑞斗的日記',e:'📔',r:'r',cat:'w',line:'「把今天寫下來。它會回答你。」'},
+
+  {id:'norbert',n:'諾伯（幼龍）',e:'🥚',r:'c',cat:'b',line:'「剛孵出來就很難搞。第一輪都是這樣。」'},
+  {id:'grawp',n:'呱啦',e:'🗿',r:'c',cat:'b',line:'「大塊頭也是一步一步學會說話的。」'},
+  {id:'bowtruckle',n:'護樹羅鍋',e:'🍃',r:'c',cat:'b',line:'「守著自己那棵樹就好，不用守整座森林。」'},
+  {id:'unicorn',n:'獨角獸',e:'🦄',r:'r',cat:'b',line:'「傷害純粹的東西，會付出代價——包括你的睡眠。」'},
+  {id:'troll',n:'山怪',e:'🪓',r:'c',cat:'b',line:'「地下室有山怪！——我知道，那是還沒讀的行政法。」'},
+  {id:'thunderbird',n:'雷鳥',e:'⛈️',r:'r',cat:'b',line:'「牠一振翅就變天。你也可以。」'},
+
+  {id:'resurrection',n:'重生石',e:'🪨',r:'l',cat:'o',line:'「回不去的就讓它過去。往前走。」'},
+  {id:'elderwand',n:'接骨木魔杖',e:'🪵',r:'l',cat:'o',line:'「最強的魔杖，也救不了沒讀的範圍。」'},
+  {id:'vanishing',n:'消失櫃',e:'🗄️',r:'r',cat:'o',line:'「進度不會自己從另一邊出來。」'},
+  {id:'flyingcar',n:'飛天車',e:'🚗',r:'c',cat:'o',line:'「抄捷徑的下場是撞上渾拚柳。」'},
+  {id:'beans',n:'比比多味豆',e:'🫘',r:'c',cat:'o',line:'「有些題目就是耳屎口味。忍著吞下去。」'},
+  {id:'frogbox',n:'巧克力蛙盒',e:'🍫',r:'c',cat:'o',line:'「牠只跳一次。抓緊了。」'},
+
+  {id:'headmaster',n:'校長室',e:'🪑',r:'r',cat:'p',line:'「歷任校長都在牆上看著你讀書。」'},
+  {id:'chamber',n:'密室',e:'🕳️',r:'r',cat:'p',line:'「它真的存在——就在你一直不想打開的那一科裡。」'},
+  {id:'greenhouse',n:'溫室',e:'🌷',r:'c',cat:'p',line:'「戴上耳罩，然後動手。」'},
+  {id:'prefectbath',n:'級長浴室',e:'🛁',r:'c',cat:'p',line:'「泡一下再回來。金蛋在水裡才聽得懂。」'},
+  {id:'threebroom',n:'三根掃帚',e:'🍻',r:'c',cat:'p',line:'「奶油啤酒時間。排定的休息不是偷懶。」'},
+
+  {id:'shrinking',n:'縮身藥水',e:'🫧',r:'c',cat:'x',line:'「把問題縮小，不是把自己縮小。」'},
+  {id:'forgetfulness',n:'遺忘藥水',e:'💭',r:'c',cat:'x',line:'「該忘的是昨天的失誤，不是背過的條文。」'},
+  {id:'livingdeath',n:'活地獄湯劑',e:'😴',r:'r',cat:'x',line:'「一滴就能睡死。你需要的其實只是正常睡覺。」'},
+  {id:'strengthening',n:'增強劑',e:'💪',r:'c',cat:'x',line:'「效果會累積——就像每天 10 條條文。」'},
+  {id:'antidote',n:'解毒劑',e:'🧯',r:'c',cat:'x',line:'「先止血，再檢討。順序不要顛倒。」'},
 
   /* ── 魔法生物 ── */
   {id:'fawkes',n:'佛客使',e:'🐦‍🔥',r:'r',cat:'b',line:'「燒盡重生——錯題也一樣。」'},
@@ -2432,10 +2501,14 @@ document.getElementById('extraDrawBtn').addEventListener('click',()=>{
 });
 
 /* ═══ 學年等級 ═══ */
+/* 門檻是照「照最低標準做、每 17 天還漏一天」的模擬曲線校準的（實測約 21.8 分/天）：
+   day60≈1315、day120≈2640、day210≈4580、day300≈6560、day360≈7890（一試）、day446≈9705（二試）。
+   所以七年級落在約第 200 天，一試前就到得了；最高的魔法部長落在二試前，
+   不會有永遠拿不到的等級——咒語綁在等級上，拿不到就等於那些咒語是死的。 */
 const LEVELS=[
-  {t:'一年級',xp:0},{t:'二年級',xp:300},{t:'三年級',xp:800},{t:'四年級',xp:1500},
-  {t:'五年級',xp:2400},{t:'六年級',xp:3500},{t:'七年級',xp:5000},{t:'霍格華茲畢業生',xp:6800},
-  {t:'正氣師學徒',xp:8800},{t:'傲羅',xp:11000},{t:'魔法部長',xp:14000}
+  {t:'一年級',xp:0},{t:'二年級',xp:320},{t:'三年級',xp:750},{t:'四年級',xp:1400},
+  {t:'五年級',xp:2200},{t:'六年級',xp:3200},{t:'七年級',xp:4400},{t:'霍格華茲畢業生',xp:5700},
+  {t:'正氣師學徒',xp:7000},{t:'傲羅',xp:8200},{t:'魔法部長',xp:9400}
 ];
 function renderLevel(){
   const xp=computeEarnedTotal();
@@ -2469,36 +2542,58 @@ const SPELLS=[
    use:'不知道從哪開始的時候：先默寫 10 條。最小的光就夠你看見下一步。'},
   {id:'wingardium',n:'溫咖癲啦唯啊薩',en:'Wingardium Leviosa',e:'🪶',lv:0,eff:'讓物體浮起',
    use:'先抬最重的那一塊——今天最不想做的那件事排第一個。'},
+  {id:'scourgify',n:'清理一新',en:'Scourgify',e:'🧼',lv:0,eff:'清潔',
+   use:'坐下前先清桌子，30 秒就好。桌面越乾淨，開始的門檻越低。'},
   {id:'reparo',n:'復復修',en:'Reparo',e:'🔧',lv:1,eff:'修復破損之物',
    use:'斷線之後：修好它，不要打掉重來。昨天沒做不影響今天能不能做。'},
   {id:'diffindo',n:'吩吩綻',en:'Diffindo',e:'✂️',lv:1,eff:'切割',
    use:'一章太大就切開。切到「這一段我現在就能做完」為止。'},
+  {id:'reducio',n:'咻咻縮',en:'Reducio',e:'🔽',lv:1,eff:'使物縮小',
+   use:'今天的目標太大就縮小它。做得完的小目標，勝過做不完的大目標。'},
   {id:'alohomora',n:'阿八拉象',en:'Alohomora',e:'🗝️',lv:2,eff:'解鎖',
    use:'卡住的科目先開一道縫：TaiLexi 隨便做 5 題，不設目標。'},
   {id:'expelliarmus',n:'去去，武器走',en:'Expelliarmus',e:'🪄',lv:2,eff:'繳械',
    use:'解除干擾。手機放到另一個房間——不是翻面，是另一個房間。'},
+  {id:'silencio',n:'默默靜',en:'Silencio',e:'🔇',lv:2,eff:'使目標無聲',
+   use:'把腦裡那個「來不及了」的聲音靜音。它從來沒幫你多讀過一頁。'},
   {id:'accio',n:'速速前',en:'Accio',e:'🧲',lv:3,eff:'召喚物品',
    use:'開始前先把要用的東西全部叫到桌上。找資料的十分鐘會吃掉整段專注。'},
   {id:'petrificus',n:'整整，石化',en:'Petrificus Totalus',e:'🧊',lv:3,eff:'全身鎖死',
    use:'把自己定住 25 分鐘。不查手機、不換科目、不站起來。'},
+  {id:'stupefy',n:'昏昏倒地',en:'Stupefy',e:'⚡',lv:3,eff:'擊昏目標',
+   use:'先把「我等一下再開始」那個念頭打昏。它是今天最大的敵人。'},
+  {id:'aparecium',n:'萬物顯形',en:'Aparecium',e:'🔍',lv:3,eff:'顯現隱形字跡',
+   use:'看不出重點的時候，把它默寫一遍——寫不出來的地方就是還沒懂的地方。'},
   {id:'obliviate',n:'空空，遺忘',en:'Obliviate',e:'🌫️',lv:4,eff:'消除記憶',
    use:'今天爛掉就讓它過去。**不准補**——這是保護規則，不是安慰。'},
   {id:'occlumency',n:'鎖心術',en:'Occlumency',e:'🛡️',lv:4,eff:'封閉心靈',
    use:'把別人的進度擋在外面。相對錄取比的是排名，不是誰的限動比較努力。'},
+  {id:'impedimenta',n:'障礙重重',en:'Impedimenta',e:'🚧',lv:4,eff:'阻礙來者',
+   use:'幫自己設路障：把會吃時間的 App 登出。多一道手續就少一次分心。'},
   {id:'patronum',n:'疾疾，護法現身',en:'Expecto Patronum',e:'🦌',lv:5,eff:'驅逐催狂魔',
    use:'催狂魔日唯一的解法：想起你為什麼要考。不是逼自己，是提醒自己。'},
   {id:'evanesco',n:'消消失',en:'Evanesco',e:'🫥',lv:5,eff:'使物消失',
    use:'桌上除了現在這一科，其他全部收走。看得到就會想切換。'},
+  {id:'geminio',n:'吾即汝',en:'Geminio',e:'👥',lv:5,eff:'複製物體',
+   use:'你沒辦法複製自己。所以只能排優先順序——先做配分最高的那一科。'},
   {id:'apparition',n:'現影術',en:'Apparition',e:'💨',lv:6,eff:'瞬間移動',
    use:'決心、目標、從容——三個 D。直接坐到位子上，不要繞路先整理房間。'},
   {id:'serpensortia',n:'蛇蛇攻',en:'Serpensortia',e:'🐍',lv:6,eff:'召喚巨蛇',
    use:'史萊哲林的野心用在這裡：把最強的那一科練到沒人敢碰。'},
+  {id:'disillusion',n:'幻身咒',en:'Disillusionment',e:'🫧',lv:6,eff:'與背景融為一體',
+   use:'安靜地讀。不用昭告天下你在拚，省下的力氣拿去寫題。'},
   {id:'legilimency',n:'破心術',en:'Legilimency',e:'👁️',lv:7,eff:'讀取心靈',
    use:'讀出題人的心：這題在考哪個要件？看穿題目比背熟課本有用。'},
+  {id:'sectumsempra',n:'撕淌三步殺',en:'Sectumsempra',e:'🩸',lv:7,eff:'石內卜自創之咒',
+   use:'自創的讀書法用之前先想清楚後果。別人的方法沒效，你的也可能。'},
   {id:'protego',n:'速速護，護法現身',en:'Protego Maxima',e:'🏰',lv:8,eff:'最強護盾',
    use:'考前七天的封盤就是這個咒。城牆立起來，新教材一律擋在外面。'},
+  {id:'homenum',n:'人形顯現',en:'Homenum Revelio',e:'👤',lv:8,eff:'顯現附近的人',
+   use:'考場上只有你自己。旁邊的人翻頁多快，跟你的分數沒有關係。'},
   {id:'finite',n:'咒立停',en:'Finite Incantatem',e:'🛑',lv:9,eff:'解除一切咒語',
    use:'考完就放下。出考場那一刻，所有效果解除——不要對答案。'},
+  {id:'piertotum',n:'千軍萬馬',en:'Piertotum Locomotor',e:'🗿',lv:9,eff:'喚醒城堡的石像守衛',
+   use:'最後這段把所有資源都調動起來：題庫、詳解、AI 批改、你的一整年。'},
   {id:'unforgivable',n:'三個不可饒恕咒',en:'The Unforgivable Curses',e:'☠️',lv:10,eff:'使用者將被關進阿茲卡班',
    use:'熬夜、補進度、跟別人比。這三個會殺死計畫，而且對施咒者本人生效。'}
 ];
@@ -2507,6 +2602,8 @@ function spellState(s){
   if(learnedSpells()[s.id]) return 'learned';
   return currentLevelIdx()>=s.lv? 'ready' : 'locked';
 }
+let SPELL_OPEN=null;              // 目前展開看細節的咒語
+const SPELL_YEAR_OVERRIDE=new Map(); // 使用者手動開合過的學年 → 覆蓋預設
 function renderSpells(){
   const box=document.getElementById('spellBook'); if(!box) return;
   const idx=currentLevelIdx();
@@ -2515,27 +2612,57 @@ function renderSpells(){
   const meta=document.getElementById('spellMeta');
   if(meta) meta.innerHTML= `目前 <b>${LEVELS[idx].t}</b>　·　已學會 <b>${learned}/${SPELLS.length}</b>`
     + (ready? `　·　<span class="sp-ready-n">${ready} 個可以學了</span>` : '');
-  box.innerHTML=SPELLS.map(s=>{
-    const st=spellState(s);
-    const need=LEVELS[s.lv].t;
-    return `<div class="spell ${st}">
-      <div class="sp-rune">${st==='locked'?'🔒':s.e}</div>
-      <div class="sp-body">
-        <div class="sp-head">
-          <span class="sp-n">${st==='locked'?'？？？':s.n}</span>
-          <span class="sp-en">${st==='locked'?'':s.en}</span>
-        </div>
-        ${st==='locked'
-          ? `<div class="sp-use dim">升上<b>${need}</b>才學得會。</div>`
-          : `<div class="sp-eff">${s.eff}</div><div class="sp-use">${s.use.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')}</div>`}
-      </div>
-      ${st==='ready'? `<button class="magic small sp-learn" data-spell="${s.id}">練習</button>`
-        : st==='learned'? `<span class="sp-done">已學會</span>` : ''}
-    </div>`;
+  // 預設只展開「最早那個還有東西可以學」的學年——一次給一個下一步，不要 11 疊全開。
+  // 每次重畫都重算，所以升級解鎖新咒語時會自己跟上；使用者手動開合過的則以他的為準。
+  const readyLvs=SPELLS.filter(s=>spellState(s)==='ready').map(s=>s.lv);
+  const defaultOpen = readyLvs.length? Math.min(...readyLvs) : idx;
+  const isOpen=(lv)=> SPELL_YEAR_OVERRIDE.has(lv)? SPELL_YEAR_OVERRIDE.get(lv) : lv===defaultOpen;
+  const lvs=[...new Set(SPELLS.map(s=>s.lv))].sort((a,b)=>a-b);
+  box.innerHTML=lvs.map(lv=>{
+    const pool=SPELLS.filter(s=>s.lv===lv);
+    const got=pool.filter(s=>spellState(s)==='learned').length;
+    const rdy=pool.filter(s=>spellState(s)==='ready').length;
+    const locked=lv>idx;
+    const open=isOpen(lv);
+    return `<details class="album-cat sp-year"${open?' open':''} data-lv="${lv}">
+      <summary>
+        <span class="ac-ico">${locked?'🔒':'✦'}</span>${LEVELS[lv].t}
+        <span class="ac-n${got===pool.length?' full':''}">${got}/${pool.length}${got===pool.length?' ✓':''}</span>
+        ${rdy?`<span class="sp-badge">${rdy} 可學</span>`:''}
+      </summary>
+      <div class="spell-grid">${pool.map(s=>{
+        const st=spellState(s);
+        const sel=SPELL_OPEN===s.id;
+        const tile=`<button class="sp-tile ${st}${sel?' sel':''}" data-sp="${s.id}">
+            <span class="sp-rune">${st==='locked'?'🔒':s.e}</span>
+            <span class="sp-tname">${st==='locked'?'？？？':s.n}</span>
+          </button>`;
+        if(!sel) return tile;
+        return tile+`<div class="sp-detail">
+          <div class="sp-head"><span class="sp-n">${st==='locked'?'？？？':s.n}</span>
+            <span class="sp-en">${st==='locked'?'':s.en}</span></div>
+          ${st==='locked'
+            ? `<div class="sp-use dim">升上<b>${LEVELS[s.lv].t}</b>才學得會。</div>`
+            : `<div class="sp-eff">${s.eff}</div>
+               <div class="sp-use">${s.use.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')}</div>`}
+          ${st==='ready'? `<div style="margin-top:9px;"><button class="magic small sp-learn" data-spell="${s.id}">練習這個咒語</button></div>`
+            : st==='learned'? `<div class="sp-done-row"><span class="sp-done">已學會</span></div>` : ''}
+        </div>`;
+      }).join('')}</div>
+    </details>`;
   }).join('');
-  box.querySelectorAll('.sp-learn').forEach(b=>b.addEventListener('click',()=>{
+
+  box.querySelectorAll('.sp-tile').forEach(b=>b.addEventListener('click',()=>{
+    SPELL_OPEN = SPELL_OPEN===b.dataset.sp? null : b.dataset.sp;
+    renderSpells();
+  }));
+  box.querySelectorAll('.sp-learn').forEach(b=>b.addEventListener('click',e=>{
+    e.stopPropagation();
     const s=SPELLS.find(x=>x.id===b.dataset.spell); if(!s) return;
-    castSpell(b.closest('.spell'), s);
+    castSpell(b.closest('.sp-detail'), s);
+  }));
+  box.querySelectorAll('details.sp-year').forEach(d=>d.addEventListener('toggle',()=>{
+    SPELL_YEAR_OVERRIDE.set(+d.dataset.lv, d.open);
   }));
 }
 function castSpell(el, s){
@@ -2942,14 +3069,34 @@ function renderStory(){
     ? `· 再過關 ${need} 天就能翻開第一章`
     : `已解鎖 ${n}/${STORY.length} 章`;
   const lastSeen=LS.get('hp_story_seen',0);
-  document.getElementById('storyList').innerHTML = STORY.map((c,i)=>{
-    if(i<n) return `<div class="chapter"><div class="ch-no">第 ${i+1} 章${i>=lastSeen?'<span class="ch-new">NEW</span>':''}</div>
-      <div class="ch-title">${c[0]}</div><div class="ch-text">${c[1]}</div></div>`;
-    if(i===n) return `<div class="chapter locked"><div class="ch-no">第 ${i+1} 章</div>
+  const box=document.getElementById('storyList');
+  if(n===0){
+    box.innerHTML=`<div class="chapter locked"><div class="ch-no">第 1 章</div>
       <div class="ch-title">？？？</div>
       <div class="ch-lock">再過關 <b>${need}</b> 天解鎖（每 ${DAYS_PER_CHAPTER} 天一章，累積計算——斷線不會歸零）。</div></div>`;
-    return '';
-  }).join('') || '<div class="card"><p class="dim">還沒有解鎖任何章節。</p></div>';
+    return;
+  }
+  // 最新一章攤開；前面的收進目錄，不然 57 章會變成一條看不完的長廊
+  const li=n-1, latest=STORY[li];
+  let html=`<div class="chapter latest">
+    <div class="ch-no">第 ${n} 章${li>=lastSeen?'<span class="ch-new">NEW</span>':''}<span class="ch-tag">最新</span></div>
+    <div class="ch-title">${latest[0]}</div><div class="ch-text">${latest[1]}</div></div>`;
+  if(n>1){
+    html+=`<details class="fold"><summary>📚 前面的章節 <span class="fold-sub">${n-1} 章，點開任一章重讀</span></summary>
+      <div class="fold-body ch-index">`
+      + STORY.slice(0,li).map((c,i)=>
+          `<details class="ch-item"><summary><span class="ci-no">第 ${i+1} 章</span>${c[0]}</summary>
+           <div class="ch-text">${c[1]}</div></details>`).reverse().join('')
+      + `</div></details>`;
+  }
+  if(n<STORY.length){
+    html+=`<div class="chapter locked"><div class="ch-no">第 ${n+1} 章</div>
+      <div class="ch-lock">再過關 <b>${need}</b> 天解鎖（每 ${DAYS_PER_CHAPTER} 天一章，累積計算——斷線不會歸零）。</div></div>`;
+  } else {
+    html+=`<div class="chapter done-all"><div class="ch-no">全書完</div>
+      <div class="ch-lock">57 章全部看完了。那個第八年生的故事到此為止——接下來是你的。</div></div>`;
+  }
+  box.innerHTML=html;
   if(n>lastSeen) LS.set('hp_story_seen',n);
 }
 
