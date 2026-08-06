@@ -653,31 +653,38 @@ details.fold .fold-body{padding:0 16px 15px;}
 }
 .cat-pet:active{transform:scale(.96);}
 .cat-svg{width:100%; height:100%; overflow:visible;}
-/* 貓的顏色跟著成長階段變 */
-.cat-svg{--fur:#3c4a42; --fur2:#2c3830; --eye:#8fd6a8; --collar:transparent; --glow:0;}
-.c-shadow{fill:rgba(0,0,0,.32);}
-.c-body,.c-face{fill:var(--fur); stroke:var(--fur2); stroke-width:1.5;}
-.c-paw{fill:var(--fur2);}
-.c-ear{fill:var(--fur); stroke:var(--fur2); stroke-width:1.5; stroke-linejoin:round;}
-.c-ear-in{fill:#6b4a52; opacity:.75;}
+/* 金漸層：中間奶白、外圈金黃、毛尖深金；配翡翠綠眼睛 */
+.cat-svg{--fur:#e8c88a; --fur2:#b8894e; --furlt:#fcf2de; --eye:#7dc94a; --eyerim:#5c4526;
+  --collar:transparent; --nose:#d98a8a;}
+.c-shadow{fill:rgba(0,0,0,.3);}
+.c-body{fill:url(#furBody); stroke:var(--fur2); stroke-width:1.4;}
+.c-face,.c-cheek{fill:url(#furShade); stroke:var(--fur2); stroke-width:1.4;}
+.c-cheek{stroke-width:0;}
+.c-muzzle{fill:var(--furlt); opacity:.72;}
+.c-paw{fill:var(--furlt); stroke:var(--fur2); stroke-width:1;}
+.c-ear{fill:var(--fur); stroke:var(--fur2); stroke-width:1.4; stroke-linejoin:round;}
+.c-ear-in{fill:#e0a3a8; opacity:.8;}
+.c-eyerim{fill:var(--eyerim); opacity:.85;}
 .c-eye{fill:var(--eye);}
-.c-pupil{fill:#0a1410;}
-.c-glint{fill:#fff; opacity:.9;}
-.c-eyes-shut{stroke:var(--fur2); stroke-width:2.2; fill:none; stroke-linecap:round; display:none;}
-.c-nose{fill:#c98a94;}
-.c-mouth{stroke:var(--fur2); stroke-width:1.6; fill:none; stroke-linecap:round;}
-.c-whisk{stroke:rgba(230,240,234,.5); stroke-width:1.1; fill:none; stroke-linecap:round;}
-.c-tail{stroke:var(--fur); stroke-width:9; fill:none; stroke-linecap:round; transform-origin:88px 104px;}
-.c-collar{stroke:var(--collar); stroke-width:2.6; fill:none; stroke-linecap:round;}
+.c-pupil{fill:#141008;}
+.c-glint{fill:#fff; opacity:.95;}
+.c-glint2{fill:#fff; opacity:.55;}
+.c-eyes-shut{stroke:var(--eyerim); stroke-width:2.4; fill:none; stroke-linecap:round; display:none;}
+.c-nose{fill:var(--nose); stroke:#a86a6a; stroke-width:.7;}
+.c-mouth{stroke:var(--fur2); stroke-width:1.5; fill:none; stroke-linecap:round;}
+.c-whisk{stroke:rgba(255,252,240,.72); stroke-width:1.1; fill:none; stroke-linecap:round;}
+.c-tail{stroke:var(--fur); stroke-width:9.5; fill:none; stroke-linecap:round; transform-origin:87px 105px;}
+.c-collar{stroke:var(--collar); stroke-width:2.8; fill:none; stroke-linecap:round;}
 .c-gem{fill:var(--collar); stroke:none;}
 .c-zzz{fill:var(--dim); font-family:"Cinzel",serif; font-size:13px; display:none;}
-/* 成長階段 */
-.cat-svg.st1{--fur:#44544a; --eye:#9fe0b6;}
-.cat-svg.st2{--fur:#4a5c50; --eye:#a8e8bf; --collar:rgba(201,169,78,.75);}
-.cat-svg.st3{--fur:#2f4038; --eye:#c9e9a0; --collar:var(--gold); --glow:1;}
-.cat-svg.st4{--fur:#26362f; --eye:#d8f0b0; --collar:var(--gold); --glow:1;}
+/* 成長階段：從奶金一路加深到深金 */
+.cat-svg.st0{--fur:#f2ddb0; --fur2:#cba877; --furlt:#fefaf0;}
+.cat-svg.st1{--fur:#eed5a0; --fur2:#c39c62; --furlt:#fdf6e6;}
+.cat-svg.st2{--fur:#e8c88a; --fur2:#b8894e; --furlt:#fcf2de; --collar:rgba(201,169,78,.85);}
+.cat-svg.st3{--fur:#e3bd74; --fur2:#a87a3e; --furlt:#fbeed2; --collar:var(--gold);}
+.cat-svg.st4{--fur:#dcb060; --fur2:#8f6329; --furlt:#f9e8c0; --collar:var(--gold);}
 .cat-svg.st3 .c-eye,.cat-svg.st4 .c-eye{filter:drop-shadow(0 0 5px var(--eye));}
-.cat-svg.st4 .c-face,.cat-svg.st4 .c-body{filter:drop-shadow(0 0 10px rgba(201,169,78,.4));}
+.cat-svg.st4 .c-face,.cat-svg.st4 .c-body{filter:drop-shadow(0 0 11px rgba(201,169,78,.5));}
 /* 心情 */
 .cat-svg.mood-sleep .c-eyes-open{display:none;}
 .cat-svg.mood-sleep .c-eyes-shut{display:block;}
@@ -1041,40 +1048,63 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
         <div class="cat-stage" id="catStageBox">
           <button class="cat-pet" id="catPet" title="摸摸牠" aria-label="摸摸牠">
             <svg class="cat-svg" id="catSvg" viewBox="0 0 120 124" aria-hidden="true">
-              <ellipse class="c-shadow" cx="60" cy="115" rx="30" ry="5"/>
-              <path class="c-tail" d="M86 104 C106 104 112 86 104 72"/>
-              <path class="c-body" d="M60 56 C41 56 31 76 31 96 C31 108 44 113 60 113 C76 113 89 108 89 96 C89 76 79 56 60 56 Z"/>
-              <path class="c-paw" d="M45 108 a6 5 0 0 1 12 0 Z"/>
-              <path class="c-paw" d="M63 108 a6 5 0 0 1 12 0 Z"/>
+              <defs>
+                <!-- 金漸層的重點：中間淺、邊緣金，毛尖帶深色暈染 -->
+                <radialGradient id="furShade" cx="50%" cy="34%" r="68%">
+                  <stop offset="0%"   stop-color="var(--furlt)"/>
+                  <stop offset="52%"  stop-color="var(--fur)"/>
+                  <stop offset="100%" stop-color="var(--fur2)"/>
+                </radialGradient>
+                <radialGradient id="furBody" cx="50%" cy="22%" r="82%">
+                  <stop offset="0%"   stop-color="var(--furlt)"/>
+                  <stop offset="46%"  stop-color="var(--fur)"/>
+                  <stop offset="100%" stop-color="var(--fur2)"/>
+                </radialGradient>
+              </defs>
+              <ellipse class="c-shadow" cx="60" cy="116" rx="31" ry="5"/>
+              <path class="c-tail" d="M87 105 C107 105 113 87 104 73"/>
+              <!-- 英短的圓身子 -->
+              <path class="c-body" d="M60 57 C39 57 29 77 29 97 C29 109 43 114 60 114 C77 114 91 109 91 97 C91 77 81 57 60 57 Z"/>
+              <path class="c-paw" d="M44 109 a6.5 5 0 0 1 13 0 Z"/>
+              <path class="c-paw" d="M63 109 a6.5 5 0 0 1 13 0 Z"/>
               <g class="c-head">
-                <path class="c-ear" d="M39 25 L34 5 L56 17 Z"/>
-                <path class="c-ear" d="M81 25 L86 5 L64 17 Z"/>
-                <path class="c-ear-in" d="M42 23 L39 11 L52 18 Z"/>
-                <path class="c-ear-in" d="M78 23 L81 11 L68 18 Z"/>
-                <circle class="c-face" cx="60" cy="41" r="27"/>
+                <path class="c-ear" d="M40 26 L36 7 L57 18 Z"/>
+                <path class="c-ear" d="M80 26 L84 7 L63 18 Z"/>
+                <path class="c-ear-in" d="M43 24 L41 13 L53 19 Z"/>
+                <path class="c-ear-in" d="M77 24 L79 13 L67 19 Z"/>
+                <!-- 圓臉＋兩頰肉 -->
+                <circle class="c-face" cx="60" cy="41" r="28"/>
+                <circle class="c-cheek" cx="38" cy="47" r="9"/>
+                <circle class="c-cheek" cx="82" cy="47" r="9"/>
+                <!-- 淺色口鼻區 -->
+                <ellipse class="c-muzzle" cx="60" cy="52" rx="15" ry="10"/>
                 <g class="c-eyes-open">
-                  <ellipse class="c-eye" cx="49" cy="40" rx="6.2" ry="7.4"/>
-                  <ellipse class="c-eye" cx="71" cy="40" rx="6.2" ry="7.4"/>
-                  <ellipse class="c-pupil" cx="49" cy="40" rx="2.4" ry="6.4"/>
-                  <ellipse class="c-pupil" cx="71" cy="40" rx="2.4" ry="6.4"/>
-                  <circle class="c-glint" cx="47" cy="37" r="1.5"/>
-                  <circle class="c-glint" cx="69" cy="37" r="1.5"/>
+                  <ellipse class="c-eyerim" cx="48" cy="40" rx="8.2" ry="8.6"/>
+                  <ellipse class="c-eyerim" cx="72" cy="40" rx="8.2" ry="8.6"/>
+                  <ellipse class="c-eye" cx="48" cy="40" rx="7" ry="7.4"/>
+                  <ellipse class="c-eye" cx="72" cy="40" rx="7" ry="7.4"/>
+                  <ellipse class="c-pupil" cx="48" cy="40.5" rx="3" ry="6.2"/>
+                  <ellipse class="c-pupil" cx="72" cy="40.5" rx="3" ry="6.2"/>
+                  <circle class="c-glint" cx="45.6" cy="36.8" r="1.9"/>
+                  <circle class="c-glint" cx="69.6" cy="36.8" r="1.9"/>
+                  <circle class="c-glint2" cx="50.5" cy="43.5" r="1"/>
+                  <circle class="c-glint2" cx="74.5" cy="43.5" r="1"/>
                 </g>
                 <g class="c-eyes-shut">
-                  <path d="M43 41 Q49 34 55 41"/><path d="M65 41 Q71 34 77 41"/>
+                  <path d="M41 41 Q48 33 55 41"/><path d="M65 41 Q72 33 79 41"/>
                 </g>
-                <path class="c-nose" d="M56 50 L64 50 L60 55 Z"/>
-                <path class="c-mouth" d="M60 55 Q55.5 60 51.5 56.5 M60 55 Q64.5 60 68.5 56.5"/>
+                <path class="c-nose" d="M55.5 48.5 Q60 46.6 64.5 48.5 Q60 54 55.5 48.5 Z"/>
+                <path class="c-mouth" d="M60 53 Q55.5 58.5 51 55 M60 53 Q64.5 58.5 69 55"/>
                 <g class="c-whisk">
-                  <path d="M44 52 L26 48"/><path d="M44 56 L26 58"/>
-                  <path d="M76 52 L94 48"/><path d="M76 56 L94 58"/>
+                  <path d="M43 51 L23 46"/><path d="M43 55 L23 57"/>
+                  <path d="M77 51 L97 46"/><path d="M77 55 L97 57"/>
                 </g>
               </g>
               <g class="c-collar">
-                <path d="M44 63 Q60 73 76 63"/>
-                <circle class="c-gem" cx="60" cy="70" r="3.4"/>
+                <path d="M43 64 Q60 74 77 64"/>
+                <circle class="c-gem" cx="60" cy="71" r="3.6"/>
               </g>
-              <g class="c-zzz"><text x="90" y="30">z</text><text x="98" y="18">z</text></g>
+              <g class="c-zzz"><text x="92" y="30">z</text><text x="100" y="18">z</text></g>
             </svg>
             <span class="cat-hearts" id="catHearts"></span>
           </button>
@@ -1102,14 +1132,6 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       </div>
     </details>
 
-    <!-- 起床順序（折疊） -->
-    <details class="fold">
-      <summary>🌅 起床固定順序 <span class="fold-sub">起床先做這五件，不用想</span></summary>
-      <div class="fold-body">
-        <ul class="checklist" id="morningChecklist"></ul>
-        <p class="dim">今天最重要的一條：起床不看手機。</p>
-      </div>
-    </details>
 
 
     <!-- 預言家日報 -->
@@ -2228,19 +2250,6 @@ function renderExamCard(){
   });
 }
 
-/* 起床 */
-const MORNING_ITEMS=['起床，不看手機','喝水、洗臉、換衣服，不做任何決定','坐下默寫 10 條條文','早餐（現在可以看手機，計時 10 分鐘）','看一眼今天的第一件事，然後開始'];
-function renderMorning(){
-  const st=LS.get('hp_morning_'+todayStr(),{});
-  document.getElementById('morningChecklist').innerHTML=MORNING_ITEMS.map((it,i)=>
-    `<li class="${st[i]?'done':''}"><input type="checkbox" id="mi${i}" data-idx="${i}" ${st[i]?'checked':''}><label for="mi${i}">${it}</label></li>`).join('');
-}
-document.getElementById('morningChecklist').addEventListener('change',e=>{
-  const cb=e.target.closest('input[type=checkbox]'); if(!cb) return;
-  const st=LS.get('hp_morning_'+todayStr(),{});
-  st[cb.dataset.idx]=cb.checked;
-  LS.set('hp_morning_'+todayStr(),st); renderMorning();
-});
 
 /* 收工 */
 const CLOSING_ITEMS=[
@@ -3907,7 +3916,6 @@ function init(){
   renderModeUI();
   renderCourseReview();
   renderExamCard();
-  renderMorning();
   renderClosing();
   renderFrogCard();
   renderTimeline();
