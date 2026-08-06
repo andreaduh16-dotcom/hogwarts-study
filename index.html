@@ -287,17 +287,6 @@ nav.tabs button[data-acc="more"].active   {--tab-acc:#b8a68a; --tab-acc-dim:rgba
   .ring-box{align-self:center;}
 }
 /* 主要動作：獨佔一行、加大 */
-/* 低電量出口 */
-.low-hint{
-  margin-top:13px; padding-top:12px; border-top:1px dashed rgba(130,190,155,.2);
-  display:flex; align-items:center; gap:9px; flex-wrap:wrap; justify-content:center;
-  font-size:12px; color:var(--dim);
-}
-.low-hint button{
-  background:rgba(255,255,255,.055); border:1px solid var(--line); color:var(--silver);
-  font-family:"Noto Serif TC",serif; font-size:12px; padding:6px 13px; border-radius:20px; cursor:pointer; transition:.15s;
-}
-.low-hint button:hover{background:rgba(255,255,255,.13); border-color:var(--line-str); color:var(--silver-hi);}
 /* 進度環 */
 .ring-box{text-align:center; flex-shrink:0;}
 .ring{
@@ -371,17 +360,6 @@ button.magic:disabled{opacity:.28; cursor:not-allowed; transform:none; filter:no
 @media (prefers-reduced-motion:reduce){
   button.magic::before,button.magic::after{animation:none !important;}
   button.magic:hover:not(:disabled){transform:none;}
-}
-/* 低電量出口鈕：跟 secondary 同一套語彙 */
-.low-hint button{
-  background:linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.03));
-  border:1px solid var(--line); color:var(--silver);
-  font-family:"Noto Serif TC",serif; font-size:12px; padding:6px 14px; border-radius:20px;
-  cursor:pointer; transition:.18s; box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
-}
-.low-hint button:hover{
-  background:rgba(255,255,255,.12); border-color:rgba(201,169,78,.55); color:var(--silver-hi);
-  box-shadow:0 0 18px rgba(201,169,78,.2), inset 0 1px 0 rgba(255,255,255,.12);
 }
 /* 分頁：選中的那個像被點亮的燭台 */
 nav.tabs button{position:relative;}
@@ -3461,7 +3439,7 @@ const PROPHET_LINES=[
   '攤平作業說明：不加深，只加寬。',
   '體系表繳交期限：能空手畫出來才算完成。',
   '默寫十條公告：這是唯一跨越所有日子的動作。',
-  '低電量模式啟用：做默寫十條，然後去睡。一樣算過關。',
+  '最低標準備忘：做默寫十條，然後去睡。一樣算過關。',
   '保護規則第一條：不准補。落後就改計畫。',
   '保護規則第二條：停在時間，不停在進度。',
   '不可破的誓言第一條：每天默寫十條，就算只讀二十分鐘。',
