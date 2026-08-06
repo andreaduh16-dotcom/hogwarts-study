@@ -298,7 +298,7 @@ button.magic.secondary:hover:not(:disabled){
   border-color:rgba(201,169,78,.6); color:var(--silver-hi);
   box-shadow:0 5px 16px rgba(0,0,0,.4), 0 0 20px rgba(201,169,78,.2), inset 0 1px 0 rgba(255,255,255,.14);
 }
-button.magic.small{padding:5px 12px; font-size:11px;}
+button.magic.small{padding:8px 13px; font-size:11px;}
 button.magic:disabled{opacity:.28; cursor:not-allowed; transform:none; filter:none; box-shadow:none; border-color:var(--line);}
 .card.parch button.magic.secondary{background:rgba(201,169,78,.1); color:#f0dfa8; border-color:rgba(201,169,78,.4);}
 @media (prefers-reduced-motion:reduce){
@@ -377,12 +377,12 @@ label.field-label{display:block; font-size:11.5px; font-weight:700; color:var(--
 /* ── 清單 ── */
 .checklist{list-style:none; padding:0; margin:8px 0 0;}
 .checklist li{
-  display:flex; align-items:flex-start; gap:9px; padding:8px 4px; font-size:13.5px;
+  display:flex; align-items:flex-start; gap:10px; padding:10px 4px; font-size:13.5px;
   border-bottom:1px solid rgba(255,255,255,.06); line-height:1.55;
 }
 .checklist li:last-child{border-bottom:none;}
 .checklist li.done{opacity:.62;}
-.checklist input[type=checkbox]{width:19px; height:19px; margin-top:1px; accent-color:var(--green-lt); cursor:pointer; flex-shrink:0;}
+.checklist input[type=checkbox]{width:22px; height:22px; margin-top:0; accent-color:var(--green-lt); cursor:pointer; flex-shrink:0;}
 .card.parch .checklist input[type=checkbox]{accent-color:var(--gold);}
 .checklist label{cursor:pointer; flex:1;}
 .checklist li.done label{text-decoration:line-through; opacity:.45;}
@@ -711,7 +711,10 @@ details.fold .fold-body{padding:0 16px 15px;}
 .cat-name{font-family:"Cinzel","Noto Serif TC",serif; font-weight:700; color:var(--gold); font-size:14px;
   cursor:pointer; letter-spacing:.5px;}
 .cat-name:hover{text-decoration:underline dotted; text-underline-offset:3px;}
-.cat-edit{background:none; border:none; color:var(--dim); cursor:pointer; font-size:12px; padding:2px 4px; line-height:1;}
+.cat-edit{background:none; border:none; color:var(--dim); cursor:pointer; font-size:13px;
+  min-width:30px; min-height:30px; display:inline-flex; align-items:center; justify-content:center;
+  border-radius:8px; line-height:1;}
+.cat-edit:active{background:rgba(255,255,255,.08);}
 .cat-edit:hover{color:var(--gold);}
 .cat-rename-input{width:100%; max-width:150px; font-size:13px; padding:4px 8px;}
 .cat-bubble{
@@ -1108,21 +1111,6 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       </div>
     </details>
 
-    <!-- 三行紙（折疊，晚上自動展開） -->
-    <details class="fold" id="parchmentFold">
-      <summary>📝 三行紙 <span class="fold-sub">睡前寫三行，明天早上的你不用做決定</span></summary>
-      <div class="fold-body">
-        <div id="yesterdayParchment" style="margin-bottom:12px;"></div>
-        <label class="field-label">① 明天主科</label>
-        <input type="text" id="p1" placeholder="例：民法〈變形學〉">
-        <label class="field-label">② 明天要做完的一件事（只寫一件）</label>
-        <input type="text" id="p2" placeholder="具體到能打勾">
-        <label class="field-label">③ 低電量時就只做</label>
-        <input type="text" id="p3" placeholder="例：默寫10條">
-        <div style="margin-top:11px;"><button class="magic" id="saveParchment">🦉 封蠟寄出</button></div>
-        <p class="dim" id="parchmentSavedMsg" style="display:none;">✓ 貓頭鷹已出發，明天早上會收到。</p>
-      </div>
-    </details>
 
     <!-- 預言家日報 -->
     <div class="prophet">
@@ -1155,7 +1143,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
 
     <div class="card">
       <h2>🍫 巧克力蛙畫片冊 <span class="dim" id="albumCount"></span></h2>
-      <p class="dim">每天過關就能開一隻。共五類、120 張：巫師與角色 40、魔法生物 24、魔法物品 23、霍格華茲場所 20、魔藥 13。</p>
+      <p class="dim">每天過關就能開一隻，<b>集滿之前絕不重複</b>。共六類、360 張：巫師與角色、魔法生物、魔法物品、霍格華茲場所、魔藥、咒語與魔法。收齊那天，這個功能就功成身退。</p>
       <div style="margin:9px 0;"><button class="magic small" id="extraDrawBtn">🍫 用 30 點再抽一張</button></div>
       <div id="albumGrid"></div>
     </div>
@@ -1307,29 +1295,6 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
         <div class="vow-item"><b>停在時間，不停在進度。</b>時間到就停，不是「讀完這章才能停」</div>
       </div>
     </div>
-    <details class="fold">
-      <summary>📖 名詞解釋 <span class="fold-sub">看不懂計畫裡的詞就開這裡</span></summary>
-      <div class="fold-body">
-        <h3>「攤平」是什麼？</h3>
-        <p>檢事官考<b>申論</b>——題目少、挖得深，是一口<b>深井</b>。<br>
-        一試考<b>選擇題</b>——題目多、每題淺，但問遍整部法典，是一片<b>廣場</b>。</p>
-        <p><b>攤平＝把深井改造成廣場。</b>拿法典和題目從第 1 條掃過去，補那些「申論不考、選擇題愛考」的東西：冷門條文、數字（期間／時效／年齡／比例）、但書例外、準用與擬制、「視為」和「推定」的差別、程序規定。</p>
-        <p class="dim">攤平不是重讀。剛考完的科目再讀一次教科書是浪費——遇到早就懂的直接跳過，只在沒看過的地方停下來。<b>不加深，只加寬。</b></p>
-        <div class="tbl-wrap"><table class="schedule-table txt">
-          <tr><th>詞</th><th>意思</th></tr>
-          <tr><td>體系表</td><td>把一整科畫成樹狀圖，讓腦中有地圖，看到題目知道它在哪個位置</td></tr>
-          <tr><td>涵攝</td><td>把題目事實套進法條要件，一項一項檢查符不符合。申論分數就在這</td></tr>
-          <tr><td>爭點</td><td>題目真正在吵的法律問題——學說或實務有不同看法的地方</td></tr>
-          <tr><td>三段論</td><td>大前提（法條）→ 小前提（本題事實）→ 結論</td></tr>
-          <tr><td>封盤</td><td>考前停止吸收新教材，只複習讀過的。新東西記不牢，還會擠掉舊記憶</td></tr>
-          <tr><td>相對錄取</td><td>看排名不看分數。一試取前 33%，目標是贏三分之二的人</td></tr>
-          <tr><td>函釋</td><td>行政機關對法規的解釋文。教科書不寫，但行政法選擇題很愛考</td></tr>
-          <tr><td>釋字／憲判字</td><td>舊制大法官解釋／新制憲法法庭判決。選擇題常從<b>理由書</b>出題，不是主文</td></tr>
-          <tr><td>實務見解</td><td>法院實際怎麼判，可能跟學說不一樣，兩邊都要知道</td></tr>
-          <tr><td>真分科</td><td>TaiLexi 的模式：照真實考試的科目組合出題</td></tr>
-        </table></div>
-      </div>
-    </details>
 
     <div class="card">
       <h2>🪄 TaiLexi 使用手冊</h2>
@@ -2264,7 +2229,7 @@ function renderExamCard(){
 }
 
 /* 起床 */
-const MORNING_ITEMS=['起床，不看手機','喝水、洗臉、換衣服，不做任何決定','坐下默寫 10 條條文','早餐（現在可以看手機，計時 10 分鐘）','看昨天寫好的三行紙'];
+const MORNING_ITEMS=['起床，不看手機','喝水、洗臉、換衣服，不做任何決定','坐下默寫 10 條條文','早餐（現在可以看手機，計時 10 分鐘）','看一眼今天的第一件事，然後開始'];
 function renderMorning(){
   const st=LS.get('hp_morning_'+todayStr(),{});
   document.getElementById('morningChecklist').innerHTML=MORNING_ITEMS.map((it,i)=>
@@ -2279,21 +2244,20 @@ document.getElementById('morningChecklist').addEventListener('change',e=>{
 
 /* 收工 */
 const CLOSING_ITEMS=[
-  {label:'寫明天的三行紙',points:0},
   {label:'今天的錯題已經入本（不隔夜，一句話也算）',points:5},
   {label:'合上書，離開位子',points:0}
 ];
 function renderClosing(){
   const o=getDayObj(todayStr()), st=LS.get('hp_closing_'+todayStr(),{});
   document.getElementById('closingChecklist').innerHTML=CLOSING_ITEMS.map((it,i)=>{
-    const ck=i===1? !!o.errorLogged : !!st[i];
+    const ck=i===0? !!o.errorLogged : !!st[i];
     return `<li class="${ck?'done':''}"><input type="checkbox" id="close${i}" data-idx="${i}" ${ck?'checked':''}><label for="close${i}">${it.label}</label>${it.points?`<span class="pt">+${it.points}</span>`:''}</li>`;
   }).join('');
 }
 document.getElementById('closingChecklist').addEventListener('change',e=>{
   const cb=e.target.closest('input[type=checkbox]'); if(!cb) return;
   const i=+cb.dataset.idx;
-  if(i===1){
+  if(i===0){
     const before=getBalance(), o=getDayObj(todayStr());
     o.errorLogged=cb.checked; setDayObj(todayStr(),o);
     renderClosing(); pointsFeedback(before, cb.checked?'錯題當天入本':'取消錯題入本');
@@ -2306,25 +2270,6 @@ document.getElementById('closingChecklist').addEventListener('change',e=>{
 /* ═══ 計時器（+3／回合） ═══ */
 /* 節奏鐘與沉浸模式已移除——計時改用外部工具。 */
 
-/* ═══ 三行紙 ═══ */
-function renderYesterdayParchment(){
-  const y=LS.get('hp_parchment_for_'+todayStr(),null);
-  const box=document.getElementById('yesterdayParchment');
-  if(!y){ box.innerHTML='<p class="dim">今天早上沒有信。今晚寫下三行，明天的你就不用想了。</p>'; return; }
-  box.innerHTML=`<div class="week-focus">
-    <div>① 明天主科：<b>${y.p1||'—'}</b></div>
-    <div>② 要做完的一件事：<b>${y.p2||'—'}</b></div>
-    <div>③ 低電量時只做：<b>${y.p3||'—'}</b></div></div>`;
-}
-document.getElementById('saveParchment').addEventListener('click',()=>{
-  const p1=document.getElementById('p1').value.trim();
-  const p2=document.getElementById('p2').value.trim();
-  const p3=document.getElementById('p3').value.trim();
-  if(!p2){ toast('②只能寫一件，但至少要寫'); return; }
-  LS.set('hp_parchment_for_'+todayStr(1),{p1,p2,p3,savedAt:todayStr()});
-  document.getElementById('parchmentSavedMsg').style.display='block';
-  toast('貓頭鷹出發了 🦉');
-});
 
 /* ═══ 時間軸 ═══ */
 function renderTimeline(){
@@ -2398,8 +2343,8 @@ function renderHeatmap(){
 
 /* ═══ 巧克力蛙 ═══ */
 /* cat：w 巫師與角色｜b 魔法生物｜o 魔法物品｜p 霍格華茲場所｜x 魔藥 */
-const CAT_NAME={w:'巫師與角色',b:'魔法生物',o:'魔法物品',p:'霍格華茲場所',x:'魔藥'};
-const CAT_ICON={w:'🧙',b:'🐾',o:'🪄',p:'🏰',x:'⚗️'};
+const CAT_NAME={w:'巫師與角色',b:'魔法生物',o:'魔法物品',p:'霍格華茲場所',x:'魔藥',s:'咒語與魔法'};
+const CAT_ICON={w:'🧙',b:'🐾',o:'🪄',p:'🏰',x:'⚗️',s:'✨'};
 const CARDS=[
   /* ── 巫師與角色 ── */
   {id:'dumbledore',n:'鄧不利多',e:'🧙‍♂️',r:'l',cat:'w',line:'「做對的選擇，比做容易的選擇難。」'},
@@ -2469,6 +2414,258 @@ const CARDS=[
   {id:'strengthening',n:'增強劑',e:'💪',r:'c',cat:'x',line:'「效果會累積——就像每天 10 條條文。」'},
   {id:'antidote',n:'解毒劑',e:'🧯',r:'c',cat:'x',line:'「先止血，再檢討。順序不要顛倒。」'},
 
+  /* ══ 擴充：巫師與角色 ══ */
+  {id:'godric',n:'高錐克·葛萊芬多',e:'🦁',r:'l',cat:'w',line:'「勇氣不是不怕，是怕還坐下來。」'},
+  {id:'rowena',n:'羅威娜·雷文克勞',e:'🦅',r:'l',cat:'w',line:'「智慧是最大的財富。條文是它的本金。」'},
+  {id:'helga',n:'赫夫帕夫',e:'🦡',r:'l',cat:'w',line:'「肯苦幹的人最後都到得了。」'},
+  {id:'nicolas',n:'尼樂·勒梅',e:'⚗️',r:'l',cat:'w',line:'「活了六百年，還是每天做功課。」'},
+  {id:'morgana',n:'摩根勒菲',e:'🌑',r:'l',cat:'w',line:'「最強的女巫也曾經是新生。」'},
+  {id:'circe',n:'瑟西',e:'🐖',r:'r',cat:'w',line:'「她把人變成豬。你把拖延變成進度。」'},
+  {id:'agrippa',n:'阿格麗帕',e:'📐',r:'r',cat:'w',line:'「最難收集的那張卡。你也是。」'},
+  {id:'ptolemy',n:'托勒密',e:'🌌',r:'r',cat:'w',line:'「先畫出星圖，再談導航。」'},
+  {id:'paracelsus',n:'帕拉塞爾蘇斯',e:'🧫',r:'r',cat:'w',line:'「劑量決定毒藥還是解藥。讀書時間也是。」'},
+  {id:'hengist',n:'亨吉斯',e:'🏘️',r:'c',cat:'w',line:'「他建了活米村。你在建自己的城。」'},
+  {id:'cliodna',n:'柯麗奧娜',e:'🌊',r:'c',cat:'w',line:'「潮汐有規律，進度也該有。」'},
+  {id:'grunnion',n:'亞伯瑞·格倫尼恩',e:'🎇',r:'c',cat:'w',line:'「他發明了糞彈。你發明了藉口。」'},
+  {id:'wildsmith',n:'伊格內修·威德史密',e:'🧴',r:'c',cat:'w',line:'「花保西藥水的發明者。慢慢熬才有效。」'},
+  {id:'bagshot',n:'巴希達·巴沙特',e:'📖',r:'r',cat:'w',line:'「《魔法史》的作者。歷史都是人寫的。」'},
+  {id:'scamander',n:'紐特·斯卡曼德',e:'🧳',r:'r',cat:'w',line:'「他把整個世界裝進一個箱子。你裝進一本錯題本。」'},
+  {id:'dumbledorealb',n:'阿波佛·鄧不利多',e:'🕯️',r:'c',cat:'w',line:'「他只想安靜地過日子。有時候那才是對的。」'},
+  {id:'mcgonagallyoung',n:'年輕的麥米奈娃',e:'🧣',r:'c',cat:'w',line:'「她也曾經是那個坐在第一排的學生。」'},
+  {id:'lily',n:'莉莉·波特',e:'🌷',r:'r',cat:'w',line:'「她的魔藥拿過最高分。天份要配上練習。」'},
+  {id:'james',n:'詹姆·波特',e:'🦌',r:'r',cat:'w',line:'「他很會飛，但飛不過期末考。」'},
+  {id:'petunia',n:'佩妮阿姨',e:'🌸',r:'c',cat:'w',line:'「她其實偷偷寫過入學申請信。」'},
+  {id:'wormtail',n:'蟲尾巴',e:'🐀',r:'c',cat:'w',line:'「背叛自己的計畫，是最容易的那種背叛。」'},
+  {id:'fudge',n:'夫子部長',e:'🎩',r:'c',cat:'w',line:'「否認問題不會讓問題消失。進度也一樣。」'},
+  {id:'umbridge',n:'恩不里居',e:'🩷',r:'r',cat:'w',line:'「『我不可以說謊』——今天到底讀了幾分鐘？」'},
+  {id:'crouch',n:'柯羅奇先生',e:'📋',r:'c',cat:'w',line:'「規則訂太嚴，最後連自己都撐不住。」'},
+  {id:'bagman',n:'魯多·貝漫',e:'🎰',r:'c',cat:'w',line:'「別把進度拿去賭。」'},
+  {id:'ollivander',n:'奧利凡德',e:'🪄',r:'r',cat:'w',line:'「是魔杖選擇巫師。條文可不會。」'},
+  {id:'flamel',n:'佩雷娜·勒梅',e:'💍',r:'c',cat:'w',line:'「六百五十八歲，還在整理書架。」'},
+  {id:'quirrell',n:'奇洛教授',e:'🧕',r:'c',cat:'w',line:'「口吃的人也把課上完了。」'},
+  {id:'karkaroff',n:'卡卡夫',e:'🧥',r:'c',cat:'w',line:'「逃避的人，最後被自己追上。」'},
+  {id:'maxime',n:'美心夫人',e:'💄',r:'c',cat:'w',line:'「大有大的氣勢。小有小的準備。」'},
+  {id:'fleur',n:'花兒·戴樂古',e:'🌼',r:'c',cat:'w',line:'「別被外表騙了，她也是勇士。」'},
+  {id:'krum',n:'喀浪',e:'🧹',r:'c',cat:'w',line:'「世界級的球員，還是得念書。」'},
+  {id:'oliver',n:'木透',e:'📣',r:'c',cat:'w',line:'「六點的訓練。你的六點呢？」'},
+  {id:'angelina',n:'安琪莉娜',e:'🏐',r:'c',cat:'w',line:'「隊長要先自己到場。」'},
+  {id:'katie',n:'凱娣·貝爾',e:'💫',r:'c',cat:'w',line:'「碰到不該碰的東西會出事。比如手機。」'},
+  {id:'leejordan',n:'李·喬丹',e:'📻',r:'c',cat:'w',line:'「主播也要先看規則書。」'},
+  {id:'seamus',n:'西莫',e:'💥',r:'c',cat:'w',line:'「炸掉也沒關係，再來一次。」'},
+  {id:'dean',n:'狄恩·湯瑪斯',e:'🎨',r:'c',cat:'w',line:'「畫得出來的東西，通常也懂了。」'},
+  {id:'lavender',n:'文妲·布朗',e:'💐',r:'c',cat:'w',line:'「別把心思全放在別人身上。」'},
+  {id:'parvati',n:'巴堤',e:'🪷',r:'c',cat:'w',line:'「占卜課再無聊，也要坐到下課。」'},
+  {id:'padma',n:'芭瑪',e:'📘',r:'c',cat:'w',line:'「雷文克勞那邊的雙胞胎，安靜地讀完了。」'},
+  {id:'colin',n:'柯林·克利維',e:'📷',r:'c',cat:'w',line:'「記錄下來的東西才留得住。」'},
+  {id:'ernie',n:'厄尼·麥米蘭',e:'🎓',r:'c',cat:'w',line:'「一板一眼地讀完，也是一種本事。」'},
+  {id:'hannah',n:'漢娜·艾寶',e:'🫖',r:'c',cat:'w',line:'「緊張到昏倒也爬起來考完。」'},
+  {id:'susan',n:'蘇珊·波恩',e:'🧺',r:'c',cat:'w',line:'「家族的期待很重。放下一點沒關係。」'},
+  {id:'justin',n:'賈斯汀',e:'🪞',r:'c',cat:'w',line:'「石化了幾個月，還是趕上了。」'},
+  {id:'terry',n:'泰瑞·布特',e:'🧮',r:'c',cat:'w',line:'「雷文克勞的門要先答對問題才開。」'},
+  {id:'michael',n:'麥可·寇那',e:'🪟',r:'c',cat:'w',line:'「換了三次讀書法的人，最後哪個都不熟。」'},
+  {id:'anthony',n:'安東尼·金坦',e:'🔖',r:'c',cat:'w',line:'「做記號的人，回來找得到路。」'},
+  {id:'blaise',n:'布雷斯·薩比尼',e:'🕶️',r:'c',cat:'w',line:'「安靜的史萊哲林，成績最好。」'},
+  {id:'theodore',n:'狄奧多·諾特',e:'📜',r:'c',cat:'w',line:'「不張揚，但每一本都讀完了。」'},
+  {id:'pansy',n:'潘西·帕金森',e:'💅',r:'c',cat:'w',line:'「嘴上說不在意，考前還是熬夜了。」'},
+  {id:'crabbe',n:'克拉',e:'🍖',r:'c',cat:'w',line:'「只會跟著別人走的人，走不遠。」'},
+  {id:'goyle',n:'高爾',e:'🥔',r:'c',cat:'w',line:'「至少他很誠實地不懂。」'},
+  {id:'marcus',n:'馬克·夫林',e:'🥍',r:'c',cat:'w',line:'「留級兩年，還是畢業了。」'},
+  {id:'slytheringhost',n:'血人巴羅',e:'⛓️',r:'r',cat:'w',line:'「史萊哲林的幽靈。悔恨比鎖鏈更重。」'},
+  {id:'fatfriar',n:'胖修士',e:'🍺',r:'c',cat:'w',line:'「他總是原諒別人。也原諒一下自己。」'},
+  {id:'fatlady',n:'胖女士',e:'🖼️',r:'c',cat:'w',line:'「沒有通關密語就進不去。你的密語是坐下。」'},
+  {id:'violet',n:'紫羅蘭',e:'🍷',r:'c',cat:'w',line:'「畫像們什麼都知道，包括你幾點睡。」'},
+  {id:'phineas',n:'菲尼亞斯·奈傑',e:'🪑',r:'r',cat:'w',line:'「史上最不受歡迎的校長。但他說的常是對的。」'},
+  {id:'dilys',n:'黛麗·德文',e:'🩺',r:'c',cat:'w',line:'「聖蒙果的院長。休息也是療程。」'},
+  {id:'griphook',n:'拉環',e:'🗝️',r:'c',cat:'w',line:'「妖精只認擁有權。你的時間屬於你。」'},
+  {id:'firenze',n:'翡冷翠（半人馬教授）',e:'♐',r:'r',cat:'w',line:'「人類太急著要答案。星星要慢慢看。」'},
+  {id:'bane',n:'貝恩',e:'🌠',r:'c',cat:'w',line:'「他不喜歡人類。但他從不說謊。」'},
+  {id:'winky',n:'眨眨',e:'🧻',r:'c',cat:'w',line:'「失去目標的時候最難熬。找一個小的先做。」'},
+  {id:'hokey',n:'賀琪',e:'🫙',r:'c',cat:'w',line:'「記得的細節，可能是關鍵證據。」'},
+  {id:'bathilda',n:'高錐客洞的老太太',e:'🏚️',r:'c',cat:'w',line:'「有些線索，要走到最後才看得懂。」'},
+  {id:'ariana',n:'亞蕊安娜',e:'🕊️',r:'c',cat:'w',line:'「被壓抑的東西不會消失，只會轉向。」'},
+  {id:'kendra',n:'坎卓拉·鄧不利多',e:'🖤',r:'c',cat:'w',line:'「一個人扛太久會出事。」'},
+  {id:'percy',n:'派西·衛斯理',e:'📎',r:'c',cat:'w',line:'「他是對的：規則要先讀熟。」'},
+  {id:'charlie',n:'查理·衛斯理',e:'🐉',r:'c',cat:'w',line:'「馴龍的人，先學會不怕。」'},
+  {id:'ginnyq',n:'金妮（哈比隊）',e:'🥇',r:'c',cat:'w',line:'「從被保護的妹妹到職業選手。」'},
+  {id:'teddy',n:'泰迪·路平',e:'🌈',r:'c',cat:'w',line:'「下一代會踩在你的肩膀上。」'},
+  {id:'scorpius',n:'天蠍·馬份',e:'✨',r:'c',cat:'w',line:'「姓氏不是判決。你的成績才是。」'},
+  {id:'trevor',n:'奈威的蟾蜍萊福',e:'🐸',r:'c',cat:'w',line:'「牠又跑了。像你的專注力。」'},
+  {id:'errol',n:'愛落',e:'🪶',r:'c',cat:'w',line:'「牠飛得很慢，但每封信都送到了。」'},
+  {id:'pigwidgeon',n:'豬水鳧',e:'🐦',r:'c',cat:'w',line:'「太興奮反而做不好事。深呼吸。」'},
+  {id:'peverell',n:'佩威爾三兄弟',e:'🔻',r:'l',cat:'w',line:'「想贏過死亡的人，最後是坦然接受的那個活最久。」'},
+  {id:'slughornyoung',n:'年輕的史拉轟',e:'⏳',r:'c',cat:'w',line:'「他記得每個有潛力的學生。包括你。」'},
+
+  /* ══ 擴充：魔法生物 ══ */
+  {id:'hippogriff2',n:'鷹馬群',e:'🪽',r:'c',cat:'b',line:'「先鞠躬。禮貌是最低成本的通行證。」'},
+  {id:'nagini',n:'那吉尼',e:'🐍',r:'r',cat:'b',line:'「被詛咒的人生，也還是在往前走。」'},
+  {id:'kelpie',n:'凱爾派',e:'🐎',r:'c',cat:'b',line:'「看起來友善的東西不一定安全。比如「等一下再讀」。」'},
+  {id:'grindylow',n:'格林迪洛',e:'🫧',r:'c',cat:'b',line:'「牠會抓住你的腳踝。焦慮也是。」'},
+  {id:'redcap',n:'紅帽小矮妖',e:'🧢',r:'c',cat:'b',line:'「牠住在流過血的地方。錯題本也是。」'},
+  {id:'hinkypunk',n:'欣克龐克',e:'🏮',r:'c',cat:'b',line:'「牠提著燈把人引進沼澤。捷徑也是。」'},
+  {id:'blastended',n:'炸尾螺',e:'🧨',r:'c',cat:'b',line:'「海格覺得牠很可愛。愛是盲目的。」'},
+  {id:'flobberworm',n:'黏巴蟲',e:'🪱',r:'c',cat:'b',line:'「什麼都不做也是一種生存策略。但不是你的。」'},
+  {id:'nogtail',n:'鼻尾豬',e:'🐷',r:'c',cat:'b',line:'「趕走牠要用純白的狗。細節決定成敗。」'},
+  {id:'streeler',n:'變色蝸牛',e:'🐌',r:'c',cat:'b',line:'「慢，但每小時都換一種顏色。」'},
+  {id:'clabbert',n:'克拉伯',e:'🫒',r:'c',cat:'b',line:'「牠額頭的疙瘩會發亮示警。你的警訊呢？」'},
+  {id:'jarvey',n:'賈維',e:'🦫',r:'c',cat:'b',line:'「牠只會罵髒話。有些聲音可以不理。」'},
+  {id:'knarl',n:'刺蝟怪',e:'🦔',r:'c',cat:'b',line:'「好意被誤解會生氣。包括對自己的好意。」'},
+  {id:'puffskein',n:'蒲絨絨（原種）',e:'🟡',r:'c',cat:'b',line:'「牠什麼都吃，什麼都不挑。像好的讀書習慣。」'},
+  {id:'augurey',n:'鳳頭鸚鵡渡鴉',e:'🌧️',r:'c',cat:'b',line:'「牠叫不是預告死亡，只是要下雨了。別亂解讀。」'},
+  {id:'diricawl',n:'嘟嘟',e:'🪄',r:'c',cat:'b',line:'「麻瓜以為牠絕種了。牠只是會消失。」'},
+  {id:'fwooper',n:'弗珀鳥',e:'🪺',r:'c',cat:'b',line:'「聽太久會瘋。有些聲音要設時限。」'},
+  {id:'graphorn',n:'夜騏獸',e:'🦬',r:'r',cat:'b',line:'「皮比龍還硬。心也可以練。」'},
+  {id:'runespoor',n:'如尼三頭蛇',e:'🐉',r:'r',cat:'b',line:'「三顆頭：計畫、批評、夢想。批評那顆最短命。」'},
+  {id:'salamander',n:'火蜥蜴',e:'🔥',r:'c',cat:'b',line:'「牠靠火活著。你靠什麼？」'},
+  {id:'sphinx',n:'獅身人面獸',e:'🐈‍⬛',r:'r',cat:'b',line:'「答對謎題才能過。看懂題目就是答對一半。」'},
+  {id:'acromantula',n:'八眼巨蛛群',e:'🕸️',r:'r',cat:'b',line:'「牠們很多。你的範圍也是。一次咬一隻。」'},
+  {id:'chimaera',n:'奇美拉',e:'🦁',r:'r',cat:'b',line:'「只有一次被打敗的紀錄。難的東西不是不可能。」'},
+  {id:'erkling',n:'厄克鈴',e:'🎶',r:'c',cat:'b',line:'「牠用歌聲引誘小孩。演算法也會。」'},
+  {id:'demiguise',n:'隱形獸',e:'🙈',r:'r',cat:'b',line:'「牠能預見未來，所以抓不到。計畫也要留餘地。」'},
+  {id:'occamy',n:'鳥蛇',e:'🥚',r:'r',cat:'b',line:'「牠會依空間大小改變。目標也是——別給太大的盒子。」'},
+  {id:'nundu',n:'努都',e:'💨',r:'r',cat:'b',line:'「最危險的野獸。要一百個巫師才制得住。所以要早點開始。」'},
+  {id:'quintaped',n:'五腳怪',e:'🦶',r:'c',cat:'b',line:'「牠曾經是人類。習慣會改變形狀。」'},
+  {id:'mooncalf',n:'月痴獸',e:'🌙',r:'c',cat:'b',line:'「牠只在滿月出來跳舞。有些事要等對的時間。」'},
+  {id:'murtlap',n:'鼠蹼獸',e:'🩹',r:'c',cat:'b',line:'「牠的觸鬚能治傷。錯題本也能。」'},
+  {id:'billywig',n:'比利威格',e:'🪰',r:'c',cat:'b',line:'「被叮到會飄起來。小小的成就感也會。」'},
+  {id:'doxy',n:'狐媚子',e:'🧚',r:'c',cat:'b',line:'「看起來像仙子，咬起來有毒。分心也是。」'},
+  {id:'gnome',n:'花園地精',e:'🪴',r:'c',cat:'b',line:'「趕走了還會回來。所以要一直趕。」'},
+  {id:'pixie',n:'康瓦耳小精靈',e:'💙',r:'c',cat:'b',line:'「牠們把人吊到吊燈上。混亂是會擴散的。」'},
+  {id:'ghoul',n:'食屍鬼',e:'🪚',r:'c',cat:'b',line:'「牠住在閣樓製造噪音。腦裡也有一隻。」'},
+  {id:'poltergeist',n:'愛惡作劇的幽靈',e:'🎈',r:'c',cat:'b',line:'「牠不是鬼，是混亂本身。」'},
+  {id:'inferi',n:'陰屍',e:'🧟',r:'r',cat:'b',line:'「熬夜隔天的你就長這樣。」'},
+  {id:'housefelf',n:'霍格華茲廚房小精靈',e:'🍽️',r:'c',cat:'b',line:'「一百多個小精靈在為你煮飯。你負責讀書就好。」'},
+  {id:'giantsquid',n:'大烏賊',e:'🦑',r:'c',cat:'b',line:'「黑湖裡最溫和的居民。安靜地存在也是一種強大。」'},
+  {id:'owlpost',n:'貓頭鷹郵局',e:'📮',r:'c',cat:'b',line:'「牠們永遠找得到收件人。你也找得到方法。」'},
+  {id:'crookshanks',n:'歪腿',e:'🐈',r:'r',cat:'b',line:'「半个獅子貓。牠早就看穿蟲尾巴了。」'},
+  {id:'fang',n:'牙牙',e:'🐕‍🦺',r:'c',cat:'b',line:'「看起來很兇，其實超膽小。跟考前的你一樣。」'},
+  {id:'buckbeakfree',n:'巴嘴（獲釋後）',e:'🕊️',r:'r',cat:'b',line:'「判決不是終點。上訴也不是。」'},
+  {id:'dementorkiss',n:'催狂魔之吻',e:'💀',r:'r',cat:'b',line:'「最可怕的不是失敗，是不在乎了。」'},
+  {id:'boggartform',n:'幻形怪（你的形狀）',e:'🪞',r:'r',cat:'b',line:'「牠變成你最怕的樣子。通常是「來不及」。」'},
+  {id:'threeheaded',n:'路威（睡著時）',e:'🎵',r:'c',cat:'b',line:'「音樂能讓牠睡。你也需要一首。」'},
+
+  /* ══ 擴充：魔法物品 ══ */
+  {id:'philosopher',n:'魔法石（複製品）',e:'🔴',r:'r',cat:'o',line:'「厄里斯魔鏡只給不想用它的人。」'},
+  {id:'mirror',n:'厄里斯魔鏡',e:'🪟',r:'l',cat:'o',line:'「沉溺在夢裡的人會忘記活著。看一眼就好。」'},
+  {id:'goblet',n:'火盃',e:'🔥',r:'r',cat:'o',line:'「投進去就不能反悔。報名也是。」'},
+  {id:'triwizardcup',n:'三強獎盃',e:'🏆',r:'r',cat:'o',line:'「終點也可能是港口鑰。過了一關還有一關。」'},
+  {id:'sneakoscope',n:'窺鏡',e:'🔺',r:'c',cat:'o',line:'「有人騙你時會轉。包括你騙自己的時候。」'},
+  {id:'foeglass',n:'仇敵鏡',e:'🪩',r:'c',cat:'o',line:'「看到模糊的影子＝敵人還遠。現在還來得及。」'},
+  {id:'secrecysensor',n:'祕密探測器',e:'📡',r:'c',cat:'o',line:'「它偵測隱瞞。你今天對自己誠實嗎？」'},
+  {id:'omnioculars',n:'萬里鏡',e:'🔭',r:'c',cat:'o',line:'「可以慢速重播。錯題本就是你的萬里鏡。」'},
+  {id:'portkey',n:'港口鑰',e:'🥾',r:'r',cat:'o',line:'「一碰就走。習慣就是這樣運作的。」'},
+  {id:'floopowder',n:'呼嚕粉',e:'🟩',r:'c',cat:'o',line:'「發音要清楚，不然會跑錯地方。」'},
+  {id:'rememberball',n:'記憶球（奈威的）',e:'🟠',r:'c',cat:'o',line:'「它提醒你忘了東西，但不說是什麼。」'},
+  {id:'quickquotes',n:'速記羽毛筆',e:'🖋️',r:'c',cat:'o',line:'「它會自己加油添醋。筆記不要抄成小說。」'},
+  {id:'howler2',n:'紅色信封',e:'📕',r:'c',cat:'o',line:'「不看它也會自己燒起來。逃避沒有用。」'},
+  {id:'timeturner2',n:'魔法部的時光器庫存',e:'⌛',r:'r',cat:'o',line:'「全部被打碎了。所以真的沒有捷徑。」'},
+  {id:'deluminator',n:'熄燈器',e:'💡',r:'r',cat:'o',line:'「它把光收起來，需要時再放出來。存電也是本事。」'},
+  {id:'tales',n:'《吟遊詩人皮陀故事集》',e:'📗',r:'r',cat:'o',line:'「童話裡藏著最重要的線索。」'},
+  {id:'advancedpotion',n:'混血王子的課本',e:'📓',r:'r',cat:'o',line:'「別人的筆記很好用，但不是你的理解。」'},
+  {id:'monsterbook',n:'《怪獸的怪獸書》',e:'📚',r:'c',cat:'o',line:'「要摸摸書背它才乖。厚的書都這樣。」'},
+  {id:'hogwartsletter',n:'霍格華茲入學信',e:'✉️',r:'r',cat:'o',line:'「一切從一封信開始。你的是報名表。」'},
+  {id:'sortinghatsong',n:'分類帽之歌',e:'🎼',r:'c',cat:'o',line:'「它每年都寫新的。你也可以重寫計畫。」'},
+  {id:'weasleysweater',n:'衛斯理毛衣',e:'🧶',r:'c',cat:'o',line:'「有人記得你的名字縮寫。你不是一個人。」'},
+  {id:'extendableears2',n:'伸縮耳（雙人版）',e:'🎧',r:'c',cat:'o',line:'「聽見了不代表懂了。」'},
+  {id:'decoydetonator',n:'誘餌炸彈',e:'🧨',r:'c',cat:'o',line:'「製造混亂好脫身。但你要脫身去哪？」'},
+  {id:'skivingsnack',n:'翹課點心盒',e:'🍬',r:'c',cat:'o',line:'「吃一半好、吃一半壞。翹掉的進度也要還。」'},
+  {id:'peruvian',n:'祕魯瞬間黑暗粉',e:'⬛',r:'c',cat:'o',line:'「看不見的時候，才知道有沒有記熟路。」'},
+  {id:'pygmyshop',n:'衛氏巫師法寶店',e:'🎪',r:'r',cat:'o',line:'「在戰爭中開店。在低潮中讀書。」'},
+  {id:'nimbus',n:'光輪 2000',e:'🧹',r:'c',cat:'o',line:'「當年最快的掃帚。現在是舊型號。工具會過時，習慣不會。」'},
+  {id:'quaffle',n:'快浮',e:'🔴',r:'c',cat:'o',line:'「得分要靠它。你的快浮是條文。」'},
+  {id:'bludger',n:'搏格',e:'⚫',r:'c',cat:'o',line:'「它專門撞人。意外總會有。」'},
+  {id:'bezoar',n:'糞石',e:'🪨',r:'r',cat:'o',line:'「大部分毒藥的解藥。翻書第一頁就寫了。」'},
+  {id:'hourglass',n:'學院分數沙漏',e:'⏳',r:'r',cat:'o',line:'「綠寶石一顆一顆掉下來。你的也是。」'},
+  {id:'chesspiece',n:'巫師棋（會碎的那種）',e:'♞',r:'c',cat:'o',line:'「要贏，得先願意犧牲一步。」'},
+  {id:'invisiblebook',n:'《隱形術之隱形書》',e:'🫥',r:'c',cat:'o',line:'「訂了一大批，然後全部找不到。分類很重要。」'},
+  {id:'wandcore',n:'鳳凰羽毛杖芯',e:'🪶',r:'r',cat:'o',line:'「稀有的杖芯脾氣也大。天份要馴服。」'},
+  {id:'brokenwand',n:'榮恩斷掉的魔杖',e:'🩹',r:'c',cat:'o',line:'「用壞掉的工具硬撐，會傷到自己。」'},
+  {id:'lockettwo',n:'史萊哲林的墜飾盒',e:'📿',r:'r',cat:'o',line:'「戴久了會變得暴躁。壓力也是。」'},
+  {id:'cupofhufflepuff',n:'赫夫帕夫的金杯',e:'🏺',r:'r',cat:'o',line:'「藏得越深，越要親手去拿。」'},
+  {id:'diaryhorcrux',n:'日記本（分靈體）',e:'🖊️',r:'r',cat:'o',line:'「別相信一個看不見腦袋的東西。包括你的直覺。」'},
+  {id:'mapfoot',n:'活點地圖上的腳印',e:'👣',r:'c',cat:'o',line:'「它顯示每個人在哪。你在哪？」'},
+  {id:'butterbeer',n:'奶油啤酒',e:'🍯',r:'c',cat:'o',line:'「休息時喝的東西，要好喝到值得期待。」'},
+  {id:'chocolate',n:'巧克力（催狂魔特效藥）',e:'🍫',r:'c',cat:'o',line:'「這是路平教授的處方。真的有效。」'},
+  {id:'ton_tongue',n:'肥舌太妃糖',e:'👅',r:'c',cat:'o',line:'「亂吃東西會出事。亂用讀書法也會。」'},
+
+  /* ══ 擴充：霍格華茲場所 ══ */
+  {id:'library',n:'圖書館',e:'📖',r:'c',cat:'p',line:'「平斯夫人在看。安靜地把它讀完。」'},
+  {id:'commonroomg',n:'葛萊芬多交誼廳',e:'🔥',r:'c',cat:'p',line:'「壁爐前的沙發。溫暖但會讓人睡著。」'},
+  {id:'commonroomr',n:'雷文克勞塔樓',e:'🦅',r:'c',cat:'p',line:'「答不出問題就進不去。每天一個問題。」'},
+  {id:'commonroomh',n:'赫夫帕夫地窖',e:'🪴',r:'c',cat:'p',line:'「靠近廚房，永遠有食物。照顧好自己。」'},
+  {id:'greathallceil',n:'大禮堂的天花板',e:'⛅',r:'c',cat:'p',line:'「它反映外面的天氣。你的臉也是。」'},
+  {id:'kitchens',n:'霍格華茲廚房',e:'🍐',r:'c',cat:'p',line:'「搔搔那顆梨子就開了。入口常常很簡單。」'},
+  {id:'owlery',n:'貓頭鷹屋',e:'🪺',r:'c',cat:'p',line:'「風很大，但視野最好。」'},
+  {id:'trophyroom',n:'獎盃室',e:'🥈',r:'c',cat:'p',line:'「上面刻的都是已經過去的人。輪到你了。」'},
+  {id:'transfigcourt',n:'變形學中庭',e:'⛲',r:'c',cat:'p',line:'「走出教室透氣，再走回去。」'},
+  {id:'viaduct',n:'高架橋',e:'🌉',r:'c',cat:'p',line:'「風會把腦袋吹清楚。」'},
+  {id:'boathouse',n:'船屋',e:'⛵',r:'c',cat:'p',line:'「新生從這裡進城堡。你也是新生。」'},
+  {id:'clocktower',n:'鐘塔',e:'🕰️',r:'r',cat:'p',line:'「鐘擺不會為誰停下。」'},
+  {id:'divinationtower',n:'占卜塔',e:'🫖',r:'c',cat:'p',line:'「霧氣很重，什麼都看不清。有時候就是這樣。」'},
+  {id:'dadaclass',n:'黑魔法防禦術教室',e:'🛡️',r:'c',cat:'p',line:'「換了七個老師。方法可以換，課要上完。」'},
+  {id:'potionsdungeon',n:'魔藥學地窖',e:'🧪',r:'c',cat:'p',line:'「陰冷、精確、不能分心。像刑法。」'},
+  {id:'hospitalbed',n:'醫療翼的床',e:'🛌',r:'c',cat:'p',line:'「龐芮夫人說：躺下。這是命令。」'},
+  {id:'roomhidden',n:'萬物俱藏室',e:'🗃️',r:'r',cat:'p',line:'「幾百年的東西都堆在這。你的腦也是。要整理。」'},
+  {id:'hogsmeadestation',n:'活米村車站',e:'🚉',r:'c',cat:'p',line:'「到站了就要下車。階段結束就往前走。」'},
+  {id:'zonkos',n:'桑科笑話商店',e:'🎁',r:'c',cat:'p',line:'「休息也要認真挑。」'},
+  {id:'madamepuddifoot',n:'帕笛芙夫人茶館',e:'🫧',r:'c',cat:'p',line:'「太粉紅了。有些地方不適合讀書。」'},
+  {id:'ministryatrium',n:'魔法部中庭',e:'🏛️',r:'r',cat:'p',line:'「『魔法即強權』——但考試只認分數。」'},
+  {id:'wizengamot',n:'威森加摩法庭',e:'⚖️',r:'r',cat:'p',line:'「你未來要站的地方。現在先站起來讀書。」'},
+  {id:'departmentmysteries',n:'神祕事務司',e:'🚪',r:'r',cat:'p',line:'「有一個房間永遠鎖著。有些答案要自己找。」'},
+  {id:'timeroom',n:'時間室',e:'🕳️',r:'r',cat:'p',line:'「時間在這裡也不能倒退。」'},
+  {id:'stmungos',n:'聖蒙果醫院',e:'🏥',r:'c',cat:'p',line:'「五樓是茶水間。連醫院都知道要休息。」'},
+  {id:'azkaban',n:'阿茲卡班',e:'🗼',r:'r',cat:'p',line:'「熬夜、補進度、跟人比——三個不可饒恕咒的終點。」'},
+  {id:'godricshollow',n:'高錐客洞',e:'⛪',r:'c',cat:'p',line:'「一切開始的地方。回去看看為什麼開始。」'},
+  {id:'grimmauld',n:'古里某街 12 號',e:'🏠',r:'c',cat:'p',line:'「藏起來的家。也需要有人打掃。」'},
+  {id:'burrow',n:'洞穴屋',e:'🏡',r:'r',cat:'p',line:'「歪歪斜斜但撐得住。計畫也是。」'},
+  {id:'shellcottage',n:'貝殼居',e:'🐚',r:'c',cat:'p',line:'「海邊的房子。有時候需要離考試遠一點。」'},
+  {id:'kingscross',n:'王十字車站',e:'🚄',r:'c',cat:'p',line:'「你可以選擇上車，或往前走。」'},
+  {id:'durmstrang',n:'德姆蘭',e:'❄️',r:'c',cat:'p',line:'「別人的學校看起來都比較厲害。那是錯覺。」'},
+  {id:'beauxbatons',n:'布斯巴當',e:'🕊️',r:'c',cat:'p',line:'「優雅是練出來的，不是天生的。」'},
+  {id:'quidditchworld',n:'魁地奇世界盃營地',e:'⛺',r:'c',cat:'p',line:'「熱鬧過後，還是要回去上課。」'},
+  {id:'blacklakebottom',n:'黑湖底',e:'🫧',r:'c',cat:'p',line:'「一小時。憋住，做完，浮上來。」'},
+
+  /* ══ 擴充：魔藥 ══ */
+  {id:'polyjuice2',n:'複方湯劑（一小時版）',e:'⏱️',r:'c',cat:'x',line:'「效果只有一小時。臨時抱佛腳也是。」'},
+  {id:'felixfull',n:'福來福喜（滿瓶）',e:'🍾',r:'r',cat:'x',line:'「一整瓶＝十二小時的好運。考試那天用不到。」'},
+  {id:'calmingdraught',n:'鎮定劑',e:'🫖',r:'c',cat:'x',line:'「手抖的時候先喝一口水，深呼吸三次。」'},
+  {id:'dreamless',n:'無夢睡眠藥水',e:'🌜',r:'r',cat:'x',line:'「睡不著的時候，不要用讀書當安眠藥。」'},
+  {id:'wideeye',n:'清醒藥水',e:'👀',r:'c',cat:'x',line:'「醒著不等於清楚。」'},
+  {id:'girding',n:'強身藥水',e:'🏋️',r:'c',cat:'x',line:'「耐力比爆發重要。這是一年的仗。」'},
+  {id:'hairraising',n:'豎髮藥水',e:'⚡',r:'c',cat:'x',line:'「嚇一跳也好，至少醒了。」'},
+  {id:'swellingsolution',n:'膨脹藥水',e:'🎈',r:'c',cat:'x',line:'「把小問題想得太大，就是喝了這個。」'},
+  {id:'shrinkingsolution',n:'縮小藥水',e:'🔬',r:'c',cat:'x',line:'「把大問題縮小，才拿得起來。」'},
+  {id:'cureboils',n:'治療癤子藥水',e:'🧴',r:'c',cat:'x',line:'「一年級第一堂課。基本功不會過時。」'},
+  {id:'elixirlife',n:'長生不老藥',e:'💧',r:'l',cat:'x',line:'「勒梅活了六百年，還是選擇放下。」'},
+  {id:'amortentia2',n:'迷情劑（你的味道）',e:'📗',r:'r',cat:'x',line:'「聞起來像新書、墨水、和一點點解脫。」'},
+  {id:'draughtpeace',n:'安寧藥劑',e:'🕊️',r:'r',cat:'x',line:'「劑量要精準。放鬆過頭會睡著。」'},
+  {id:'gillyweed',n:'魚鰓草',e:'🌿',r:'r',cat:'x',line:'「吃下去就能呼吸一小時。撐過去的方法總會有。」'},
+  {id:'mandrakerestorative',n:'曼德拉草復甦劑',e:'🪴',r:'r',cat:'x',line:'「石化的人都醒了。你也會。」'},
+  {id:'confusing',n:'困惑藥劑',e:'💫',r:'c',cat:'x',line:'「同時開五個分頁就是自己喝了這個。」'},
+  {id:'invigoration',n:'活力藥劑',e:'🔋',r:'c',cat:'x',line:'「真正的活力來自睡飽，不是來自瓶子。」'},
+
+  /* ══ 咒語與魔法（新類別） ══ */
+  {id:'sp_avada',n:'索命咒',e:'💚',r:'l',cat:'s',line:'「沒有反制咒。所以不要走到那一步。」'},
+  {id:'sp_imperio',n:'噩噩令',e:'🎭',r:'r',cat:'s',line:'「被控制的人以為自己在做決定。演算法也是。」'},
+  {id:'sp_crucio',n:'鑽心剜骨',e:'🩻',r:'r',cat:'s',line:'「自我懲罰不會讓進度變快。」'},
+  {id:'sp_riddikulus',n:'滑稽滑稽',e:'🤡',r:'r',cat:'s',line:'「把恐懼變成好笑的東西，它就縮小了。」'},
+  {id:'sp_expecto',n:'護法咒',e:'🦌',r:'l',cat:'s',line:'「需要一段夠強的快樂記憶。存幾個備用。」'},
+  {id:'sp_fidelius',n:'赤膽忠心咒',e:'🤐',r:'r',cat:'s',line:'「祕密藏在一個人心裡。你的目標也可以先不說。」'},
+  {id:'sp_unbreakable',n:'牢不可破咒',e:'🤝',r:'r',cat:'s',line:'「毀約者死。所以三個誓言只訂做得到的。」'},
+  {id:'sp_priori',n:'呼呼，前咒現',e:'🔁',r:'r',cat:'s',line:'「它顯示魔杖做過的每件事。你的紀錄也在。」'},
+  {id:'sp_morsmordre',n:'魔魔斃',e:'💀',r:'r',cat:'s',line:'「天空出現黑魔標記時，大家都知道出事了。你的警訊是什麼？」'},
+  {id:'sp_confringo',n:'火焰熊熊',e:'🔥',r:'c',cat:'s',line:'「爆炸很爽，但收拾很久。」'},
+  {id:'sp_episkey',n:'愈合如初',e:'🩹',r:'c',cat:'s',line:'「小傷當場處理，不要等它變大。」'},
+  {id:'sp_ferula',n:'繃帶纏繞',e:'🧵',r:'c',cat:'s',line:'「先固定，再走路。」'},
+  {id:'sp_lumosmaxima',n:'路摸思極光',e:'🔆',r:'c',cat:'s',line:'「需要更多光的時候，就要求更多光。」'},
+  {id:'sp_nox',n:'諾克斯',e:'🌑',r:'c',cat:'s',line:'「熄燈。該睡了。」'},
+  {id:'sp_sonorus',n:'宏聲咒',e:'📢',r:'c',cat:'s',line:'「把重點唸出來，記得比較牢。」'},
+  {id:'sp_muffliato',n:'力克樂佛',e:'🔕',r:'c',cat:'s',line:'「讓旁邊的人聽不見。也讓你聽不見他們。」'},
+  {id:'sp_tergeo',n:'清潔溜溜',e:'🧽',r:'c',cat:'s',line:'「擦掉重寫，不是失敗。」'},
+  {id:'sp_engorgio',n:'噴噴障',e:'🎈',r:'c',cat:'s',line:'「放大重點，不是放大焦慮。」'},
+  {id:'sp_immobulus',n:'定身術',e:'⏸️',r:'c',cat:'s',line:'「暫停一下。世界不會塌。」'},
+  {id:'sp_revelio',n:'現形咒',e:'🔎',r:'r',cat:'s',line:'「藏起來的東西終究要面對。比如那一科。」'},
+  {id:'sp_finite2',n:'咒立停（全解除）',e:'🕊️',r:'l',cat:'s',line:'「最後一張。所有咒語解除——你自由了。」'},
+
   /* ── 魔法生物 ── */
   {id:'fawkes',n:'佛客使',e:'🐦‍🔥',r:'r',cat:'b',line:'「燒盡重生——錯題也一樣。」'},
   {id:'buckbeak',n:'巴嘴',e:'🦅',r:'c',cat:'b',line:'「先鞠躬，再刷題。」'},
@@ -2536,15 +2733,21 @@ const CARDS=[
   {id:'wolfsbane',n:'縛狼汁',e:'🌙',r:'r',cat:'x',line:'「控制不了月圓，但控制得了準備。」'}
 ];
 const RARITY_NAME={l:'傳說',r:'稀有',c:'普通'};
+/* 全套 360 張，抽到集滿為止都不會重複。
+   稀有度只決定「先抽哪一階」；那一階抽完了就往還有剩的階去拿，
+   所以每一天開出來的一定是新的一張。全部集滿後回傳 null，功能結束。 */
+function unownedCards(){ const o=ownedCards(); return CARDS.filter(c=>!o[c.id]); }
+function albumComplete(){ return unownedCards().length===0; }
 function drawRandomCard(){
+  const left=unownedCards();
+  if(!left.length) return null;
   const roll=Math.random();
-  const tier= roll<0.08?'l' : roll<0.35?'r' : 'c';
-  const pool=CARDS.filter(c=>c.r===tier);
-  // 稀有度機率不變，但同一階內優先給還沒收集到的——集滿該階之後才會出現重複
-  const owned=ownedCards();
-  const fresh=pool.filter(c=>!owned[c.id]);
-  const use= fresh.length? fresh : pool;
-  return use[Math.floor(Math.random()*use.length)];
+  const order = roll<0.08? ['l','r','c'] : roll<0.35? ['r','c','l'] : ['c','r','l'];
+  for(const tier of order){
+    const pool=left.filter(c=>c.r===tier);
+    if(pool.length) return pool[Math.floor(Math.random()*pool.length)];
+  }
+  return left[Math.floor(Math.random()*left.length)];
 }
 function ownedCards(){ return LS.get('hp_cards',{}); }
 function grantCard(c){ const o=ownedCards(); o[c.id]=(o[c.id]||0)+1; LS.set('hp_cards',o); }
@@ -2556,13 +2759,20 @@ function cardHTML(c,cnt){
 }
 function renderFrogCard(){
   const box=document.getElementById('frogBox'), t=todayStr();
+  const card=box.closest('.card');
+  // 360 張全部收齊 → 這個功能功成身退，整張卡收起來
+  if(albumComplete()){
+    if(card) card.style.display='none';
+    return;
+  }
+  if(card) card.style.display='';
   const isRoom = dayEvent(t).id==='room';   // 有求必應屋：今天可抽兩張
   const slots = isRoom? ['hp_card_day_'+t,'hp_card_day2_'+t] : ['hp_card_day_'+t];
   const drawnAll = slots.map(k=>LS.get(k,null));
   const nextSlot = slots.findIndex(k=>!LS.get(k,null));
 
   if(!getDayObj(t).completed && nextSlot===0){
-    box.innerHTML='<p class="dim">完成今天的任務清單，就能打開一隻巧克力蛙，裡面的畫片是隨機的。</p>';
+    box.innerHTML='<p class="dim">完成今天的任務清單，就能打開一隻巧克力蛙。全套 360 張，<b>集滿之前不會抽到重複的</b>。</p>';
     return;
   }
   let html = drawnAll.filter(Boolean).map(id=>{
@@ -2570,18 +2780,23 @@ function renderFrogCard(){
     return c? cardHTML(c, ownedCards()[c.id]||1).replace(' frog-reveal','') : '';
   }).join('');
   if(nextSlot>-1 && getDayObj(t).completed){
+    const left=unownedCards().length;
     html += `<div style="text-align:center; padding:6px 0;">
-      <p style="margin:0 0 10px;">${nextSlot===0?'今天過關了——盒子在你手上跳動。':'🚪 有求必應屋：牆上還有一道門，再開一隻。'}</p>
+      <p style="margin:0 0 10px;">${nextSlot===0?'今天過關了——盒子在你手上跳動。':'🚪 有求必應屋：牆上還有一道門，再開一隻。'}
+        <span class="dim">（還有 ${left} 張沒收集）</span></p>
       <button class="magic" id="openFrogBtn">打開巧克力蛙 🍫</button></div>`;
   }
   box.innerHTML=html;
   const btn=document.getElementById('openFrogBtn');
   if(btn) btn.addEventListener('click',()=>{
-    const c=drawRandomCard(); grantCard(c);
+    const c=drawRandomCard();
+    if(!c){ renderFrogCard(); renderAlbum(); return; }
+    grantCard(c);
     LS.set(slots[nextSlot],c.id);
     renderFrogCard(); renderAlbum();
     celebrate(c.r==='l');
-    toast(c.r==='l'?'傳說畫片！✨':`獲得畫片：${c.n}`);
+    if(albumComplete()){ celebrate(true); toast('🍫 全套 360 張收齊了！'); }
+    else toast(c.r==='l'?'傳說畫片！✨':`獲得畫片：${c.n}`);
   });
 }
 function renderAlbum(){
@@ -2594,8 +2809,10 @@ function renderAlbum(){
     ? '· 過關一次就能開出第一張'
     : `已收集 ${got}/${CARDS.length}（傳說 ${gL}/${nL} · 稀有 ${gR}/${nR}）`;
   // 分類收納：一次只看一疊，比 90 格攤開好找
+  const RANK={l:0,r:1,c:2};   // 傳說 → 稀有 → 普通
   grid.innerHTML=Object.keys(CAT_NAME).map(k=>{
-    const pool=CARDS.filter(c=>c.cat===k);
+    const pool=CARDS.filter(c=>c.cat===k).slice()
+      .sort((a,b)=> RANK[a.r]-RANK[b.r] || a.n.localeCompare(b.n,'zh-Hant'));
     const mine=pool.filter(c=>owned[c.id]).length;
     const done=mine===pool.length;
     return `<details class="album-cat"${done?'':' open'}>
@@ -2609,18 +2826,24 @@ function renderAlbum(){
       }).join('')}</div>
     </details>`;
   }).join('');
-  document.getElementById('extraDrawBtn').disabled = getBalance()<30;
+  const eb=document.getElementById('extraDrawBtn');
+  eb.disabled = getBalance()<30 || albumComplete();
+  eb.style.display = albumComplete()? 'none' : '';
 }
 document.getElementById('extraDrawBtn').addEventListener('click',()=>{
+  if(albumComplete()){ toast('全套已經收齊了'); return; }
   if(getBalance()<30){ toast('點數不夠'); return; }
   if(!confirm('用 30 點再抽一張畫片？')) return;
   const rd=LS.get('hp_redemptions',[]);
   rd.push({id:Date.now().toString(36),name:'巧克力蛙 ×1',cost:30,date:todayStr()});
   LS.set('hp_redemptions',rd);
-  const c=drawRandomCard(); grantCard(c);
+  const c=drawRandomCard();
+  if(!c){ toast('全套已經收齊了'); return; }
+  grantCard(c);
   celebrate(c.r==='l');
-  toast(c.r==='l'?'傳說畫片！✨':`獲得畫片：${c.n}`);
-  refreshHeaderStats(); renderRedemptionHistory(); renderRewardShopList();
+  if(albumComplete()){ celebrate(true); toast('🍫 全套 360 張收齊了！'); }
+  else toast(c.r==='l'?'傳說畫片！✨':`獲得畫片：${c.n}`);
+  refreshHeaderStats(); renderFrogCard(); renderRedemptionHistory(); renderRewardShopList();
   const grid=document.getElementById('albumGrid');
   const tmp=document.createElement('div'); tmp.innerHTML=cardHTML(c, ownedCards()[c.id]);
   grid.parentNode.insertBefore(tmp.firstChild, grid);
@@ -2816,7 +3039,7 @@ const PROPHET_LINES=[
   '本報民調：87% 的巫師後悔沒早點開始讀書，其餘 13% 拒絕受訪。',
   '衛斯理笑話商店：「假裝在讀書的羽毛筆」再度售罄。',
   '魔藥課提醒：福來福喜缺貨，實力才是常備藥。',
-  '禁忌森林公告：入夜請返回城堡，並寫好三行紙。',
+  '禁忌森林公告：入夜請返回城堡，別在黑暗裡硬撐。',
   '校長室便箋：別沉溺於夢，而忘了眼前的生活。',
   '貓頭鷹郵局：寫給明天自己的信，今晚截止收件。',
   '時光器管理處：時間不會重來，但錯題可以重寫。',
@@ -2863,7 +3086,331 @@ const PROPHET_LINES=[
   '霍格華茲校規補述：期末考也算魔法考核的一環。',
   '路平教授備課：面對恐懼的咒語是「滑稽滑稽」，面對進度的是「開始開始」。',
   '貓頭鷹棚舍：嘿美說牠可以等，但不要讓牠等太久。',
-  '魔法部辟邪司：最強的黑魔法是「明天再說」。'
+  '魔法部辟邪司：最強的黑魔法是「明天再說」。',
+  '魔法部公告：本日全國禁止使用「等一下」作為咒語。',
+  '國際巫師聯盟決議：拖延不列入不可抗力事由。',
+  '斜角巷快訊：奧利凡德表示，最挑剔的魔杖也挑不出不讀書的藉口。',
+  '古靈閣財務快報：時間是唯一不能存進金庫的東西。',
+  '霍格華茲校務公告：分類帽拒絕替任何人分類「今天要不要讀書」。',
+  '天氣預報：全國多雲，適合待在室內把那一章讀完。',
+  '魁地奇聯賽戰報：追蹤手表示，得分靠的是重複練習，不是靈感。',
+  '禁書區公告：平斯夫人已將「明天開始」列為禁書。',
+  '聖蒙果醫院提醒：熬夜造成的損傷，本院無法用魔法修復。',
+  '魔法生物管制司：已知最難馴服的生物是週一早上的自己。',
+  '預言家日報更正啟事：昨日報導「還有很多時間」，特此更正。',
+  '巫師棋錦標賽：冠軍表示，他從不在同一步上想超過三分鐘。',
+  '活米村商情：蜂蜜公爵推出新品「做完再吃」限定巧克力。',
+  '魔法部交通司：現影術考照不通過的主因是「決心不足」。',
+  '霍格華茲廚房日誌：小精靈今天煮了你最愛的，但你得先坐下。',
+  '黑湖水位報告：深呼吸，一小時很快就過去了。',
+  '正氣師總部徵才：條件——能在混亂中照樣完成當日份工作。',
+  '占卜學教室快訊：崔老妮預言你今天會坐下讀書。她第一次說對。',
+  '魔藥學考題外流？石內卜：範圍就是課本，從來沒有變過。',
+  '衛氏巫師法寶店新品：翹課點心盒已售罄，請正常上課。',
+  '貓頭鷹郵局延誤公告：牠們找得到每個人，除了逃避的人。',
+  '霍格華茲特快車時刻表：十一點準時開，不會等你收行李。',
+  '魔法部神祕事務司：愛與時間，是兩種買不到的東西。',
+  '妖精工藝協會：真正的好東西，是一次做對。',
+  '禁忌森林巡邏報告：迷路的人通常是不肯回頭的人。',
+  '學院盃即時戰況：領先的是每天都到場的那一隊。',
+  '魔法史期末講義：所有的歷史都是有人堅持完成的紀錄。',
+  '變形學實驗紀錄：把焦慮變成清單，難度中等，效果顯著。',
+  '飛行課通知：起飛的口令只有一個字——「上」。',
+  '草藥學溫室三號：曼德拉草今天特別吵，戴上耳罩繼續。',
+  '古代魔文研究：看不懂的符號，抄十遍就會了。',
+  '算術占卜期中報告：數字不會安慰人，但它誠實。',
+  '奇獸飼育學：越大的生物，越需要固定餵食時間。',
+  '麻瓜研究課：他們有一種東西叫番茄鐘，據說很有效。',
+  '魔法部法務司：所有的例外，都寫在但書裡。',
+  '威森加摩開庭公告：本席只採信寫下來的東西。',
+  '巫師報稅季：時間也要記帳，不然你不知道花去哪了。',
+  '霍格華茲失物招領：一份被放棄的讀書計畫，失主請領回。',
+  '學生會公告：交誼廳的沙發今天不開放給想睡覺的人。',
+  '級長巡邏日誌：熄燈時間到了，明天的你需要今天的你去睡。',
+  '天文塔觀測紀錄：星星走得很慢，但它從不停。',
+  '魔咒學小考通知：唸對咒語只是及格，唸準才拿分。',
+  '黑魔法防禦術：最有效的護盾，是提前準備。',
+  '鳳凰社集會紀要：士氣低落時，先吃飯，再開會。',
+  '魔法部媒體司澄清：沒有任何魔藥可以取代複習。',
+  '巫師醫療期刊：規律作息對記憶的幫助大於任何提神劑。',
+  '國際魔法教育年會：最有效的學習法是「間隔重複」，全世界通用。',
+  '霍格華茲圖書館新書：《如何在不減少睡眠的情況下讀完》。',
+  '魔法部人事命令：即日起，「完美主義」調離本案。',
+  '斜角巷二手書攤：別人畫的重點，不是你的理解。',
+  '巫師棋社招生：每一步都想清楚，比走得快重要。',
+  '魁地奇裁判守則：金探子出現前，比賽不會結束。',
+  '掃帚保養提醒：工具再好，也要有人願意起飛。',
+  '魔法部檔案調閱：舊考題是最誠實的預言書。',
+  '霍格華茲新生訓練：走進城堡的第一課是「準時」。',
+  '學院扣分公告：本日因「滑手機」扣十分。',
+  '學院加分公告：本日因「照表坐下」加十分。',
+  '大禮堂晚餐菜單：主菜是今天做完的事。',
+  '貓頭鷹屋公告：訊息要送出去，得先寫出來。',
+  '魔法部緊急應變：計畫崩了不是災難，不改才是。',
+  '巫師心理衛生中心：把「應該」換成「可以」，會輕鬆很多。',
+  '霍格華茲校醫室：連續坐超過九十分鐘，請起立走動。',
+  '魔法部節能宣導：把電留給重要的那一段。',
+  '禁書區借閱紀錄：翻開的書才算讀過。',
+  '巫師法典修訂：第一條——今天的事今天做。',
+  '妙麗的讀書時間表流出：她也有休息，只是你沒看到。',
+  '榮恩的建議：先吃飽再說，餓著肚子什麼都記不住。',
+  '哈利的觀察：撐過去的人，通常只是比別人多撐一天。',
+  '奈威的心得：怕的東西，做過一次就沒那麼可怕了。',
+  '露娜的提醒：慢一點沒關係，你只是走在自己的路上。',
+  '金妮的戰術：先攻最有把握的，把信心拿回來。',
+  '雙胞胎的實驗報告：偷懶的方法我們都試過了，沒有一個有用。',
+  '石內卜的評語：你的問題不是不會，是不肯坐下。',
+  '麥教授的通知：變形學作業要交，人生的作業也是。',
+  '孚立維的加課公告：唸咒的重音在第二個音節，複習的重點在錯的地方。',
+  '芽菜教授的叮嚀：澆水要每天，不是想到才澆。',
+  '海格的來信：你比你以為的還撐得住。',
+  '鄧不利多辦公室便條：需要幫忙的時候，開口就會有人來。',
+  '佛地魔的失敗檢討：他也是輸在細節。',
+  '魔法部通緝令：通緝「明天再說」，賞金一日份的進度。',
+  '阿茲卡班獄政報告：最多人服刑的罪名是「拖到最後一天」。',
+  '催狂魔活動警示：今日情緒偏低，請備妥巧克力。',
+  '護法咒訓練公告：想一件真心開心的事，然後開始。',
+  '幻形怪處理指引：把它變成好笑的樣子，恐懼就縮小了。',
+  '有求必應屋開放時間：你真的需要的時候，它才會出現。',
+  '密室入口公告：密語是「開始」。',
+  '消失櫃維修中：進度不會自己從另一邊出現。',
+  '厄里斯魔鏡警語：看太久會忘記活著。看一眼就好。',
+  '時光器庫存清點：零。所以今天的時間只能今天用。',
+  '重生石使用說明：回不去的就讓它過去。',
+  '隱形斗篷租借公告：藏起來的進度還是沒有進度。',
+  '接骨木魔杖爭奪戰：最強的工具救不了沒讀的範圍。',
+  '分靈體研究警告：把自己拆成七份，每一份都做不好。',
+  '不可饒恕咒名單新增：與別人比較。',
+  '魔法部教育司統計：贏過三分之二的人，就上榜了。',
+  '相對錄取制說明會：你不用完美，你只要不放棄。',
+  '報名截止提醒：四月要核對應考須知。',
+  '應考須知重點：早點到，帶身分證，深呼吸。',
+  '考場配置公告：坐下之後，世界就只剩那張紙。',
+  '節次時間表提醒：午休是十二點四十，不是十二點。',
+  '第四卷應試策略：六科湊一百四十分，讀一點就有分。',
+  '第三卷應試策略：民法加民訴一百六十分，全場最大一塊。',
+  '一試放榜倒數：名次是相對的，努力是絕對的。',
+  '二試作文提醒：國文一百分，全年唯一沒有覆蓋的科目。',
+  '選試科目確認：智慧財產法，因為你本來就在修。',
+  '二試節次提醒：兩天各從八點寫到六點四十。體力也是實力。',
+  '電腦作答練習公告：打字速度也要練。',
+  '附發法條說明：分數在論述結構，不在背誦。',
+  '涵攝技巧講座：把事實一項一項套進要件，分數就在那裡。',
+  '爭點整理教學：先找出雙方在吵什麼。',
+  '三段論複習：大前提、小前提、結論。就這樣。',
+  '實務見解索引更新：法院怎麼判，跟學說怎麼說，兩邊都要知道。',
+  '釋字理由書提醒：選擇題愛考理由書，不是主文。',
+  '函釋補充包：教科書不寫，但行政法很愛考。',
+  '高頻法條榜單：二七二條，二十七天跑一輪。',
+  '題庫擴充公告：一〇二到一一五年，四千一百零四題。',
+  '刷題模式建議：第一輪開即時詳解，模考開整卷後詳解。',
+  '真分科模式上線：照真實考科組合出題，跟考場一樣。',
+  '錯題本使用守則：猜對的也要記，那跟錯的一樣危險。',
+  '模考檢討提醒：一次只修一項，全部一起修等於沒修。',
+  '封盤期公告：不碰新教材。想讀新東西是焦慮，不是需求。',
+  '考前七天作息表：把午餐移到十二點四十。',
+  '期末考期提醒：那三週司律排零，你不欠自己任何東西。',
+  '寒假倒數：全年最長的一段全職期，成敗看這裡。',
+  '春季週一提醒：全天沒課，整學期最大的一塊。',
+  '暑假衝刺開跑：從「還在學」切換到「只在修」。',
+  '報告死線提醒：五月十四日前全部清完。',
+  '選課建議：二〇二七年秋季，星期一不要排課。',
+  '學分與司律對照表：你修的課本身就是一百三十分。',
+  '法德一備考說明：跟司律零重疊，給固定上限六小時。',
+  '智財雙修快報：著作權加專利，等於別人要多讀一科。',
+  '民訴一預習指引：畫出訴訟流程圖，開學就變複習。',
+  '公司法預習重點：公司種類、機關、負責人責任。',
+  '憲法補強公告：全年覆蓋最薄的一科，優先處理。',
+  '親屬繼承提醒：檢事官沒考到的真空，數字特別多。',
+  '攤平作業說明：不加深，只加寬。',
+  '體系表繳交期限：能空手畫出來才算完成。',
+  '默寫十條公告：這是唯一跨越所有日子的動作。',
+  '低電量模式啟用：做默寫十條，然後去睡。一樣算過關。',
+  '保護規則第一條：不准補。落後就改計畫。',
+  '保護規則第二條：停在時間，不停在進度。',
+  '不可破的誓言第一條：每天默寫十條，就算只讀二十分鐘。',
+  '不可破的誓言第二條：錯題不隔夜。',
+  '不可破的誓言第三條：週日回顧不跳過。',
+  '週日下午公告：完全休息。這是排定的，不是偷懶。',
+  '午餐時間公告：十二點到一點。吃飯不算切段。',
+  '飯後緩衝時段：想放空就放空，這是排定的。',
+  '收工時間公告：十四點五十。晚上是你的。',
+  '晚上不排進度：這條規則比任何咒語都有效。',
+  '睡眠時數建議：七小時起跳，這是投資不是浪費。',
+  '手機處置建議：放到另一個房間，不是翻面。',
+  '桌面清理提醒：三十秒就好，門檻會降很多。',
+  '一天一科原則：下午刷的題就是上午讀的那一科。',
+  '開始的成本說明：一天開始一次就好。',
+  '專注時段建議：二十五分鐘，不換科目不站起來。',
+  '進度回顧提醒：做了什麼比想了什麼重要。',
+  '連續紀錄公告：斷了就從一開始，不是從零。',
+  '學院點數結算：勾一項拿一項，取消會扣回。',
+  '巧克力蛙開盒提醒：全套三百六十張，集滿之前不重複。',
+  '畫片冊整理公告：傳說在最前面，普通在後面。',
+  '咒語書更新：升上新學年，就會想起新的咒語。',
+  '魔寵成長紀錄：牠看的是總共餵養幾天，不是連續。',
+  '守護神解鎖條件：連續過關滿三十天。',
+  '魔杖登記處：你的魔杖只認你。',
+  '故事解鎖進度：每累積過關四天，翻一章。',
+  '第八年生手記出土：他也曾經想過放棄。',
+  '交誼廳沙發縫：又找到一頁筆記。',
+  '霍格華茲畢業生近況：他們都說，撐過去就好了。',
+  '正氣師學徒訓練：體力、心理、法律，缺一不可。',
+  '傲羅資格考公告：他們考的也是實務見解。',
+  '魔法部長談話：制度是人訂的，人是會累的。',
+  '巫師職涯博覽會：律師與司法官，都要先過這一關。',
+  '實習律師招募：先上榜，再談別的。',
+  '法律扶助基金會：你將來要幫的人，現在還不認識你。',
+  '法庭觀察筆記：好的答辯都有結構。',
+  '書記官日誌：寫下來的東西才算數。',
+  '卷宗整理提醒：分類做得好，找東西就快。',
+  '判決書閱讀技巧：先看主文，再看理由。',
+  '學說與實務對照：兩邊都要知道，考試才安全。',
+  '法條檢索練習：找得快，也是一種能力。',
+  '要件拆解教學：一個一個檢查，不要跳。',
+  '但書提醒：例外常常才是考點。',
+  '準用與擬制：視為和推定不一樣，這會考。',
+  '期間計算複習：數字題永遠有人算錯。',
+  '時效制度整理：這一塊每年都出。',
+  '程序規定提醒：向誰聲請、幾天內，都要記。',
+  '選擇題陷阱警告：圈出「非」「不」「下列何者」。',
+  '配速練習公告：不會的先跳過，不要盤旋。',
+  '猜題策略說明：不確定也要往下走。',
+  '答案卡填寫提醒：劃記要確實，這是最不值得掉的分。',
+  '文具檢查清單：多帶一支筆。',
+  '考前一晚建議：東西收好，早點睡。',
+  '考試當天早餐：吃你平常吃的，不要嘗試新東西。',
+  '進場提醒：手機關機，深呼吸三次。',
+  '第一節開始前：你準備了一整年。',
+  '中場休息守則：不要對答案。',
+  '最後一節提醒：撐完它，然後你就自由了。',
+  '出考場之後：咒立停。所有效果解除。',
+  '放榜日提醒：不管結果如何，這一年都是你的。',
+  '霍格華茲畢業舞會：跳舞之前，先把論文交了。',
+  '魔法部年度報告：最有生產力的部門是「每天做一點」司。',
+  '巫師界流行語：「我明天開始」被票選為年度最危險咒語。',
+  '魔法界民調：九成受訪者表示，開始之後就沒那麼難了。',
+  '巫師時尚週：今年流行「準時出現」。',
+  '魔法界美食評鑑：最好吃的是做完事之後的那一餐。',
+  '巫師旅遊指南：最值得去的地方是你的書桌。',
+  '魔法界運動精神：贏的人不是最強的，是最少缺席的。',
+  '巫師音樂榜：本週冠軍是〈翻頁的聲音〉。',
+  '魔法界電影快報：《那年我坐下來讀書》票房長紅。',
+  '巫師出版界：最暢銷的書是自己寫的筆記。',
+  '魔法界慈善晚會：捐出你的拖延時間，救助未來的自己。',
+  '巫師建築獎：得獎作品是一張整齊的書桌。',
+  '魔法界園藝展：長得最好的植物，是每天澆水的那盆。',
+  '巫師攝影展：主題是「有人在讀書的窗」。',
+  '魔法界天氣異象：今日出現「突然想讀書」現象，把握機會。',
+  '巫師鐘錶行公告：所有的錶都只往前走。',
+  '魔法界郵政改革：寄給未來的自己，一年後送達。',
+  '巫師銀行利率調整：複利最高的投資是每天一小時。',
+  '魔法界保險新約：唯一保得住的是已經學會的東西。',
+  '巫師法律扶助：拖延不構成免責事由。',
+  '魔法界環保宣導：不要浪費今天。',
+  '巫師交通規則：慢慢走可以，不要停。',
+  '魔法界急救課程：崩潰的時候先吃飯，再睡覺，最後才檢討。',
+  '巫師營養學：大腦要糖，但不要只有糖。',
+  '魔法界運動處方：走路二十分鐘，效果等同一杯咖啡。',
+  '巫師睡眠研究：記憶在睡覺的時候整理。',
+  '魔法界心理學：進度條會騙人，做完的事不會。',
+  '巫師哲學系講座：「開始」是唯一不能外包的動作。',
+  '魔法界統計學：連續三十天的人，通過率高出四成。',
+  '巫師經濟學：時間是你唯一無法增產的資源。',
+  '魔法界管理學：一次做一件事，是最有效率的多工。',
+  '巫師人類學觀察：會做筆記的物種比較容易生存。',
+  '魔法界考古發現：三千年前的學生也在抱怨考試。',
+  '巫師語言學：「還沒開始」和「做不到」不是同義詞。',
+  '魔法界地理學：從書桌到考場，是全世界最短也最長的路。',
+  '巫師氣象學：低氣壓會過去，計畫要留著。',
+  '魔法界海洋學：浪一直來，但你學會了游泳。',
+  '巫師天文學：你只是暫時在低谷，不是掉出軌道。',
+  '魔法界生物學：習慣的形成平均需要六十六天。',
+  '巫師化學：反應要時間，催化劑是重複。',
+  '魔法界物理學：靜止的物體需要一個外力。今天由你來當。',
+  '巫師數學：三百六十天乘以一小時，等於一個不一樣的人。',
+  '魔法界資訊科學：備份很重要，你的筆記也是。',
+  '巫師工程學：地基打好，樓才蓋得高。',
+  '魔法界醫學倫理：對自己也要適用善良管理人注意義務。',
+  '巫師法理學：規範的目的是保護，不是懲罰。你的計畫也是。',
+  '魔法界國際法：條約要簽了才算數，計畫要做了才算數。',
+  '巫師憲政史：所有的權利都是有人堅持來的。',
+  '魔法界刑事政策：對自己的懲罰，通常沒有教化功能。',
+  '巫師民事訴訟：舉證責任在主張的人。你說你會，就做給自己看。',
+  '魔法界行政法：程序正義也適用於讀書——先排表，再執行。',
+  '巫師商事法：資本要投在會複利的地方。',
+  '魔法界智財權：你的筆記是你的著作。',
+  '巫師保險法：最好的保險是提早開始。',
+  '魔法界票據法：開出去的支票要兌現，包括對自己的。',
+  '巫師強制執行法：說到要做到，這叫執行力。',
+  '魔法界國際私法：不管在哪個法域，努力都算數。',
+  '巫師法律倫理：對自己誠實，是所有倫理的起點。',
+  '魔法界法學英文：看不懂就查，查了就記。',
+  '巫師法制史：每一部法典都是慢慢累積的。',
+  '魔法界比較法：別人的方法可以參考，不能照抄。',
+  '巫師法律社會學：制度會變，準備好的人不怕。',
+  '魔法界犯罪學：最常見的自我妨害是完美主義。',
+  '巫師證據法：感覺不是證據，紀錄才是。',
+  '魔法界法律經濟分析：沉沒成本不該影響下一步。',
+  '巫師調解實務：跟自己談判的時候，也要留餘地。',
+  '魔法界仲裁庭：你是自己案子的仲裁人。判得公平一點。',
+  '巫師公證處：今天做到的事，蓋章生效。',
+  '魔法界戶政司：你的身分是「正在準備的人」。',
+  '巫師地政司：先把地界劃清楚——今天做到哪裡為止。',
+  '魔法界稅務局：時間也要申報，不要漏報。',
+  '巫師勞動部：你也需要休假，這是法定的。',
+  '魔法界衛福部：心理健康跟身體健康一樣重要。',
+  '巫師教育部：學習是一輩子的事，考試只是其中一站。',
+  '魔法界文化部：把過程記下來，那也是作品。',
+  '巫師體育署：耐力型選手贏在後半段。',
+  '魔法界農委會：種下去的東西，要等它長。',
+  '巫師交通部：塞車的時候不要換道，那沒有比較快。',
+  '魔法界內政部：家要整理，腦也要。',
+  '巫師外交部：跟自己的關係，是最重要的一段。',
+  '魔法界國防部：最好的防禦是提前準備。',
+  '巫師財政部：預算要編，時間也要。',
+  '魔法界經濟部：產能不是靠加班，是靠穩定。',
+  '巫師科技部：工具再新，還是要有人按下開始。',
+  '魔法界主計處：數字不會說謊，你的紀錄也是。',
+  '巫師人事行政：今天請你自己來上班。',
+  '魔法界研考會：計畫、執行、檢核、修正。就這四步。',
+  '巫師檔案局：留下紀錄的人，走得比較穩。',
+  '魔法界智庫報告：長期堅持的報酬率高於短期爆發。',
+  '巫師新創論壇：最小可行進度——今天十分鐘。',
+  '魔法界創投說明會：投資自己，這是唯一穩賺的標的。',
+  '巫師專利公告：你的讀書法，只有你能用得順。',
+  '魔法界商標註冊：「每天都有做一點」已被你註冊。',
+  '巫師公平會：不要跟別人比，那是不公平競爭。',
+  '魔法界消保官：對自己的承諾也受保護。',
+  '巫師標準檢驗局：合格標準是「今天有坐下」。',
+  '魔法界度量衡：進度用「做完的事」量，不用「花的時間」。',
+  '巫師氣候變遷報告：情緒是天氣，計畫是氣候。',
+  '魔法界能源政策：把最好的電留給最重要的那一段。',
+  '巫師水利署：涓滴成河，這是真的。',
+  '魔法界林務局：一棵樹要長很多年。你才第幾個月。',
+  '巫師海巡署：浪大的時候待在船上就好。',
+  '魔法界消防局：先滅火，再檢討起火原因。',
+  '巫師警政署：最常見的失竊物是時間。',
+  '魔法界法醫研究所：死因通常是「拖到最後」。',
+  '巫師監理站：定期保養，不要等到拋錨。',
+  '魔法界郵局：寄出去才會到。做出來才算數。',
+  '巫師氣象局特報：今日適合翻開最不想翻的那一本。',
+  '魔法界地震測報：計畫會晃，地基不會垮。',
+  '巫師觀測站：你已經走了很遠，回頭看看。',
+  '魔法界燈塔管理處：光不用很亮，夠看見下一步就好。',
+  '巫師鐵路局：誤點沒關係，方向對就好。',
+  '魔法界航空站：起飛前的檢查清單，一項都不能跳。',
+  '巫師港務局：卸貨要一箱一箱來。',
+  '魔法界倉儲管理：記憶也要定期盤點。',
+  '巫師物流中心：分批送達，不要一次塞爆。',
+  '魔法界品管部：重做一次不丟臉，交出爛的才丟臉。',
+  '巫師客服中心：對自己說話，語氣可以好一點。',
+  '魔法界人力資源：你是自己唯一的員工，也是唯一的老闆。',
+  '巫師工會聲明：加班不是美德。',
+  '魔法界職安署：連續久坐請起立走動。',
+  '巫師退休基金：現在存的，以後領。',
+  '魔法界年度總結：你今天出現了，這就是總結。',
+  '預言家日報編輯室：頭條會輪完，但你的日子還在繼續。接下來由你自己寫。'
 ];
 
 /* 動態訊息：反映你當下的真實狀態，所以每天都不一樣 */
@@ -3363,14 +3910,11 @@ function init(){
   renderMorning();
   renderClosing();
   renderFrogCard();
-  renderYesterdayParchment();
   renderTimeline();
   renderTaiLexiLock();
   renderRewardShopList();
   renderRedemptionHistory();
   refreshHeaderStats();
-  // 晚上把三行紙自動打開（那是睡前該做的事）
-  if(new Date().getHours()>=20) document.getElementById('parchmentFold').open=true;
   maybeIntro();
   // 排程中的時段跟著時鐘走
   setInterval(()=>{ renderTodayPlan(); renderTaiLexiLock(); }, 60000);
