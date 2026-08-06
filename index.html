@@ -60,7 +60,7 @@ body::before{
 .scene{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
 .scene-win{
   position:absolute; top:-4%; height:108%;
-  width:clamp(96px, 20vw, 250px); opacity:.5;
+  width:clamp(96px, 20vw, 250px); opacity:.34;
   filter:blur(.4px);
 }
 .scene-win.l{left:-2%;}
@@ -189,13 +189,12 @@ nav.tabs button[data-acc="more"].active   {--tab-acc:#b8a68a; --tab-acc-dim:rgba
 
 /* 書頁本體：標籤貼在它上面 */
 .pagebox{
-  --page-bg:rgba(17,32,24,.72);
+  --page-bg:#0f1e17;
   position:relative; z-index:1;
   background:var(--page-bg);
   border:1px solid var(--line-str); border-radius:0 0 16px 16px;
   padding:15px 13px 20px;
-  box-shadow:0 12px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.05);
-  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  box-shadow:0 12px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05);
 }
 /* 頁面上緣一條主色細線，翻頁時顏色會換 */
 .pagebox::before{
@@ -208,14 +207,14 @@ nav.tabs button[data-acc="more"].active   {--tab-acc:#b8a68a; --tab-acc-dim:rgba
 
 /* ── 玻璃卡 ── */
 .card{
-  background:linear-gradient(180deg, rgba(38,68,52,.55), rgba(22,44,32,.5));
+  background:linear-gradient(180deg,#1a3126,#152719);
   border:1px solid var(--line); border-radius:14px;
   padding:16px 17px; margin-bottom:13px; color:var(--silver);
-  box-shadow:0 5px 20px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.06);
+  box-shadow:0 4px 16px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05);
 }
 /* ── 層級：次要區塊放輕，主要區塊才有份量 ── */
 .card.sub{
-  background:rgba(255,255,255,.028); border-color:rgba(130,190,155,.13);
+  background:#132419; border-color:rgba(130,190,155,.12);
   box-shadow:none; padding:13px 15px;
 }
 .card.sub h2{font-size:14px; padding-bottom:7px; opacity:.9;}
@@ -264,7 +263,7 @@ nav.tabs button[data-acc="more"].active   {--tab-acc:#b8a68a; --tab-acc-dim:rgba
   position:relative; overflow:hidden;
   background:
     radial-gradient(ellipse 120% 90% at 12% 0%, var(--acc-dim,rgba(79,174,116,.16)), transparent 62%),
-    linear-gradient(160deg, rgba(36,70,52,.8), rgba(14,30,21,.8));
+    linear-gradient(160deg,#1d3a2b,#122418);
   border:1px solid var(--acc,#4fae74); border-radius:18px;
   padding:20px 18px 18px; margin-bottom:14px;
   box-shadow:0 14px 44px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.09), 0 0 40px var(--acc-dim,rgba(79,174,116,.16));
@@ -422,26 +421,13 @@ input:focus,textarea:focus,select:focus{outline:none; border-color:var(--green-l
 label.field-label{display:block; font-size:11.5px; font-weight:700; color:var(--acc,#4fae74); margin:11px 0 4px; letter-spacing:.4px;}
 .card.parch label.field-label{color:var(--gold);}
 
-/* ── 電量模式 ── */
-.mode-row{display:flex; gap:7px; flex-wrap:wrap;}
-.mode-btn{
-  flex:1; min-width:88px; padding:10px 5px; border-radius:11px; cursor:pointer; text-align:center;
-  border:1px solid rgba(255,255,255,.1); background:rgba(0,0,0,.24);
-  font-family:"Cinzel","Noto Serif TC",serif; font-size:12.5px; transition:.15s; color:var(--silver);
+/* 過關門檻標記 */
+.pass-tag{
+  display:inline-block; margin-left:7px; font-size:9.5px; letter-spacing:1px;
+  font-family:"Cinzel","Noto Serif TC",serif; color:var(--gold); vertical-align:1px;
+  border:1px solid rgba(201,169,78,.45); border-radius:9px; padding:1px 6px;
+  background:rgba(201,169,78,.1);
 }
-.mode-btn .emoji{font-size:19px; display:block; margin-bottom:3px; filter:grayscale(.5); transition:.15s;}
-.mode-btn .sub{font-size:10px; color:var(--dim); margin-top:2px;}
-.mode-btn:hover{background:rgba(255,255,255,.07); border-color:rgba(201,169,78,.4); transform:translateY(-1px);}
-.mode-btn.active{
-  border-color:var(--gold); color:#f4e6bd;
-  background:
-    radial-gradient(ellipse 90% 130% at 50% 120%, rgba(201,169,78,.3), transparent 68%),
-    rgba(201,169,78,.12);
-  box-shadow:0 0 22px rgba(201,169,78,.24), inset 0 1px 0 rgba(255,255,255,.14);
-}
-.mode-btn.active .emoji{filter:none;}
-.mode-btn.active .sub{color:rgba(240,223,168,.75);}
-
 /* ── 清單 ── */
 .checklist{list-style:none; padding:0; margin:8px 0 0;}
 .checklist li{
@@ -463,7 +449,7 @@ label.field-label{display:block; font-size:11.5px; font-weight:700; color:var(--
 }
 
 /* ── 折疊 ── */
-details.fold{border:1px solid rgba(130,190,155,.14); border-radius:12px; background:rgba(255,255,255,.022); margin-bottom:10px; overflow:hidden;}
+details.fold{border:1px solid rgba(130,190,155,.14); border-radius:12px; background:#132419; margin-bottom:10px; overflow:hidden;}
 details.fold>summary{
   cursor:pointer; padding:13px 16px; font-family:"Cinzel","Noto Serif TC",serif; font-size:14px;
   color:var(--silver-hi); list-style:none; display:flex; align-items:center; gap:7px; font-weight:600; letter-spacing:.5px;
@@ -481,7 +467,7 @@ details.fold .fold-body{padding:0 16px 15px;}
 .seg-label{line-height:1.55;}
 .seg.class{background:rgba(61,143,94,.13); border-left-color:var(--green-lt);}
 .seg.class .seg-time{color:var(--green-lt);}
-.seg.study{background:rgba(255,255,255,.035); border-left-color:rgba(255,255,255,.18);}
+.seg.study{background:rgba(255,255,255,.055); border-left-color:rgba(255,255,255,.22);}
 .seg.rest{background:rgba(255,255,255,.02); border-left-color:rgba(255,255,255,.1); opacity:.62;}
 .seg.exam{background:rgba(179,82,74,.14); border-left-color:var(--red);}
 .seg.exam .seg-time{color:var(--red);}
@@ -520,7 +506,7 @@ details.fold .fold-body{padding:0 16px 15px;}
 .phase.done .ph-title,.phase.done .ph-date{opacity:.5;}
 .phase .ph-date{font-size:11px; color:var(--dim); margin-bottom:4px;}
 .phase.current .ph-title::after{content:' ← 現在'; color:var(--gold); font-size:11px;}
-.week-focus{font-size:12.5px; background:rgba(255,255,255,.045); border-radius:7px; padding:8px 10px; margin-top:5px; line-height:1.6; border-left:2px solid var(--line);}
+.week-focus{font-size:12.5px; background:rgba(255,255,255,.06); border-radius:7px; padding:8px 10px; margin-top:5px; line-height:1.6; border-left:2px solid var(--line);}
 .card.parch .week-focus{background:rgba(0,0,0,.22); border-left-color:rgba(201,169,78,.3);}
 
 /* ── 階段卡：第一眼只看得到重點，細節要自己展開 ── */
@@ -528,7 +514,7 @@ details.fold .fold-body{padding:0 16px 15px;}
 .ph-drill{
   display:flex; align-items:baseline; gap:9px; flex-wrap:wrap;
   font-size:12.5px; line-height:1.6; margin-bottom:9px; padding:8px 11px; border-radius:9px;
-  background:rgba(255,255,255,.045); border-left:2px solid var(--acc,#4fae74); color:var(--silver);
+  background:rgba(255,255,255,.065); border-left:2px solid var(--acc,#4fae74); color:var(--silver);
 }
 .ph-drill>span{
   font-family:"Cinzel","Noto Serif TC",serif; font-size:10px; letter-spacing:1.4px;
@@ -1094,10 +1080,6 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
           <div class="ring-lbl">今日進度</div>
         </div>
       </div>
-      <div class="low-hint" id="lowHint">
-        <span>今天真的沒電？</span>
-        <button id="lowBtn">🪫 那就只做最小的那一件</button>
-      </div>
     </div>
 
     <!-- 今日事件 -->
@@ -1106,11 +1088,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     <!-- 今日任務（唯一羊皮紙） -->
     <div class="card parch" id="taskCard">
       <h2>📋 今日任務 <span class="dim" id="taskModeTag"></span></h2>
-      <div class="mode-row" id="modeRow">
-        <div class="mode-btn" data-mode="full"><span class="emoji">🔋</span>滿電<br><span class="sub">照表全做</span></div>
-        <div class="mode-btn" data-mode="half"><span class="emoji">🔅</span>半電<br><span class="sub">3 件事</span></div>
-        <div class="mode-btn" data-mode="low"><span class="emoji">🪫</span>低電<br><span class="sub">只默寫10條</span></div>
-      </div>
+      <p class="dim" style="margin:0 0 10px;">勾完<b>第一項（默寫 10 條）</b>就算今天過關——連續天數、巧克力蛙、故事都照算。其餘是加分。</p>
       <div class="progressbar"><div id="dayProgress" style="width:0%"></div></div>
       <ul class="checklist" id="dayChecklist"></ul>
 
@@ -1266,9 +1244,9 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       <h2>🦉 出勤紀錄 <span class="dim">最近 12 週</span></h2>
       <div class="hm-wrap"><div class="heatmap" id="heatmap"></div></div>
       <div class="hm-legend">
-        <span><i style="background:#5cc084;"></i>滿電</span>
-        <span><i style="background:#3d8f5e;"></i>半電</span>
-        <span><i style="background:#2c6b45;"></i>低電</span>
+        <span><i style="background:#5cc084;"></i>全部做完</span>
+        <span><i style="background:#3d8f5e;"></i>做一半以上</span>
+        <span><i style="background:#2c6b45;"></i>只做最低標準</span>
         <span><i style="background:rgba(255,255,255,.06);"></i>沒過關</span>
       </div>
     </div>
@@ -1567,9 +1545,14 @@ function monthStart(ds){ return ds.slice(0,8)+'01'; }
 /* ═══ 每日紀錄 ═══ */
 function dayKey(dt){ return 'hp_day_'+dt; }
 function getDayObj(dt){
-  const o = LS.get(dayKey(dt), {mode:null,itemsByMode:{},completed:false,courses:{},errorLogged:false,examPass:false});
-  if(o.items && !o.itemsByMode){ o.itemsByMode={}; if(o.mode) o.itemsByMode[o.mode]=o.items; delete o.items; }
-  if(!o.itemsByMode) o.itemsByMode={};
+  const o = LS.get(dayKey(dt), {items:{},itemCount:0,completed:false,courses:{},errorLogged:false,examPass:false});
+  // 舊資料（電量模式時代）搬過來：把當時選的模式的勾選狀態攤平
+  if(o.itemsByMode){
+    if(!o.items) o.items = o.itemsByMode[o.mode] || {};
+    if(!o.itemCount && o.itemCounts) o.itemCount = o.itemCounts[o.mode] || 0;
+    delete o.itemsByMode; delete o.itemCounts; delete o.mode;
+  }
+  if(!o.items) o.items={};
   if(!o.courses) o.courses={};
   return o;
 }
@@ -1584,8 +1567,8 @@ function itemPointSplits(n){
   return arr;
 }
 function dayEarnedFromChecklist(o){
-  if(o.mode && o.itemCounts && o.itemCounts[o.mode]){
-    const n=o.itemCounts[o.mode], sp=itemPointSplits(n), ck=o.itemsByMode[o.mode]||{};
+  if(o.itemCount){
+    const n=o.itemCount, sp=itemPointSplits(n), ck=o.items||{};
     let s=0; for(let i=0;i<n;i++) if(ck[i]) s+=sp[i];
     return s;
   }
@@ -2024,6 +2007,33 @@ function hotHint(subj,doneRatio){
   for(const [name,n] of list){ acc+=n; if(doneRatio*tot<=acc) return name; }
   return list[list.length-1][0];
 }
+/* 這一天真的拿得到刷題量嗎？期末考期與模考日會被當天的流程吃掉。 */
+function drillableDate(cp,ds){
+  if(MOCK_DATES.includes(ds)) return false;
+  if(cp.id===2 && ds>=FALL_EXAM_START)   return false;
+  if(cp.id===4 && ds>=SPRING_EXAM_START) return false;
+  return true;
+}
+/* 先列出這一段「實際拿得到」的日子，再把題數分下去。
+   這樣期末考期、模考日被吃掉的量會自動攤到其他天，不會憑空消失。 */
+function blockDays(cp,b,school){
+  const out=[];
+  if(!school){
+    for(let k=b.d0;k<=b.d1;k++){
+      const ds=toLocalDateStr(new Date(d(cp.start).getTime()+k*86400000));
+      if(ds<=cp.end && drillableDate(cp,ds)) out.push(ds);
+    }
+  } else {
+    const mon=d(mondayOf(cp.start));
+    for(let w=b.w0;w<=b.w1;w++) for(const wd of school.days){
+      const off=w*7+((wd===0?7:wd)-1);
+      const ds=toLocalDateStr(new Date(mon.getTime()+off*86400000));
+      if(ds>=cp.start && ds<=cp.end && drillableDate(cp,ds)) out.push(ds);
+    }
+    out.sort();
+  }
+  return out;
+}
 /* 今天該刷哪一科、幾題 */
 function todayDrill(cp,tStr){
   if(!cp) return null;
@@ -2031,21 +2041,23 @@ function todayDrill(cp,tStr){
     const off=daysBetween(d(cp.start), d(tStr));
     const b=DRILL_FULLTIME[cp.id].find(x=>off>=x.d0&&off<=x.d1);
     if(!b) return null;
-    const days=b.d1-b.d0+1, n=Math.ceil(b.q/days), i=off-b.d0;
-    return {subj:b.s, tag:b.tag, n, done:i*n, total:b.q, dayNo:i+1, days,
-            hot:hotHint(b.s, i/days)};
+    const days=blockDays(cp,b,null);
+    const i=days.indexOf(tStr); if(i<0) return null;
+    const n=Math.ceil(b.q/days.length);
+    return {subj:b.s, tag:b.tag, n, done:i*n, total:b.q, dayNo:i+1, days:days.length,
+            hot:hotHint(b.s, i/days.length)};
   }
   const sc=DRILL_SCHOOL[cp.id];
   if(sc){
-    const wd=d(tStr).getDay();
-    if(!sc.days.includes(wd)) return null;
+    if(!sc.days.includes(d(tStr).getDay())) return null;
     const w=weekIdx(cp);
     const b=sc.blocks.find(x=>w>=x.w0&&w<=x.w1);
     if(!b) return null;
-    const slots=(b.w1-b.w0+1)*sc.days.length, n=Math.ceil(b.q/slots);
-    const i=(w-b.w0)*sc.days.length + sc.days.indexOf(wd);
-    return {subj:b.s, n, done:i*n, total:b.q, dayNo:i+1, days:slots,
-            hot:hotHint(b.s, i/slots)};
+    const days=blockDays(cp,b,sc);
+    const i=days.indexOf(tStr); if(i<0) return null;
+    const n=Math.ceil(b.q/days.length);
+    return {subj:b.s, n, done:i*n, total:b.q, dayNo:i+1, days:days.length,
+            hot:hotHint(b.s, i/days.length)};
   }
   return null;
 }
@@ -2087,12 +2099,14 @@ function getTodayPlan(){
     const w=Math.min(weekIdx(cp), cp.weekShort.length-1);
     focus=`第 ${w+1} 週主攻：${cp.weekShort[w]}`;
     if(w===3){
-      // 最後一週：預習秋季課程。開學後平日沒有自習時間，先把框架建起來
-      note='開學後平日不會有司律自習時間。先把民訴一的框架建起來，9/7 之後上課就變成「複習」而不是「第一次接觸」。';
+      // 最後一週：預習秋季課程，但民法的刷題量還沒清完，一起排進來
+      const dr4=todayDrill(cp,tStr);
+      note='開學後平日不會有司律自習時間。先把民訴一的框架建起來，9/7 之後上課就變成「複習」而不是「第一次接觸」。'
+         + (dr4? `　同時把民法剩下的題刷完：今天 ${dr4.n} 題。`:'');
       segments=fulltimeSegs(
         '預習民事訴訟法一〈魔咒學〉——讀完課本前幾章，畫出訴訟流程圖',
-        '預習商事法一（公司法）〈算術占卜〉——公司種類、機關、負責人責任',
-        '整理兩科的架構筆記，開學直接帶進課堂');
+        drillLabel(dr4)||'預習商事法一（公司法）〈算術占卜〉',
+        '整理兩科的架構筆記＋錯題入本');
     } else {
       const dr1=todayDrill(cp,tStr);
       note='過關標準：能空手畫出民法五編＋憲法的體系表。智財〈鍊金術〉這四週完全不碰。'
@@ -2306,26 +2320,11 @@ function renderHero(){
     whatEl.textContent = label;
     whenEl.textContent = [f.seg.t, detail, TODAY_PLAN.focus].filter(Boolean).join('　·　');
   }
-  // 已經選了模式就不用再推「沒電」出口
-  const lh=document.getElementById('lowHint');
-  lh.style.display = (st.mode||st.completed)? 'none' : 'flex';
 }
-/* 一鍵最低門檻：切低電模式並捲到那一件事 */
-document.getElementById('lowBtn').addEventListener('click',()=>{
-  const before=getBalance(), st=getDayObj(todayStr());
-  st.mode='low'; st.completed=recomputeCompleted(st); ensureItemCounts(st);
-  setDayObj(todayStr(),st);
-  renderModeUI(); renderHero(); renderFrogCard(); pointsFeedback(before,'切成低電模式');
-  document.getElementById('taskCard').scrollIntoView({behavior:'smooth',block:'center'});
-  toast('低電模式：做完那一件就算過關 🪫');
-});
 function renderRing(){
   const st=getDayObj(todayStr());
-  let done=0,total=0;
-  if(st.mode){
-    const items=itemsForMode(st.mode), ck=st.itemsByMode[st.mode]||{};
-    total=items.length; done=items.filter((_,i)=>ck[i]).length;
-  }
+  const items=todayItems(), ck=st.items||{};
+  const total=items.length, done=items.filter((_,i)=>ck[i]).length;
   const pct= total? Math.round(done/total*100) : 0;
   const ring=document.getElementById('dayRing');
   ring.style.setProperty('--p',pct);
@@ -2347,78 +2346,61 @@ function renderTodayPlan(){
   renderHero();
 }
 
-/* ═══ 電量模式與今日任務 ═══ */
-function itemsForMode(mode){
-  if(mode==='low')  return ['默寫 10 條條文（做完就去休息，一樣算過關）'];
-  if(mode==='half') return ['默寫 10 條條文','一塊主科體系（挑今天最重要那塊）','錯題本（一句話也算）'];
+/* ═══ 今日任務 ═══ */
+/* 一份清單就好，不再分電量。清單＝當天時間表裡「要動腦的那幾段」。 */
+function todayItems(){
   const blocks=(TODAY_PLAN?TODAY_PLAN.segments:[])
     .filter(s=>s.kind==='study'||s.kind==='exam')
     .map(s=>`${s.t}｜${s.label.replace(/^自習：/,'')}`);
-  // 時間表本身就含「默寫 10 條」那一段，不要再多加一項變成重複
   const hasDictation=blocks.some(b=>/默寫\s*10\s*條/.test(b));
   return hasDictation? blocks : ['默寫 10 條條文', ...blocks];
 }
-function ensureItemCounts(st){
-  if(!st.mode) return st;
-  if(!st.itemCounts) st.itemCounts={};
-  st.itemCounts[st.mode]=itemsForMode(st.mode).length;
-  return st;
-}
+/* 過關＝勾完第一項（默寫 10 條）。這是計畫的最低標準，也是低電量的出口。 */
 function recomputeCompleted(st){
-  if(!st.mode) return false;
-  const items=itemsForMode(st.mode), ck=st.itemsByMode[st.mode]||{};
-  return items.length>0 && items.every((_,i)=>ck[i]);
+  const items=todayItems();
+  return items.length>0 && !!(st.items||{})[0];
+}
+function syncItemCount(st){
+  st.itemCount=todayItems().length;
+  return st;
 }
 function renderModeUI(){
   const st=getDayObj(todayStr());
-  if(st.mode){
-    const before=JSON.stringify(st.itemCounts||{});
-    ensureItemCounts(st);
-    if(JSON.stringify(st.itemCounts)!==before) setDayObj(todayStr(),st);
-  }
-  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===st.mode));
-  const tag={full:'滿電模式',half:'半電模式',low:'低電模式'}[st.mode]||'';
-  document.getElementById('taskModeTag').textContent=tag?'· '+tag:'';
+  const n=todayItems().length;
+  if(st.itemCount!==n){ st.itemCount=n; setDayObj(todayStr(),st); }
+  document.getElementById('taskModeTag').textContent='';
   renderChecklist(st);
 }
 function renderChecklist(st){
   const ul=document.getElementById('dayChecklist');
-  if(!st.mode){
-    ul.innerHTML='<li class="dim">↑ 選一個今天的電量。選「低電」只要做一件事，一樣算過關、連續天數照算。</li>';
+  const items=todayItems(), ck=st.items||{}, sp=itemPointSplits(items.length);
+  if(!items.length){
+    ul.innerHTML='<li class="dim">今天沒有排程。</li>';
     document.getElementById('dayProgress').style.width='0%';
     document.getElementById('dayCompleteMsg').style.display='none';
     renderRing(); return;
   }
-  document.getElementById('lowHint').style.display='none';
-  const items=itemsForMode(st.mode), ck=st.itemsByMode[st.mode]||{}, sp=itemPointSplits(items.length);
   ul.innerHTML=items.map((it,i)=>{
     const c=!!ck[i];
-    return `<li class="${c?'done':''}"><input type="checkbox" id="di${i}" data-idx="${i}" ${c?'checked':''}><label for="di${i}">${it}</label><span class="pt">+${sp[i]}</span></li>`;
+    return `<li class="${c?'done':''}"><input type="checkbox" id="di${i}" data-idx="${i}" ${c?'checked':''}>`
+      +`<label for="di${i}">${it}${i===0?'<span class="pass-tag">過關門檻</span>':''}</label>`
+      +`<span class="pt">+${sp[i]}</span></li>`;
   }).join('');
   const done=items.filter((_,i)=>ck[i]).length;
   document.getElementById('dayProgress').style.width=Math.round(done/items.length*100)+'%';
   document.getElementById('dayCompleteMsg').style.display=st.completed?'block':'none';
   renderRing();
 }
-document.getElementById('modeRow').addEventListener('click',e=>{
-  const b=e.target.closest('.mode-btn'); if(!b) return;
-  const before=getBalance(), st=getDayObj(todayStr());
-  if(st.mode===b.dataset.mode) return;
-  st.mode=b.dataset.mode;
-  st.completed=recomputeCompleted(st);
-  ensureItemCounts(st); setDayObj(todayStr(),st);
-  renderModeUI(); pointsFeedback(before,'切換電量模式'); renderFrogCard();
-});
 document.getElementById('dayChecklist').addEventListener('change',e=>{
   const cb=e.target.closest('input[type=checkbox]'); if(!cb) return;
   const before=getBalance(), st=getDayObj(todayStr()), was=st.completed;
-  if(!st.itemsByMode[st.mode]) st.itemsByMode[st.mode]={};
-  st.itemsByMode[st.mode][cb.dataset.idx]=cb.checked;
+  if(!st.items) st.items={};
+  st.items[cb.dataset.idx]=cb.checked;
   st.completed=recomputeCompleted(st);
-  ensureItemCounts(st); setDayObj(todayStr(),st);
+  syncItemCount(st); setDayObj(todayStr(),st);
   renderChecklist(st);
-  pointsFeedback(before, st.completed?'完成當日全部進度':(cb.checked?'打勾一項':'取消一項'));
-  if(!was&&st.completed) celebrate(true);
+  pointsFeedback(before, cb.checked?'打勾一項':'取消一項');
+  if(!was&&st.completed){ celebrate(true); toast('今天過關了 ✓'); }
   renderFrogCard();
 });
 
@@ -2587,8 +2569,10 @@ function renderHeatmap(){
     const dt=toLocalDateStr(new Date(d(start).getTime()+i*86400000+12*3600000));
     if(dt>today){ html+='<div class="hm future"></div>'; continue; }
     const o=getDayObj(dt);
-    const cls= o.completed? (o.mode==='full'?'l3':o.mode==='half'?'l2':'l1') : '';
-    html+=`<div class="hm ${cls}" title="${dt}${o.completed?'（'+(o.mode==='full'?'滿電':o.mode==='half'?'半電':'低電')+'過關）':''}"></div>`;
+    const n=o.itemCount||0, ckn=n? Object.values(o.items||{}).filter(Boolean).length : 0;
+    const r= n? ckn/n : 0;
+    const cls= o.completed? (r>=0.99?'l3': r>=0.5?'l2':'l1') : '';
+    html+=`<div class="hm ${cls}" title="${dt}${o.completed?`（過關${n?`　${ckn}/${n}`:''}）`:''}"></div>`;
   }
   box.innerHTML=html;
 }
@@ -3756,7 +3740,7 @@ function catSay(ctx){
 function renderCat(){
   const box=document.getElementById('catSvg'); if(!box) return;
   const streak=computeStreakCurrent(), fed=completedDayCount(), o=getDayObj(todayStr());
-  const any=Object.values(o.itemsByMode[o.mode]||{}).some(Boolean)||o.completed;
+  const any=Object.values(o.items||{}).some(Boolean)||o.completed;
   const hour=new Date().getHours();
   const st=catStageIdx(fed), stage=CAT_STAGES[st];
   let mood;
