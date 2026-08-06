@@ -192,36 +192,58 @@ nav.tabs button[data-acc="more"].active   {--tab-acc:#b8a68a; --tab-acc-dim:rgba
   nav.tabs button .ti{font-size:14px;}
 }
 
-/* ── 桌機：不要把手機版拉寬，改成書籤＋雙欄 ── */
-@media (min-width:820px){
-  /* 書籤縮成自然寬度、靠左排，像真的從書側伸出來 */
-  nav.tabs{gap:5px; padding:0 10px;}
+/* ── 桌機（≥900px）：側邊書籤＋雙欄，不是把手機版拉寬 ── */
+@media (min-width:900px){
+  .wrap{max-width:1180px;}
+  /* 頁首壓成一行：左標題、右數據 */
+  header.top{
+    display:flex; align-items:center; gap:22px; flex-wrap:wrap;
+    padding:14px 4px 0; margin-bottom:14px;
+  }
+  .brandline{margin:0; flex:0 0 auto;}
+  header.top h1{font-size:20px;}
+  .statrow{flex:1 1 auto; justify-content:flex-end; gap:8px;}
+  .chip{flex:0 0 auto; min-width:88px;}
+  .xp-wrap{flex:1 0 100%; max-width:none; margin:2px 0 0;}
+  /* 書籤移到左側，變成書口的側邊索引 */
+  .shell{display:flex; align-items:flex-start; gap:0;}
+  nav.tabs{
+    flex:0 0 auto; flex-direction:column; gap:6px;
+    padding:14px 0 0; margin:0 -1px 0 0; overflow:visible; width:126px;
+  }
   nav.tabs button{
-    flex:0 0 auto; max-width:none; flex-direction:row; gap:7px;
-    padding:10px 20px 13px; font-size:13px;
+    flex:0 0 auto; max-width:none; width:100%;
+    flex-direction:row; justify-content:flex-start; gap:9px;
+    padding:12px 14px; margin:0 -1px 0 0; font-size:13px;
+    border-radius:11px 0 0 11px; border-right-color:var(--line);
   }
-  nav.tabs button .ti{font-size:16px;}
-  /* 「今天」分成兩欄：主要動作在左，週邊資訊在右 */
-  #tab-dashboard.active{
-    display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);
-    gap:0 18px; align-items:start;
+  nav.tabs button.active{
+    border-right-color:transparent;
+    background:linear-gradient(90deg, var(--tab-acc-dim,rgba(79,174,116,.2)), var(--page-bg));
+    box-shadow:-3px 0 14px rgba(0,0,0,.3);
   }
-  #tab-dashboard > .hero,
-  #tab-dashboard > #eventBox,
-  #tab-dashboard > #taskCard,
-  #tab-dashboard > #planFold{grid-column:1;}
-  #tab-dashboard > #cupCard,
-  #tab-dashboard > .grid2,
-  #tab-dashboard > .prophet,
-  #tab-dashboard > .card.sub:last-of-type{grid-column:2;}
-  #tab-dashboard > .grid2{grid-template-columns:1fr;}
-  /* 長篇文字不要拉到 900px 寬，難讀 */
-  .card > p, .fold-body > p, .card > .dim{max-width:66ch;}
+  nav.tabs button.active::before{
+    left:0; right:auto; top:10px; bottom:10px; width:2px; height:auto; border-radius:2px;
+  }
+  .pagebox{flex:1 1 auto; min-width:0; border-radius:0 16px 16px 16px;}
+  .pagebox::before{display:none;}
+  /* 「今天」分兩欄：左邊是要動手的，右邊是看的 */
+  #tab-dashboard.active{display:flex; gap:18px; align-items:flex-start;}
+  .col-main{flex:1 1 0; min-width:0;}
+  .col-side{flex:0 0 340px; min-width:0;}
+  .col-side .grid2{grid-template-columns:1fr;}   /* 側欄放不下兩欄，改直向 */
+  /* 其他分頁的長文不要拉滿整條 */
+  .card > p, .fold-body > p, .card > .dim{max-width:70ch;}
+  /* 兌換、更多都是矮卡片，直向排會很空——改成雙欄流排 */
+  #tab-rewards.active, #tab-more.active{columns:2; column-gap:16px;}
+  #tab-rewards.active > *, #tab-more.active > *{
+    break-inside:avoid; -webkit-column-break-inside:avoid; page-break-inside:avoid;
+  }
+  /* 地圖的四張參考折頁併成兩欄，正文與全年計畫維持整寬 */
+  #tab-map .fold-pair{display:grid; grid-template-columns:1fr 1fr; gap:0 12px; align-items:start;}
 }
-@media (min-width:1080px){
-  .wrap{max-width:1080px;}
-}
-/* 清單：+N 貼著文字走，不要被推到 900px 外的邊緣 */
+@media (min-width:1240px){ .col-side{flex-basis:380px;} }
+/* 清單：+N 貼著文字走，不要被推到最右緣 */
 .checklist li>label{flex:0 1 auto;}
 .checklist .pt{margin-left:12px;}
 .checklist li{justify-content:flex-start;}
@@ -1071,6 +1093,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
 
   <div class="debug-banner" id="debugBanner" style="display:none;"></div>
 
+  <div class="shell">
   <nav class="tabs" id="tabs">
     <button data-tab="dashboard" data-acc="today" class="active"><span class="ti">📜</span><span class="tt">今天</span></button>
     <button data-tab="collection" data-acc="collect"><span class="ti">📖</span><span class="tt">收藏</span></button>
@@ -1084,6 +1107,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
   <!-- ═══ 今天 ═══ -->
   <section class="tab-panel active" id="tab-dashboard">
 
+    <div class="col-main">
     <!-- HERO -->
     <div class="hero">
       <div class="hero-top">
@@ -1127,6 +1151,20 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       <div class="done-msg" id="dayCompleteMsg" style="display:none;">✓ 今天已過關。不管接下來發生什麼，今天都不算白過。</div>
     </div>
 
+    <!-- 完整時間表（折疊） -->
+    <details class="fold" id="planFold">
+      <summary>📅 今天的完整時間表 <span class="fold-sub" id="planFocusTag"></span></summary>
+      <div class="fold-body">
+        <div id="todayPlanBox"></div>
+        <p class="dim" id="planNote" style="margin:9px 0 0;"></p>
+      </div>
+    </details>
+
+
+
+    </div>
+
+    <div class="col-side">
     <!-- 學院盃 -->
     <div class="card sub" id="cupCard">
       <h2>🏆 學院盃 <span class="dim" id="cupPeriod"></span></h2>
@@ -1237,17 +1275,6 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       </div>
     </div>
 
-    <!-- 完整時間表（折疊） -->
-    <details class="fold" id="planFold">
-      <summary>📅 今天的完整時間表 <span class="fold-sub" id="planFocusTag"></span></summary>
-      <div class="fold-body">
-        <div id="todayPlanBox"></div>
-        <p class="dim" id="planNote" style="margin:9px 0 0;"></p>
-      </div>
-    </details>
-
-
-
     <!-- 預言家日報 -->
     <div class="prophet">
       <div class="prophet-head">✦ 預言家日報 ✦</div>
@@ -1266,6 +1293,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
         <span><i style="background:#2c6b45;"></i>只做最低標準</span>
         <span><i style="background:rgba(255,255,255,.06);"></i>沒過關</span>
       </div>
+    </div>
     </div>
   </section>
 
@@ -1297,6 +1325,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       <div id="pointsDetailBox"></div>
     </div>
 
+    <div class="fold-pair">
     <details class="fold">
       <summary>🏆 學院點數規則 <span class="fold-sub">怎麼算分的</span></summary>
       <div class="fold-body">
@@ -1392,6 +1421,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       </div>
     </details>
 
+    </div>
     <div class="card">
       <h2>🗺️ 全年計畫</h2>
       <p class="dim">八個階段，每一段都寫清楚「要幹嘛、每天怎麼跑、什麼算過關」。<b>不確定現在該做什麼就翻到這裡</b>；只想知道今天做什麼，回「📜 今天」。</p>
@@ -1469,6 +1499,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     </details>
   </section>
   </div><!-- /pagebox -->
+  </div><!-- /shell -->
 
   <footer class="foot">獻給史萊哲林的你 · 表壞掉的時候，回到三個誓言，其他全部可以重排。</footer>
 </div>
@@ -3779,6 +3810,7 @@ function renderCat(){
   // 同一天同一種心情講同一句，不會每次重畫就跳字
   document.getElementById('catLine').textContent = pool[hashNum(todayStr()+mood+streak)%pool.length];
 
+  applyCatPhoto();   // 有存照片就用照片，重新整理後照樣還原
   const fill=document.getElementById('catBondFill'), lbl=document.getElementById('catMeta');
   if(stage.next){
     const span=stage.next-stage.need;
