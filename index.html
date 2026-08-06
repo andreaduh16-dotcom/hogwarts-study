@@ -139,31 +139,96 @@ h1{
 .xp-bar>div{height:100%; background:linear-gradient(90deg,var(--green-lt),var(--gold)); transition:width .6s; box-shadow:0 0 10px var(--green-glow);}
 .xp-lbl{font-size:10px; color:var(--dim); text-align:center; margin-top:5px; letter-spacing:.5px;}
 
-/* ── 分頁 ── */
+/* ── 分頁：書口索引標籤（像從書側伸出來的紙籤，不是一排文字） ── */
+/* 每個分頁有自己的主色，整站不再只有一種綠 */
+.pagebox[data-acc="today"]  {--acc:#4fae74; --acc-dim:rgba(79,174,116,.16);}
+.pagebox[data-acc="collect"]{--acc:#9b7fd4; --acc-dim:rgba(155,127,212,.16);}
+.pagebox[data-acc="reward"] {--acc:#d9a441; --acc-dim:rgba(217,164,65,.16);}
+.pagebox[data-acc="map"]    {--acc:#4aa8b8; --acc-dim:rgba(74,168,184,.16);}
+.pagebox[data-acc="more"]   {--acc:#b8a68a; --acc-dim:rgba(184,166,138,.16);}
+
 nav.tabs{
-  display:flex; gap:3px; overflow-x:auto; padding:11px 0 0; margin:12px 0 13px;
-  border-bottom:1px solid var(--line); -webkit-overflow-scrolling:touch; scrollbar-width:none;
+  display:flex; gap:4px; padding:0 6px; margin:14px 0 0; position:relative; z-index:2;
+  overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
 }
 nav.tabs::-webkit-scrollbar{display:none;}
 nav.tabs button{
-  flex:0 0 auto; font-family:"Cinzel","Noto Serif TC",serif; font-size:12.5px; letter-spacing:.3px;
-  padding:8px 11px; cursor:pointer; background:transparent; color:var(--dim); border:none;
-  border-bottom:2px solid transparent; margin-bottom:-1px; transition:.15s; white-space:nowrap;
+  flex:1 1 0; min-width:60px; position:relative; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  font-family:"Cinzel","Noto Serif TC",serif; font-size:12px; font-weight:600; letter-spacing:.5px;
+  padding:9px 6px 12px; margin-bottom:-1px; color:var(--dim);
+  background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+  border:1px solid var(--line); border-bottom:1px solid var(--line);
+  border-radius:11px 11px 0 0;
+  transition:color .2s, background .2s, transform .16s, box-shadow .2s;
 }
-nav.tabs button:hover{color:var(--silver);}
-nav.tabs button.active{color:var(--silver-hi); border-bottom-color:var(--green-lt); text-shadow:0 0 12px var(--green-glow);}
-.tab-panel{display:none; animation:fade .3s ease;}
+nav.tabs button .ti{font-size:15px; line-height:1; filter:grayscale(.55) opacity(.75); transition:.2s;}
+nav.tabs button:hover{color:var(--silver); transform:translateY(-2px);}
+nav.tabs button:hover .ti{filter:none;}
+/* 選中的那一籤：往下貼齊書頁，底線消失，看起來跟頁面連在一起 */
+nav.tabs button.active{
+  color:var(--silver-hi); z-index:3;
+  background:linear-gradient(180deg, var(--tab-acc-dim,rgba(79,174,116,.2)), var(--page-bg));
+  border-color:var(--line-str); border-bottom-color:transparent;
+  box-shadow:0 -3px 14px rgba(0,0,0,.3);
+}
+nav.tabs button.active .ti{filter:none; transform:scale(1.08);}
+nav.tabs button.active::before{
+  content:''; position:absolute; left:10px; right:10px; top:0; height:2px; border-radius:2px;
+  background:var(--tab-acc,#4fae74); box-shadow:0 0 10px var(--tab-acc,#4fae74);
+}
+nav.tabs button[data-acc="today"].active  {--tab-acc:#4fae74; --tab-acc-dim:rgba(79,174,116,.2);}
+nav.tabs button[data-acc="collect"].active{--tab-acc:#9b7fd4; --tab-acc-dim:rgba(155,127,212,.2);}
+nav.tabs button[data-acc="reward"].active {--tab-acc:#d9a441; --tab-acc-dim:rgba(217,164,65,.2);}
+nav.tabs button[data-acc="map"].active    {--tab-acc:#4aa8b8; --tab-acc-dim:rgba(74,168,184,.2);}
+nav.tabs button[data-acc="more"].active   {--tab-acc:#b8a68a; --tab-acc-dim:rgba(184,166,138,.2);}
+@media (max-width:430px){
+  nav.tabs button{font-size:11px; padding:8px 4px 11px;}
+  nav.tabs button .ti{font-size:14px;}
+}
+
+/* 書頁本體：標籤貼在它上面 */
+.pagebox{
+  --page-bg:rgba(17,32,24,.72);
+  position:relative; z-index:1;
+  background:var(--page-bg);
+  border:1px solid var(--line-str); border-radius:0 0 16px 16px;
+  padding:15px 13px 20px;
+  box-shadow:0 12px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+}
+/* 頁面上緣一條主色細線，翻頁時顏色會換 */
+.pagebox::before{
+  content:''; position:absolute; left:0; right:0; top:-1px; height:1px;
+  background:linear-gradient(90deg, transparent, var(--acc), transparent); opacity:.55;
+}
+.tab-panel{display:none; animation:fade .28s ease;}
 .tab-panel.active{display:block;}
 @keyframes fade{from{opacity:0; transform:translateY(5px);}to{opacity:1; transform:none;}}
 
 /* ── 玻璃卡 ── */
 .card{
-  background:linear-gradient(180deg, rgba(32,60,45,.62), rgba(20,40,29,.58));
+  background:linear-gradient(180deg, rgba(38,68,52,.55), rgba(22,44,32,.5));
   border:1px solid var(--line); border-radius:14px;
   padding:16px 17px; margin-bottom:13px; color:var(--silver);
-  backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px);
-  box-shadow:0 6px 24px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.07);
+  box-shadow:0 5px 20px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.06);
 }
+/* ── 層級：次要區塊放輕，主要區塊才有份量 ── */
+.card.sub{
+  background:rgba(255,255,255,.028); border-color:rgba(130,190,155,.13);
+  box-shadow:none; padding:13px 15px;
+}
+.card.sub h2{font-size:14px; padding-bottom:7px; opacity:.9;}
+.card.sub h2 .dim{font-size:11px;}
+/* 標題左側一道主色短線，取代「每張卡長一樣」 */
+.card h2{position:relative; padding-left:11px;}
+/* 對齊標題第一行，不要在換行的標題上跑到兩行中間 */
+.card h2::before{
+  content:''; position:absolute; left:0; top:3px;
+  width:3px; height:16px; border-radius:2px; background:var(--acc,#4fae74); opacity:.85;
+}
+.card.parch h2::before{background:var(--gold);}
+.card.sub h2::before{height:12px; opacity:.5;}
 .card h2{
   font-family:"Cinzel","Noto Serif TC",serif; font-size:16px; margin:0 0 11px;
   color:var(--silver-hi); letter-spacing:.8px; display:flex; align-items:center; gap:8px;
@@ -172,7 +237,7 @@ nav.tabs button.active{color:var(--silver-hi); border-bottom-color:var(--green-l
 .card h2 .dim{font-weight:400; letter-spacing:0;}
 .card h3{
   font-family:"Cinzel","Noto Serif TC",serif; font-size:12.5px; margin:16px 0 6px;
-  color:var(--green-lt); letter-spacing:1px; font-weight:700; text-transform:none;
+  color:var(--acc,#4fae74); letter-spacing:1px; font-weight:700; text-transform:none;
   display:flex; align-items:center; gap:7px;
 }
 .card h3::after{content:''; flex:1; height:1px; background:var(--line);}
@@ -197,9 +262,12 @@ nav.tabs button.active{color:var(--silver-hi); border-bottom-color:var(--green-l
 /* ── HERO：現在焦點 ── */
 .hero{
   position:relative; overflow:hidden;
-  background:linear-gradient(160deg, var(--glass-hi), rgba(16,32,23,.72));
-  border:1px solid var(--line-str); border-radius:16px; padding:16px 16px 15px; margin-bottom:12px;
-  box-shadow:0 8px 30px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07), 0 0 34px rgba(61,143,94,.12);
+  background:
+    radial-gradient(ellipse 120% 90% at 12% 0%, var(--acc-dim,rgba(79,174,116,.16)), transparent 62%),
+    linear-gradient(160deg, rgba(36,70,52,.8), rgba(14,30,21,.8));
+  border:1px solid var(--acc,#4fae74); border-radius:18px;
+  padding:20px 18px 18px; margin-bottom:14px;
+  box-shadow:0 14px 44px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.09), 0 0 40px var(--acc-dim,rgba(79,174,116,.16));
 }
 .hero::after{
   content:''; position:absolute; top:-56px; right:-46px; width:180px; height:180px; border-radius:50%;
@@ -207,11 +275,11 @@ nav.tabs button.active{color:var(--silver-hi); border-bottom-color:var(--green-l
 }
 .hero-tag{
   font-family:"Cinzel","Noto Serif TC",serif; font-size:10.5px; letter-spacing:2.4px;
-  color:var(--green-lt); text-transform:uppercase; margin-bottom:5px; display:flex; align-items:center; gap:6px;
+  color:var(--acc,#4fae74); text-transform:uppercase; margin-bottom:5px; display:flex; align-items:center; gap:6px;
 }
 .hero-tag .pulse{width:6px; height:6px; border-radius:50%; background:var(--green-lt); box-shadow:0 0 9px var(--green-lt); animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.72);}}
-.hero-what{font-size:16.5px; font-weight:700; color:var(--silver-hi); line-height:1.52; margin-bottom:2px;}
+.hero-what{font-size:21px; font-weight:700; color:#fff; line-height:1.42; margin-bottom:4px; letter-spacing:.3px;}
 .hero-when{font-size:11.5px; color:var(--dim); font-family:"Cinzel","Noto Serif TC",serif; letter-spacing:.6px;}
 .hero-top{display:flex; align-items:center; gap:18px;}
 .hero-info{flex:1; min-width:0;}
@@ -351,7 +419,7 @@ textarea,input[type=text],input[type=number],input[type=date],select{
 }
 input::placeholder,textarea::placeholder{color:rgba(139,162,149,.55);}
 input:focus,textarea:focus,select:focus{outline:none; border-color:var(--green-lt); box-shadow:0 0 0 3px rgba(61,143,94,.14);}
-label.field-label{display:block; font-size:11.5px; font-weight:700; color:var(--green-lt); margin:11px 0 4px; letter-spacing:.4px;}
+label.field-label{display:block; font-size:11.5px; font-weight:700; color:var(--acc,#4fae74); margin:11px 0 4px; letter-spacing:.4px;}
 .card.parch label.field-label{color:var(--gold);}
 
 /* ── 電量模式 ── */
@@ -395,7 +463,7 @@ label.field-label{display:block; font-size:11.5px; font-weight:700; color:var(--
 }
 
 /* ── 折疊 ── */
-details.fold{border:1px solid var(--line); border-radius:12px; background:var(--glass); margin-bottom:12px; backdrop-filter:blur(9px); overflow:hidden;}
+details.fold{border:1px solid rgba(130,190,155,.14); border-radius:12px; background:rgba(255,255,255,.022); margin-bottom:10px; overflow:hidden;}
 details.fold>summary{
   cursor:pointer; padding:13px 16px; font-family:"Cinzel","Noto Serif TC",serif; font-size:14px;
   color:var(--silver-hi); list-style:none; display:flex; align-items:center; gap:7px; font-weight:600; letter-spacing:.5px;
@@ -429,7 +497,7 @@ details.fold .fold-body{padding:0 16px 15px;}
 .schedule-table tr:hover td{background:rgba(255,255,255,.028);}
 .schedule-table th{
   background:transparent; font-family:"Cinzel","Noto Serif TC",serif; font-weight:700;
-  color:var(--green-lt); font-size:10.5px; letter-spacing:1.4px; padding-bottom:6px;
+  color:var(--acc,#4fae74); font-size:10.5px; letter-spacing:1.4px; padding-bottom:6px;
   border-bottom:1px solid var(--line-str);
 }
 /* 最後一欄（數值）靠右、用等寬數字 */
@@ -460,7 +528,7 @@ details.fold .fold-body{padding:0 16px 15px;}
   background:rgba(92,192,132,.09); border-left:2px solid var(--green-lt); color:var(--silver-hi);}
 .phase.current .ph-goal{background:rgba(201,169,78,.1); border-left-color:var(--gold);}
 .ph-sub{font-family:"Cinzel","Noto Serif TC",serif; font-size:10.5px; letter-spacing:1.3px;
-  color:var(--green-lt); margin:11px 0 5px; display:flex; align-items:center; gap:8px;}
+  color:var(--acc,#4fae74); margin:11px 0 5px; display:flex; align-items:center; gap:8px;}
 .ph-sub::after{content:''; flex:1; height:1px; background:var(--line);}
 .phase.current .ph-sub{color:var(--gold);}
 .ph-rhythm{width:100%; border-collapse:collapse; font-size:12px;}
@@ -530,7 +598,7 @@ details.fold .fold-body{padding:0 16px 15px;}
 .album-cat>summary::-webkit-details-marker{display:none;}
 .album-cat>summary::after{content:'▾'; margin-left:auto; color:var(--dim); font-size:11px; transition:.25s;}
 .album-cat[open]>summary::after{transform:rotate(180deg);}
-.album-cat>summary:hover{color:var(--gold);}
+.album-cat>summary:hover{color:var(--acc,#4fae74);}
 .ac-ico{font-size:16px;}
 .ac-n{font-family:"Cinzel",serif; font-size:11px; color:var(--dim); font-weight:400; letter-spacing:.5px;}
 .ac-n.full{color:var(--gold);}
@@ -973,12 +1041,14 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
   <div class="debug-banner" id="debugBanner" style="display:none;"></div>
 
   <nav class="tabs" id="tabs">
-    <button data-tab="dashboard" class="active">📜 今天</button>
-    <button data-tab="collection">📖 收藏</button>
-    <button data-tab="rewards">🎁 兌換</button>
-    <button data-tab="map">🗺️ 地圖</button>
-    <button data-tab="more">🪄 更多</button>
+    <button data-tab="dashboard" data-acc="today" class="active"><span class="ti">📜</span><span class="tt">今天</span></button>
+    <button data-tab="collection" data-acc="collect"><span class="ti">📖</span><span class="tt">收藏</span></button>
+    <button data-tab="rewards" data-acc="reward"><span class="ti">🎁</span><span class="tt">兌換</span></button>
+    <button data-tab="map" data-acc="map"><span class="ti">🗺️</span><span class="tt">地圖</span></button>
+    <button data-tab="more" data-acc="more"><span class="ti">🪄</span><span class="tt">更多</span></button>
   </nav>
+
+  <div class="pagebox" id="pagebox" data-acc="today">
 
   <!-- ═══ 今天 ═══ -->
   <section class="tab-panel active" id="tab-dashboard">
@@ -1035,15 +1105,15 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     </div>
 
     <!-- 學院盃 -->
-    <div class="card" id="cupCard">
+    <div class="card sub" id="cupCard">
       <h2>🏆 學院盃 <span class="dim" id="cupPeriod"></span></h2>
       <div id="cupBox"></div>
     </div>
 
     <!-- 巧克力蛙 + 貓 -->
     <div class="grid2">
-      <div class="card"><h2>🍫 今日的巧克力蛙</h2><div id="frogBox"></div></div>
-      <div class="card">
+      <div class="card sub"><h2>🍫 今日的巧克力蛙</h2><div id="frogBox"></div></div>
+      <div class="card sub">
         <h2>🐈 你的魔寵 <span class="dim" id="catStage"></span></h2>
         <div class="cat-stage" id="catStageBox">
           <button class="cat-pet" id="catPet" title="摸摸牠" aria-label="摸摸牠">
@@ -1143,7 +1213,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     </div>
 
     <!-- 出勤 -->
-    <div class="card">
+    <div class="card sub">
       <h2>🦉 出勤紀錄 <span class="dim">最近 12 週</span></h2>
       <div class="hm-wrap"><div class="heatmap" id="heatmap"></div></div>
       <div class="hm-legend">
@@ -1384,6 +1454,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       </div>
     </details>
   </section>
+  </div><!-- /pagebox -->
 
   <footer class="foot">獻給史萊哲林的你 · 表壞掉的時候，回到三個誓言，其他全部可以重排。</footer>
 </div>
@@ -1648,6 +1719,8 @@ document.getElementById('tabs').addEventListener('click',e=>{
   document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
   document.getElementById('tab-'+b.dataset.tab).classList.add('active');
+  // 換頁＝換主色，整站不再只有一種綠
+  document.getElementById('pagebox').dataset.acc=b.dataset.acc;
   window.scrollTo({top:0,behavior:'smooth'});
 });
 
@@ -2149,7 +2222,9 @@ function itemsForMode(mode){
   const blocks=(TODAY_PLAN?TODAY_PLAN.segments:[])
     .filter(s=>s.kind==='study'||s.kind==='exam')
     .map(s=>`${s.t}｜${s.label.replace(/^自習：/,'')}`);
-  return ['默寫 10 條條文', ...blocks];
+  // 時間表本身就含「默寫 10 條」那一段，不要再多加一項變成重複
+  const hasDictation=blocks.some(b=>/默寫\s*10\s*條/.test(b));
+  return hasDictation? blocks : ['默寫 10 條條文', ...blocks];
 }
 function ensureItemCounts(st){
   if(!st.mode) return st;
