@@ -523,6 +523,30 @@ details.fold .fold-body{padding:0 16px 15px;}
 .week-focus{font-size:12.5px; background:rgba(255,255,255,.045); border-radius:7px; padding:8px 10px; margin-top:5px; line-height:1.6; border-left:2px solid var(--line);}
 .card.parch .week-focus{background:rgba(0,0,0,.22); border-left-color:rgba(201,169,78,.3);}
 
+/* ── 階段卡：第一眼只看得到重點，細節要自己展開 ── */
+.ph-one{font-size:13.5px; line-height:1.62; color:var(--silver-hi); margin:6px 0 8px;}
+.ph-drill{
+  display:flex; align-items:baseline; gap:9px; flex-wrap:wrap;
+  font-size:12.5px; line-height:1.6; margin-bottom:9px; padding:8px 11px; border-radius:9px;
+  background:rgba(255,255,255,.045); border-left:2px solid var(--acc,#4fae74); color:var(--silver);
+}
+.ph-drill>span{
+  font-family:"Cinzel","Noto Serif TC",serif; font-size:10px; letter-spacing:1.4px;
+  color:var(--acc,#4fae74); flex-shrink:0;
+}
+.ph-drill b{color:#f0dfa8;}
+details.ph-more{margin-top:2px;}
+details.ph-more>summary{
+  cursor:pointer; list-style:none; font-size:11.5px; color:var(--dim);
+  font-family:"Cinzel","Noto Serif TC",serif; letter-spacing:1px;
+  padding:5px 0; display:inline-flex; align-items:center; gap:5px;
+}
+details.ph-more>summary::-webkit-details-marker{display:none;}
+details.ph-more>summary::after{content:'▾'; font-size:10px; transition:.25s;}
+details.ph-more[open]>summary::after{transform:rotate(180deg);}
+details.ph-more>summary:hover{color:var(--acc,#4fae74);}
+.ph-more-body{padding-top:4px;}
+
 /* ── 階段詳解（地圖頁：這階段到底要幹嘛） ── */
 .ph-goal{font-size:12.5px; line-height:1.65; margin:6px 0 8px; padding:9px 11px; border-radius:8px;
   background:rgba(92,192,132,.09); border-left:2px solid var(--green-lt); color:var(--silver-hi);}
@@ -721,15 +745,19 @@ details.fold .fold-body{padding:0 16px 15px;}
 }
 .cat-pet:active{transform:scale(.96);}
 .cat-svg{width:100%; height:100%; overflow:visible;}
+.cat-photo{width:100%; height:100%; object-fit:cover; border-radius:50%;
+  border:2px solid rgba(201,169,78,.55); box-shadow:0 0 18px rgba(201,169,78,.25);}
 /* 金漸層：中間奶白、外圈金黃、毛尖深金；配翡翠綠眼睛 */
 .cat-svg{--fur:#e8c88a; --fur2:#b8894e; --furlt:#fcf2de; --eye:#7dc94a; --eyerim:#5c4526;
   --collar:transparent; --nose:#d98a8a;}
 .c-shadow{fill:rgba(0,0,0,.3);}
 .c-body{fill:url(#furBody); stroke:var(--fur2); stroke-width:1.3;}
 .c-face{fill:url(#furShade); stroke:var(--fur2); stroke-width:1.3;}
-.c-leg{fill:var(--furlt); stroke:var(--fur2); stroke-width:1.1;}
-.c-toe{stroke:var(--fur2); stroke-width:1; fill:none; stroke-linecap:round; opacity:.65;}
-.c-pad{fill:var(--furlt); opacity:.5;}
+.c-bib{fill:#fdf8ee; opacity:.9;}
+.c-sock{fill:#fdf8ee; stroke:var(--fur2); stroke-width:.9; stroke-opacity:.5;}
+.c-toe{stroke:var(--fur2); stroke-width:1; fill:none; stroke-linecap:round; opacity:.5;}
+.c-pad{fill:#fdf8ee; opacity:.62;}
+.c-stripe{stroke:var(--fur2); stroke-width:2.4; fill:none; stroke-linecap:round; opacity:.5;}
 .c-ear{fill:var(--fur); stroke:var(--fur2); stroke-width:1.3; stroke-linejoin:round;}
 .c-ear-in{fill:#e0a3a8; opacity:.8;}
 .c-eyerim{fill:var(--eyerim); opacity:.85;}
@@ -1131,69 +1159,78 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
                   <stop offset="100%" stop-color="var(--fur2)"/>
                 </radialGradient>
               </defs>
-              <ellipse class="c-shadow" cx="60" cy="117" rx="29" ry="4.5"/>
-              <!-- 尾巴繞到身側 -->
-              <path class="c-tail" d="M84 108 C104 110 110 92 100 80 C96 75 90 76 90 81"/>
-              <!-- 身體：胸口收、屁股寬，蹲坐的輪廓 -->
-              <path class="c-body" d="M60 60
-                C46 60 37 72 34 86 C31 98 33 110 41 113
-                C48 116 72 116 79 113 C87 110 89 98 86 86 C83 72 74 60 60 60 Z"/>
-              <!-- 前腳 -->
-              <path class="c-leg" d="M47 96 C45 104 45 110 47 113 C51 115 56 114 57 111 C58 106 56 99 54 95 Z"/>
-              <path class="c-leg" d="M73 96 C75 104 75 110 73 113 C69 115 64 114 63 111 C62 106 64 99 66 95 Z"/>
-              <path class="c-toe" d="M48 112 v-4 M52 112.5 v-4"/>
-              <path class="c-toe" d="M72 112 v-4 M68 112.5 v-4"/>
+              <ellipse class="c-shadow" cx="60" cy="118" rx="30" ry="4.5"/>
+              <path class="c-tail" d="M84 110 C104 112 111 94 101 82 C97 77 91 78 91 83"/>
+              <!-- 身體：麵包型，寬而矮 -->
+              <path class="c-body" d="M60 66 C44 66 35 78 33 92 C31 104 34 114 42 116
+                C50 118 70 118 78 116 C86 114 89 104 87 92 C85 78 76 66 60 66 Z"/>
+              <!-- 白色胸毛 -->
+              <path class="c-bib" d="M60 70 C52 70 47 80 47 92 C47 104 52 112 60 112
+                C68 112 73 104 73 92 C73 80 68 70 60 70 Z"/>
+              <!-- 白襪前腳 -->
+              <path class="c-sock" d="M45 100 C43 107 43 112 45 115 C49 117 54 116 55 113 C56 108 54 102 52 99 Z"/>
+              <path class="c-sock" d="M75 100 C77 107 77 112 75 115 C71 117 66 116 65 113 C64 108 66 102 68 99 Z"/>
+              <path class="c-toe" d="M46 114 v-4 M50 114.5 v-4 M74 114 v-4 M70 114.5 v-4"/>
               <g class="c-head">
-                <!-- 耳朵：外耳有弧度，不是三角形 -->
-                <path class="c-ear" d="M38 28 C34 18 34 9 37 7 C41 5 51 12 56 19 Z"/>
-                <path class="c-ear" d="M82 28 C86 18 86 9 83 7 C79 5 69 12 64 19 Z"/>
-                <path class="c-ear-in" d="M41 25 C39 18 39 12 41 11 C44 10 50 16 53 21 Z"/>
-                <path class="c-ear-in" d="M79 25 C81 18 81 12 79 11 C76 10 70 16 67 21 Z"/>
-                <!-- 頭：上圓下寬，兩側有頰毛的起伏 -->
-                <path class="c-face" d="M60 15
-                  C74 15 85 24 87 36 C88 43 87 49 84 53
-                  C81 58 79 55 76 57 C71 61 66 63 60 63
-                  C54 63 49 61 44 57 C41 55 39 58 36 53
-                  C33 49 32 43 33 36 C35 24 46 15 60 15 Z"/>
+                <!-- 耳朵：小、圓、分得開 -->
+                <path class="c-ear" d="M36 26 C33 17 34 11 38 10 C43 9 50 15 53 21 C47 21 40 22 36 26 Z"/>
+                <path class="c-ear" d="M84 26 C87 17 86 11 82 10 C77 9 70 15 67 21 C73 21 80 22 84 26 Z"/>
+                <path class="c-ear-in" d="M39 24 C37 18 38 14 40 13 C43 13 47 17 49 21 C45 21 41 22 39 24 Z"/>
+                <path class="c-ear-in" d="M81 24 C83 18 82 14 80 13 C77 13 73 17 71 21 C75 21 79 22 81 24 Z"/>
+                <!-- 頭：寬圓，兩頰有毛絨的起伏 -->
+                <path class="c-face" d="M60 13
+                  C76 13 88 23 90 37 C91 45 89 51 85 55
+                  C82 58 80 55 77 58 C72 63 66 65 60 65
+                  C54 65 48 63 43 58 C40 55 38 58 35 55
+                  C31 51 29 45 30 37 C32 23 44 13 60 13 Z"/>
+                <!-- 虎斑：額頭的 M 與兩側斑紋 -->
+                <g class="c-stripe">
+                  <path d="M60 16 L57 25 M60 16 L63 25 M52 18 L51 27 M68 18 L69 27"/>
+                  <path d="M35 32 C39 33 42 34 44 36 M85 32 C81 33 78 34 76 36"/>
+                  <path d="M33 41 C37 41 40 42 42 43 M87 41 C83 41 80 42 78 43"/>
+                </g>
                 <g class="c-eyes-open">
-                  <ellipse class="c-eyerim" cx="48.5" cy="38" rx="8.6" ry="8.2"/>
-                  <ellipse class="c-eyerim" cx="71.5" cy="38" rx="8.6" ry="8.2"/>
-                  <ellipse class="c-eye" cx="48.5" cy="38.3" rx="7.4" ry="7.1"/>
-                  <ellipse class="c-eye" cx="71.5" cy="38.3" rx="7.4" ry="7.1"/>
-                  <ellipse class="c-pupil" cx="48.5" cy="38.6" rx="3.1" ry="6"/>
-                  <ellipse class="c-pupil" cx="71.5" cy="38.6" rx="3.1" ry="6"/>
-                  <circle class="c-glint" cx="46" cy="35" r="2.1"/>
-                  <circle class="c-glint" cx="69" cy="35" r="2.1"/>
-                  <circle class="c-glint2" cx="50.6" cy="41.6" r="1.1"/>
-                  <circle class="c-glint2" cx="73.6" cy="41.6" r="1.1"/>
+                  <ellipse class="c-eyerim" cx="48" cy="40" rx="9.4" ry="9"/>
+                  <ellipse class="c-eyerim" cx="72" cy="40" rx="9.4" ry="9"/>
+                  <ellipse class="c-eye" cx="48" cy="40.3" rx="8.2" ry="7.9"/>
+                  <ellipse class="c-eye" cx="72" cy="40.3" rx="8.2" ry="7.9"/>
+                  <ellipse class="c-pupil" cx="48" cy="40.6" rx="3.4" ry="6.6"/>
+                  <ellipse class="c-pupil" cx="72" cy="40.6" rx="3.4" ry="6.6"/>
+                  <circle class="c-glint" cx="45.2" cy="36.8" r="2.3"/>
+                  <circle class="c-glint" cx="69.2" cy="36.8" r="2.3"/>
+                  <circle class="c-glint2" cx="50.4" cy="44" r="1.2"/>
+                  <circle class="c-glint2" cx="74.4" cy="44" r="1.2"/>
                 </g>
                 <g class="c-eyes-shut">
-                  <path d="M41 39 Q48.5 31 56 39"/><path d="M64 39 Q71.5 31 79 39"/>
+                  <path d="M40 41 Q48 32 56 41"/><path d="M64 41 Q72 32 80 41"/>
                 </g>
-                <!-- 鬍鬚墊：貓臉下半的兩球 -->
-                <ellipse class="c-pad" cx="52" cy="52" rx="9.5" ry="7"/>
-                <ellipse class="c-pad" cx="68" cy="52" rx="9.5" ry="7"/>
-                <path class="c-nose" d="M56 47.5 Q60 45.8 64 47.5 Q60 52.5 56 47.5 Z"/>
-                <path class="c-mouth" d="M60 51.5 Q56 56 52.5 53 M60 51.5 Q64 56 67.5 53"/>
+                <!-- 鬍鬚墊 -->
+                <ellipse class="c-pad" cx="52.5" cy="54" rx="10" ry="7.2"/>
+                <ellipse class="c-pad" cx="67.5" cy="54" rx="10" ry="7.2"/>
+                <path class="c-nose" d="M56 49 Q60 47.2 64 49 Q60 54 56 49 Z"/>
+                <path class="c-mouth" d="M60 53 Q56 57.5 52.5 54.5 M60 53 Q64 57.5 67.5 54.5"/>
                 <g class="c-whisk">
-                  <path d="M43 50 C34 47 28 46 22 46"/>
-                  <path d="M43 53.5 C34 54 28 56 22 58"/>
-                  <path d="M77 50 C86 47 92 46 98 46"/>
-                  <path d="M77 53.5 C86 54 92 56 98 58"/>
+                  <path d="M42 51 C33 48 27 47 21 47"/>
+                  <path d="M42 55 C33 56 27 58 21 60"/>
+                  <path d="M78 51 C87 48 93 47 99 47"/>
+                  <path d="M78 55 C87 56 93 58 99 60"/>
                 </g>
               </g>
               <g class="c-collar">
-                <path d="M44 63 Q60 72 76 63"/>
-                <circle class="c-gem" cx="60" cy="70" r="3.6"/>
+                <path d="M45 68 Q60 77 75 68"/>
+                <circle class="c-gem" cx="60" cy="75" r="3.6"/>
               </g>
               <g class="c-zzz"><text x="92" y="30">z</text><text x="100" y="18">z</text></g>
             </svg>
+            <img class="cat-photo" id="catPhoto" alt="" style="display:none;">
             <span class="cat-hearts" id="catHearts"></span>
           </button>
           <div class="cat-side">
             <div class="cat-nameline">
               <span class="cat-name" id="catName" title="點一下改名">（點我取名）</span>
               <button class="cat-edit" id="catRename" title="改名" aria-label="改名">✎</button>
+              <button class="cat-edit" id="catPhotoBtn" title="換成自己的貓的照片" aria-label="換照片">🖼</button>
+              <input type="file" id="catPhotoFile" accept="image/*" style="display:none;">
             </div>
             <div class="cat-bubble" id="catLine"></div>
             <div class="cat-bond">
@@ -1757,84 +1794,97 @@ const FULLTIME_RHYTHM=[
 ];
 const PHASES=[
   {id:1,name:'開學前空窗',start:'2026-08-11',end:'2026-09-06',tag:'全職',len:'4 週',
-   goal:'唯一一段「整天都是你的、而且還沒開學」的時間。要補的是檢事官沒考到的兩個洞——憲法和民法身分法——順便把秋季的課先預習掉。',
+   one:'補兩個洞（憲法、民法身分法），順便刷完這兩科的題。',
+   goal:'唯一一段「整天都是你的、而且還沒開學」的時間。這四週要做完的是：憲法從零建立、民法補上身分法，然後把這兩科的題全部刷掉。',
+   drill:'憲法 225 題 ＋ 民法 659 題 ＝ <b>884 題</b>',
    rhythm:FULLTIME_RHYTHM,
-   weeks:['<b>第 1 週｜憲法〈魔法理論〉全科一輪</b>——全年覆蓋最薄的一科，趁還有整天時間做掉。一試 40 分、二試跟行政法合卷 200 分。',
-          '<b>第 2 週｜民法〈變形學〉親屬繼承</b>——檢事官的財產法不含身分法，這是民法唯一的真空。數字特別多（期間、年齡、比例），選擇題最愛考。',
-          '<b>第 3 週｜民法〈變形學〉攤平</b>（總則＋債＋物權）＋<b>五編體系表定稿</b>。記憶最熱的時候拉廣度，五編一起收。',
-          '<b>第 4 週｜預習秋季課程</b>——民訴一（60 分）為主、公司法（30 分）次之。開學後平日沒有司律自習時間，走進教室如果是「第一次接觸」，那堂課只能拿來理解；有框架的話，同樣兩小時就變成複習。'],
-   check:'過關標準：能<b>空手畫出</b>民法五編＋憲法的體系表。畫不出來就再給一週，不要硬往下走。',
-   warn:'智財〈鍊金術〉這四週完全不碰，秋季有著作權法和專利法兩門課接手。也不要預習法德一，它跟司律零重疊。行政法與刑事法的攤平已移到寒假（那裡有 7 週，放得下）。',
+   weeks:['第 1 週｜憲法：全科讀一輪，同時刷完 225 題',
+          '第 2 週｜民法親屬繼承：檢事官沒考過的真空，刷 200 題',
+          '第 3 週｜民法攤平（總則＋債＋物權）＋體系表定稿，刷 300 題',
+          '第 4 週｜預習秋季的民訴一與公司法，民法收尾 159 題'],
+   check:'能空手畫出民法五編＋憲法的體系表。',
+   warn:'智財這四週不碰，秋季有著作權法和專利法接手。也不要預習法德一。',
    weekShort:['憲法〈魔法理論〉全科一輪','民法〈變形學〉親屬繼承','民法〈變形學〉攤平＋體系表定稿','預習秋季課程（民訴一為主）']},
 
-  {id:2,name:'秋季學期',start:'2026-09-07',end:'2026-12-25',tag:'在校・維持',len:'16 週（扣掉期末考期，實際 13 週）',
-   goal:'定位是「<b>不要退步</b>」，不是「往前推」。平日沒有司律自習時間——但你在修的課（民訴 60、公司法 30、保險法 20、國私 20）本身就是那 130 分，上課就是在讀司律，不用有罪惡感。',
-   rhythm:[['週一～週五','<b>只做默寫 10 條。</b>其餘時間＝上課＋課業，那就是進度'],
-           ['週六','憲法〈魔法理論〉第二輪——讀釋字與憲判字的<b>理由書</b>（選擇題常從理由書出題，不是主文）'],
-           ['週日上午','TaiLexi 刷題 50 題＋當天錯題入本'],
-           ['週日下午','<b>完全休息</b>，連默寫都不用。這是排定的，不是偷懶']],
-   weeks:['這學期只做兩件事：<b>憲法二輪</b>和<b>開始刷題</b>。以前的版本在這裡排了刑法攤平、刑訴攤平、民法二輪、票據證交、小科總掃——那需要每週 33 小時，你沒有。',
-          '默寫 10 條的來源＝TaiLexi 的 <b>272 條高頻必考法條</b>（六年內出現 3 次以上），27 天跑完一輪。'],
-   check:'報告要在 <b>12/4 前</b>全部交完——12/5 起沒有餘裕。',
-   warn:'16 週裡最後 3 週（12/5–12/25）是期末考期，司律進度排 0 → <b>實際只有 13 週</b>。年度總表已經算進去了，那三週你不會欠自己任何東西。'},
+  {id:2,name:'秋季學期',start:'2026-09-07',end:'2026-12-25',tag:'在校・維持',len:'16 週（實際 13 週）',
+   one:'平日只默寫 10 條，刷題全部集中在週六和週日上午。',
+   goal:'定位是「不要退步」，不是「往前推」。你在修的課（民訴、公司法、保險法、國私）本身就是一試的 130 分，上課就是在讀司律。',
+   drill:'民訴 363 題（第 1–8 週）＋ 公司法 213 題（第 9–13 週）＝ <b>576 題</b>，每個刷題日約 22 題',
+   rhythm:[['週一～週五','只做默寫 10 條。其餘時間＝上課＋課業'],
+           ['週六','憲法第二輪（讀釋字與憲判字的理由書）＋當週刷題量'],
+           ['週日上午','刷題＋當天錯題入本'],
+           ['週日下午','完全休息，連默寫都不用']],
+   weeks:['刷題只排在週六與週日上午——平日不排，因為排了也做不到。',
+          '默寫 10 條的來源是 TaiLexi 的 272 條高頻法條，27 天跑一輪。'],
+   check:'報告在 12/4 前交完。',
+   warn:'最後 3 週（12/5–12/25）是期末考期，司律排 0，所以實際只有 13 週。'},
 
   {id:3,name:'寒假',start:'2026-12-26',end:'2027-02-14',tag:'全職',len:'7.3 週',
-   goal:'⭐ <b>全年最長的一段全職期（7.3 週）</b>。秋季塞不下的東西全部在這裡補完，並跑完一試題庫第一輪。這一段做得好不好，幾乎決定一試結果。',
+   one:'全年最長的全職期。攤平四科的同時把題刷完，第 34 天新題就結束。',
+   goal:'秋季塞不下的東西全部在這裡補完。每天上午攤平一科、下午刷同一科的題——所以不需要再留一段「純刷題期」。',
+   drill:'行政法 409 ＋ 刑法 320 ＋ 刑訴 267 ＋ 法倫 186 ＋ 國公 129 ＋ 國私 134 ＝ <b>1,445 題</b>',
    rhythm:FULLTIME_RHYTHM,
-   weeks:['<b>第 1–2 週｜攤平</b>：行政法〈魔藥學〉（重點補「<b>函釋</b>」——教科書不寫，但行政法選擇題很愛考）＋ 刑法〈黑魔法防禦術〉刑訴〈決鬥課〉（分則細節、選擇題角落）。重點是<b>廣度不是深度</b>。',
-          '<b>第 3–5 週｜一試題庫第一輪</b>（21 天）：開「智能不重複」＋「即時詳解」，<b>年份篩 107–115</b>（107 年起才改成全單選，102–106 是舊題型，第一輪先不碰）。約 2,600 題 ÷ 21 天 ≈ <b>每天 125 題</b>，每題抓 1 分鐘含詳解 ≈ 2 小時。',
-          '<b>第 6 週｜弱科補強</b>：看 TaiLexi 歷史成績，正確率最低的兩科單獨再刷一輪。這裡才動用 102–106 年那批舊題（約 1,500 題），當弱科的額外題源。',
-          '<b>第 7 週｜只做錯題，不做新題</b>（用「練習錯題」功能）。'],
-   check:'檢核點：<b>任一主科正確率低於 65%</b> → 春季的週一優先給它。',
-   warn:'2026 年 TaiLexi 題庫從 2,968 題擴到 <b>4,104 題</b>（多收 102–106 年）。<b>不要因為題庫變大就想全刷完</b>——21 天塞 4,104 題等於每天 195 題，一定會犧牲詳解，刷完沒消化等於沒刷。先刷 107–115（現行題型），舊題留給弱科。'},
+   weeks:['第 1–7 天｜行政法（每天 59 題）　第 8–14 天｜刑法（46 題）',
+          '第 15–21 天｜刑訴（39 題）　第 22–26 天｜法律倫理（38 題）',
+          '第 27–30 天｜國際公法（33 題）　第 31–34 天｜國際私法（34 題）',
+          '第 35–51 天｜新題結束，17 天全部給錯題第一輪與弱科補強'],
+   check:'任一主科正確率低於 65% → 春季的週一優先給它。',
+   warn:'不要為了追進度跳過詳解。刷完沒消化等於沒刷。'},
 
-  {id:4,name:'春季學期',start:'2027-02-15',end:'2027-06-04',tag:'在校・半推進',len:'16 週（扣掉期末考期，實際 13 週）',
-   goal:'比秋季多一天：<b>週一全天沒課</b>。那是整學期最大的一塊，任何理由都不要動它。',
-   rhythm:[['週一（全天沒課）','<b>主攻日</b>：錯題第二輪（TaiLexi「練習錯題」），約 4 小時，照全職期的日表走'],
+  {id:4,name:'春季學期',start:'2027-02-15',end:'2027-06-04',tag:'在校・半推進',len:'16 週（實際 13 週）',
+   one:'週一全天沒課，那是整學期最大的一塊。刷完剩下的小科。',
+   goal:'比秋季多一天可用。刷題排在週一和週六，其餘照秋季的節奏走。',
+   drill:'保險 138 ＋ 法英 207 ＋ 票據 135 ＋ 證交 117 ＋ 強執 111 ＝ <b>708 題</b>，每個刷題日約 27–35 題',
+   rhythm:[['週一（全天沒課）','主攻日：當週刷題量＋錯題第二輪，約 4 小時'],
            ['週二～週五','默寫 10 條。其餘＝上課＋課業'],
-           ['週六','刷題；<b>模考日</b>照真實四卷節次（09:00–17:40）自己計時'],
-           ['週日上午','刷題／錯題；下午休息']],
-   weeks:['<b>全真模考三場：4/3、4/24、5/8</b>（週六）。用 TaiLexi「真分科」＋「<b>整卷後詳解</b>」模式，照真實時間，中途不查書。',
-          '最後一場提前到 5/8，是因為 5/15 起就是期末考期了。',
-          '<b>模考後兩天專做檢討</b>：寫一頁只回答一個問題——<b>哪一類在流血？</b>觀念錯 → 回去讀那章；看錯題目 → 練圈「非／不／下列何者」；時間不夠 → 練跳題。<b>一次只修一項。</b>'],
-   check:'4 月報名時，用應考須知<b>核對配分有沒有調整</b>，並確認二試選試填的是智慧財產法。報告要在 <b>5/14 前</b>全部交完。',
-   warn:'16 週裡最後 3 週（5/15–6/4）是期末考期，司律排 0 → <b>實際只有 13 週</b>。考完 6/4，隔天 6/5 就進暑假衝刺，中間沒有緩衝——所以報告一定要在 5/14 前清完。'},
+           ['週六','刷題；模考日改照真實四卷節次計時'],
+           ['週日上午','錯題；下午休息']],
+   weeks:['第 1–2 週保險法／3–5 週法學英文／6–7 週票據法／8–9 週證交法／10–11 週強制執行。',
+          '第 12–13 週新題結束，全部轉錯題第二輪。',
+          '全真模考三場：4/3、4/24、5/8（週六），用「真分科」＋「整卷後詳解」。'],
+   check:'4 月報名時核對應考須知的配分，並確認二試選試填智慧財產法。',
+   warn:'最後 3 週（5/15–6/4）是期末考期，司律排 0。報告要在 5/14 前清完。'},
 
   {id:5,name:'暑假衝刺',start:'2027-06-05',end:dayBefore(OWL_DATE),tag:'全職',len:'8 週',
-   goal:'從「還在學」切換到「只在修」。這 8 週不再增加知識面積，只把已經有的東西練到能在考場上取出來。',
-   rhythm:[['前 4 週・每週六','<b>自辦全真模考</b>，照 09:00–17:40 四卷節次。TaiLexi 開「真分科」＋「整卷後詳解」'],
-           ['模考後兩天','專做檢討：寫一頁「哪一類在流血」，下週只修那一項'],
-           ['其餘日','刷題＋弱科加強（照全職期日表）'],
-           ['後 2 週','<b>封盤</b>：不碰任何新教材。只有錯題本第三輪＋272 條高頻條文速讀'],
-           ['考前 7 天','條文＋錯題本，<b>午餐改成 12:40–14:00</b>，作息整個調成考試時間']],
-   weeks:['<b>沒有模考班不影響。</b>模考的核心不是有人監考，是三件事：照真實節次時間、一次寫完不查書、事後才對答案——這三件你自己都做得到。',
-          '模考真正在練的是<b>體力分配</b>：09:00 撐到 17:40，最後一卷（第四卷六科雜貨店）你還要能算票據法。'],
-   check:'封盤後如果還很想讀新東西，那是焦慮不是需求——去睡覺。',
-   warn:'考前 7 天把午餐往後推到 12:40。真實考場午休就是 12:40–14:00，你平常 12:00 吃飯，考當天最大分數的第三卷（民法 100＋民訴 60）開始前會已經餓過頭。'},
+   one:'不排新題了。只有模考、錯題第三輪、封盤。',
+   goal:'第一輪 3,613 題在春季就跑完了，這 8 週不再增加知識面積，只把已經有的練到能在考場取出來。',
+   drill:'<b>不排新題</b>。全部是模考與錯題第三輪。',
+   rhythm:[['前 4 週・每週六','自辦全真模考，照 09:00–17:40 四卷節次'],
+           ['模考後兩天','檢討：寫一頁「哪一類在流血」，下週只修那一項'],
+           ['其餘日','錯題第三輪＋弱科加強'],
+           ['後 2 週','封盤：不碰任何新教材，只有錯題本與 272 條高頻條文'],
+           ['考前 7 天','午餐改成 12:40–14:00，作息整個調成考試時間']],
+   weeks:['沒有模考班不影響。模考練的是體力分配和「不確定也要往下走」，自己計時一樣練得到。'],
+   check:'封盤後還很想讀新東西，那是焦慮不是需求——去睡覺。',
+   warn:'考前 7 天把午餐往後推到 12:40，對齊真實考場的午休。'},
 
   {id:'owl',name:'O.W.L. 一試',start:OWL_DATE,end:OWL_DATE,tag:'考試',len:'一天四卷',
-   goal:'一天四卷，600 分，全部單選、每題 2 分。取全程到考人數<b>前 33%</b>——你不用考滿分，你要贏三分之二的人。',
-   rhythm:OWL_PAPERS.map(p=>[p.t.replace('–','–'),`<b>${p.no}</b>　${p.subs.map(s=>s[0]+' '+s[1]).join('、')}`]),
+   one:'一天四卷、600 分、全部單選，取前 33%。',
+   goal:'你不用考滿分，你要贏三分之二的人。',
+   rhythm:OWL_PAPERS.map(p=>[p.t,`<b>${p.no}</b>　${p.subs.map(s=>s[0]+' '+s[1]).join('、')}`]),
    weeks:[],
-   warn:'午休是 12:40–14:00。飛行課（時間分配）——不要在一題上盤旋，不會的先跳過。'},
+   warn:'午休是 12:40–14:00。不會的先跳過，不要在一題上盤旋。'},
 
-  {id:6,name:'N.E.W.T. 特訓',start:'2027-08-15',end:dayBefore(NEWT_DATE),tag:'半在校',len:'10 週',
-   goal:'從<b>選擇題腦</b>切換到<b>申論腦</b>。好消息是真正的新東西只有兩樣：<b>憲法申論</b>和<b>國文作文</b>；其他科目一試都讀過了，差別只在輸出方式。',
-   rhythm:[['第 1–2 週','建各科<b>答題模板</b>：爭點→法條→學說／實務→涵攝→結論。每科一張 A4'],
-           ['第 3–7 週','<b>每天一題實寫</b>（用電腦，二試是電腦作答）。每週輪一科，<b>憲法排兩週</b>'],
-           ['每週一次','挑<b>一篇</b>送 TaiLexi AI 批改，重點看「<b>改寫示範</b>」——把它的句型抄進自己的模板'],
-           ['第 8 週','<b>週六＋週日連兩天全真模考</b>，照 10/24–10/25 的真實節次'],
-           ['第 9–10 週','國文作文 3 篇 ＋ 智財〈鍊金術〉收尾 ＋ 模板背熟']],
-   weeks:['<b>申論的三個現實：</b>① 除國文外都<b>附發法條</b> → 分數不在背誦，在論述結構與涵攝。② 刑法、商事法常要求「附具個人意見」→ 每個爭點備一句「本文認為……，理由是……」。③ 每題有 10 頁作答空間 → <b>寫得少不會被同情。</b>',
-          '國文作文是全年<b>唯一沒有任何覆蓋</b>的科目，100 分。不要拖到最後三天。'],
-   check:'過關標準：每科都有一張<b>能默寫出來</b>的 A4 模板。',
-   warn:'⚠️ <b>全程用電腦練</b>——二試是電腦作答，順便把打字速度練起來。免費 AI 批改每月只有 2 次，所以每週只送一篇。批改紀錄是<b>本機儲存</b>，換瀏覽器或清快取就消失，批改完立刻複製到自己的筆記。'},
+  {id:6,name:'N.E.W.T. 特訓',start:'2027-08-01',end:dayBefore(NEWT_DATE),tag:'半在校',len:'12 週',
+   one:'一試隔天就開始。從選擇題腦切換到申論腦。',
+   goal:'真正的新東西只有兩樣：憲法申論和國文作文。其他科目一試都讀過了，差別只在輸出方式。',
+   drill:'不刷選擇題。改成<b>每天一題申論實寫</b>（用電腦，二試是電腦作答）。',
+   rhythm:[['第 1–2 週','建各科答題模板：爭點→法條→學說／實務→涵攝→結論，每科一張 A4'],
+           ['第 3–9 週','每天一題實寫。憲法排兩週、民法民訴排兩週'],
+           ['每週一次','挑一篇送 TaiLexi AI 批改，重點看「改寫示範」'],
+           ['第 10 週','週六＋週日連兩天全真模考，照 10/24–10/25 節次'],
+           ['第 11–12 週','國文作文 3 篇＋智財收尾＋模板背熟']],
+   weeks:['除國文外都附發法條，分數在論述結構與涵攝，不在背誦。',
+          '每題有 10 頁作答空間——寫得少不會被同情。'],
+   check:'每科都有一張能默寫出來的 A4 模板。',
+   warn:'免費 AI 批改每月只有 2 次，所以每週只送一篇。批改紀錄是本機儲存，清快取就沒了。'},
 
   {id:'newt',name:'N.E.W.T. 二試',start:NEWT_DATE,end:NEWT_END_DATE,tag:'考試',len:'兩天七節',
-   goal:'兩天七節，1000 分，申論<b>電腦作答</b>。除國文外都附發法條。',
+   one:'兩天七節、1000 分、申論電腦作答。',
+   goal:'除國文外都附發法條。這不是知識的考試，是體力的考試。',
    rhythm:NEWT_PAPERS.map(p=>[`${p.day===1?'10/24':'10/25'} ${p.t}`,`${p.name}　<b>${p.pts} 分</b>`]),
    weeks:[],
-   warn:'兩天都是 08:00 寫到 18:40。這不是知識的考試，是體力的考試。'}
+   warn:'兩天都是 08:00 寫到 18:40。'}
 ];
 function currentPhase(){
   const now=d(todayStr());
@@ -1918,7 +1968,7 @@ const SPRING_STUDY={
 };
 const SMALL_ROTATION_FALL=['國際公法〈國際巫聯〉','國際私法〈天文學〉','強制執行〈奇獸管束〉','法律倫理〈不可破的誓言〉','法學英文〈古代魔文〉'];
 const SMALL_ROTATION_SPRING=['國際公法〈國際巫聯〉','強制執行〈奇獸管束〉','法律倫理〈不可破的誓言〉','法學英文〈古代魔文〉'];
-const NEWT_ROTATION=['憲法〈魔法理論〉','憲法〈魔法理論〉第二週','民法〈變形學〉＋民訴〈魔咒學〉','刑法〈黑魔法防禦術〉＋刑訴〈決鬥課〉','行政法〈魔藥學〉＋商事法〈算術占卜〉'];
+const NEWT_ROTATION=['憲法〈魔法理論〉','憲法〈魔法理論〉第二週','行政法〈魔藥學〉','民法〈變形學〉＋民訴〈魔咒學〉','民法〈變形學〉＋民訴〈魔咒學〉第二週','刑法〈黑魔法防禦術〉＋刑訴〈決鬥課〉','商事法〈算術占卜〉（公司・保險・證交）'];
 
 /* ═══ 刷題排程 ═══
    資料來源：TaiLexi 102–115 各科「未做題數」（單科題，不含跨科題）。
@@ -2179,9 +2229,9 @@ function getTodayPlan(){
     note='二試除國文外都附發法條——分數在論述結構與涵攝，不在背誦。⚠️ 全部用電腦練，二試是電腦作答。';
     if(w<2){ focus='建各科答題模板（每科一張 A4）';
       segments=fulltimeSegs('答題模板：爭點→法條→學說／實務→涵攝→結論','模板（續）＋讀判決抄骨架','條文＋立法理由整理');
-    } else if(w<7){ const s=NEWT_ROTATION[w-2]; focus=`本週主攻：${s}（每天一題實寫）`;
+    } else if(w<9){ const s=NEWT_ROTATION[Math.min(w-2,NEWT_ROTATION.length-1)]; focus=`本週主攻：${s}（每天一題實寫）`;
       segments=fulltimeSegs(`一題實寫（用電腦）：${s}`,`檢討＋更新模板：${s}`,`條文＋判決骨架：${s}`);
-    } else if(w===7){
+    } else if(w===9){
       if(wd===6||wd===0){
         const md=wd===6?1:2;
         focus=`兩天連續全真模考・第${md==1?'一':'二'}天（照 10/24–10/25 真實節次）`;
@@ -2200,6 +2250,11 @@ function getTodayPlan(){
     if(cp.id==='owl'){
       focus='O.W.L. 一試';
       segments=owlMockSegs().filter(s=>s.kind!=='study');
+    } else if(cp.id==='newt' && tStr>NEWT_END_DATE){
+      // 二試考完之後：不要再顯示考試節次
+      focus='完賽';
+      note='兩試都考完了。咒立停——所有效果解除，不要對答案。';
+      segments=[{t:'今天',label:'去做一件跟考試完全無關的事。你準備了 440 天。',kind:'rest'}];
     } else if(cp.id==='newt'){
       const md = tStr===NEWT_DATE? 1 : 2;
       focus=`N.E.W.T. 二試・第${md===1?'一':'二'}天`;
@@ -2468,20 +2523,27 @@ function renderTimeline(){
     const cur=cp&&cp.id===p.id;
     const done=!cur && today>d(p.end);
     const span=p.start===p.end? p.start : `${p.start} ~ ${p.end}`;
-    const len= p.len? `　·　${p.len}` : '';
+    // 第一眼只給：階段名、期間、一句話、刷幾題。細節收在「展開」裡。
     let h=`<div class="phase ${cur?'current':''}${done?' done':''}">
-      <div class="ph-title">${p.name}（${p.tag}）</div>
-      <div class="ph-date">${span}${len}</div>`;
-    if(p.goal)   h+=`<div class="ph-goal">${p.goal}</div>`;
-    if(p.rhythm&&p.rhythm.length){
-      h+=`<div class="ph-sub">${p.tag==='考試'?'當天節次':'每天／每週怎麼跑'}</div>`
-       + `<table class="ph-rhythm">${p.rhythm.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>`;
+      <div class="ph-title">${p.name}</div>
+      <div class="ph-date">${span}${p.len?`　·　${p.len}`:''}　·　${p.tag}</div>`;
+    if(p.one)   h+=`<div class="ph-one">${p.one}</div>`;
+    if(p.drill) h+=`<div class="ph-drill"><span>刷題量</span>${p.drill}</div>`;
+    const hasDetail = (p.rhythm&&p.rhythm.length)||(p.weeks&&p.weeks.length)||p.check||p.warn;
+    if(hasDetail){
+      h+=`<details class="ph-more"${cur?' open':''}><summary>展開細節</summary><div class="ph-more-body">`;
+      if(p.goal) h+=`<div class="ph-goal">${p.goal}</div>`;
+      if(p.rhythm&&p.rhythm.length){
+        h+=`<div class="ph-sub">${p.tag==='考試'?'當天節次':'每天／每週怎麼跑'}</div>`
+         + `<table class="ph-rhythm">${p.rhythm.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>`;
+      }
+      if(p.weeks&&p.weeks.length){
+        h+=`<div class="ph-sub">重點</div>`+p.weeks.map(x=>`<div class="week-focus">${x}</div>`).join('');
+      }
+      if(p.check) h+=`<div class="ph-check">✓ ${p.check}</div>`;
+      if(p.warn)  h+=`<div class="ph-warn">⚠️ ${p.warn}</div>`;
+      h+=`</div></details>`;
     }
-    if(p.weeks&&p.weeks.length){
-      h+=`<div class="ph-sub">重點</div>`+p.weeks.map(x=>`<div class="week-focus">${x}</div>`).join('');
-    }
-    if(p.check) h+=`<div class="ph-check">✓ ${p.check}</div>`;
-    if(p.warn)  h+=`<div class="ph-warn">⚠️ ${p.warn}</div>`;
     return h+'</div>';
   }).join('');
 }
@@ -3741,6 +3803,41 @@ document.getElementById('catPet').addEventListener('click',()=>{
     setTimeout(()=>el.remove(),1300);
   }
 });
+/* 換成自己的貓：存在瀏覽器裡（縮到 240px 才存，不會塞爆 localStorage） */
+function applyCatPhoto(){
+  const src=LS.get('hp_cat_photo',null);
+  const img=document.getElementById('catPhoto'), svg=document.getElementById('catSvg');
+  if(!img||!svg) return;
+  if(src){ img.src=src; img.style.display='block'; svg.style.display='none'; }
+  else { img.removeAttribute('src'); img.style.display='none'; svg.style.display='block'; }
+}
+document.getElementById('catPhotoBtn').addEventListener('click',()=>{
+  if(LS.get('hp_cat_photo',null)){
+    if(confirm('改回手繪插畫？')){ LS.del('hp_cat_photo'); applyCatPhoto(); toast('已改回插畫'); }
+    return;
+  }
+  document.getElementById('catPhotoFile').click();
+});
+document.getElementById('catPhotoFile').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    const im=new Image();
+    im.onload=()=>{
+      const S=240, c=document.createElement('canvas'); c.width=c.height=S;
+      const ctx=c.getContext('2d');
+      // 置中裁成正方形
+      const side=Math.min(im.width,im.height);
+      ctx.drawImage(im,(im.width-side)/2,(im.height-side)/2,side,side,0,0,S,S);
+      LS.set('hp_cat_photo', c.toDataURL('image/jpeg',0.82));
+      applyCatPhoto(); toast('🐈 換好了');
+    };
+    im.src=rd.result;
+  };
+  rd.readAsDataURL(f);
+  e.target.value='';
+});
+
 /* 改名：站內輸入，不用瀏覽器的 prompt */
 function startRename(){
   const line=document.querySelector('.cat-nameline');
