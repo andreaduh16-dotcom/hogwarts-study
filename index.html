@@ -618,6 +618,15 @@ details.ph-more>summary:hover{color:var(--acc,#4fae74);}
 .hm{width:12px; height:12px; border-radius:3px; background:rgba(255,255,255,.06);}
 .hm.l1{background:#2c6b45;} .hm.l2{background:#3d8f5e;} .hm.l3{background:#5cc084; box-shadow:0 0 6px rgba(92,192,132,.5);}
 .hm.future{background:transparent; border:1px dashed rgba(255,255,255,.07);}
+/* 上課日：沒排司律進度，自動過關——用外框跟實心的「有做」區分開 */
+.hm.auto{background:rgba(44,107,69,.22); box-shadow:inset 0 0 0 1px rgba(92,192,132,.45);}
+/* 上課日的今日清單 */
+.auto-pass{display:flex; gap:11px; align-items:flex-start; padding:13px 14px;
+  background:rgba(92,192,132,.07); border:1px solid rgba(92,192,132,.22); border-radius:11px; list-style:none;}
+.auto-pass .ap-tick{flex:0 0 auto; width:22px; height:22px; border-radius:50%; background:rgba(92,192,132,.2);
+  color:#7fd6a3; display:grid; place-items:center; font-size:13px; font-weight:700;}
+.auto-pass b{display:block; margin-bottom:3px;}
+.auto-pass .dim{font-size:12.5px; line-height:1.6;}
 .hm-legend{display:flex; gap:11px; font-size:10.5px; color:var(--dim); margin-top:8px; flex-wrap:wrap;}
 .hm-legend span{display:inline-flex; align-items:center; gap:4px;}
 .hm-legend i{width:10px; height:10px; border-radius:3px; display:inline-block;}
@@ -1179,7 +1188,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     <!-- 今日任務（唯一羊皮紙） -->
     <div class="card parch" id="taskCard">
       <h2>📋 今日任務 <span class="dim" id="taskModeTag"></span></h2>
-      <p class="dim" style="margin:0 0 10px;">勾完<b>第一項（默寫 10 條）</b>就算今天過關——連續天數、巧克力蛙、故事都照算。其餘是加分。</p>
+      <p class="dim" style="margin:0 0 10px;">勾完<b>第一項</b>就算今天過關——連續天數、巧克力蛙、故事都照算。其餘是加分。<br>上課日不排司律進度，<b>自動過關</b>：那天的課業本身就是一試的 130 分。</p>
       <div class="progressbar"><div id="dayProgress" style="width:0%"></div></div>
       <ul class="checklist" id="dayChecklist"></ul>
 
@@ -1347,6 +1356,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
         <span><i style="background:#5cc084;"></i>全部做完</span>
         <span><i style="background:#3d8f5e;"></i>做一半以上</span>
         <span><i style="background:#2c6b45;"></i>只做最低標準</span>
+        <span><i style="background:rgba(44,107,69,.22); box-shadow:inset 0 0 0 1px rgba(92,192,132,.45);"></i>上課日（自動）</span>
         <span><i style="background:rgba(255,255,255,.06);"></i>沒過關</span>
       </div>
     </div>
@@ -1566,7 +1576,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     </div>
     <div class="vow-plaque">
       <div class="vow-title">⚡ 三個不可破的誓言 ⚡</div>
-      <div class="vow-item">① 每天默寫 10 條條文，就算那天只讀了 20 分鐘</div>
+      <div class="vow-item">① 每天勾到第一項，就算那天只讀了 20 分鐘</div>
       <div class="vow-item">② 錯題不隔夜，今天的今天入本</div>
       <div class="vow-item">③ 週日回顧不跳過</div>
       <div class="vow-rule">
@@ -1724,10 +1734,47 @@ function dayEarnedFromChecklist(o){
   }
   return o.completed?10:0;
 }
+/* ═══ 上課日自動過關 ═══
+   拿掉默寫之後，在校期的平日沒有任何司律項目——那是刻意的：
+   你在修的課本身就是一試的 130 分。所以那些日子自動算過關，
+   連續天數不會斷，故事照推進。判定不需要儲存，任何日期都能重算。 */
+const _autoPassMemo={};
+function autoPassDay(ds){
+  if(_autoPassMemo[ds]!==undefined) return _autoPassMemo[ds];
+  return _autoPassMemo[ds]=_autoPassCalc(ds);
+}
+function _autoPassCalc(ds){
+  if(ds<PHASES[0].start) return false;
+  const p=PHASES.find(x=>ds>=x.start&&ds<=x.end);
+  if(!p||(p.id!==2&&p.id!==4)) return false;        // 只有在校期
+  if(MOCK_DATES.includes(ds)) return false;         // 模考日要真的去考
+  const examStart = p.id===2? FALL_EXAM_START : SPRING_EXAM_START;
+  if(ds>=examStart) return false;                   // 期末考期有「準備期末考」那一項
+  const plan=getTodayPlan(ds);
+  const hasClass=plan.segments.some(s=>s.kind==='class');
+  const hasWork =plan.segments.some(s=>s.kind==='study'||s.kind==='exam');
+  return hasClass && !hasWork;                      // 有課、且那天沒排任何司律項目 = 自動過關
+}
+/* 這一天算不算過關：自己勾的，或上課日自動算 */
+function dayPassed(ds){ return getDayObj(ds).completed || autoPassDay(ds); }
+/* 所有算過關的日期（含沒有紀錄、但自動過關的上課日）。
+   會被連續獎勵與故事解鎖重複呼叫，所以照今天的日期快取一份。 */
+let _passedCache={key:null,val:null};
+function passedDates(){
+  const today=todayStr();
+  const key=today+'|'+allDayDates().length;
+  if(_passedCache.key===key) return _passedCache.val;
+  const set=new Set(allDayDates().filter(dt=>getDayObj(dt).completed));
+  for(let ds=PHASES[0].start; ds<=today; ds=addDays(ds,1)) if(autoPassDay(ds)) set.add(ds);
+  const val=[...set].sort();
+  _passedCache={key,val};
+  return val;
+}
+
 function computeStreakCurrent(){
   let count=0, probe=todayStr();
-  if(!getDayObj(probe).completed) probe=todayStr(-1);
-  while(getDayObj(probe).completed){
+  if(!dayPassed(probe)) probe=todayStr(-1);
+  while(dayPassed(probe)){
     count++;
     probe=toLocalDateStr(new Date(d(probe).getTime()-86400000+12*3600000));
     if(count>3650) break;
@@ -1735,7 +1782,7 @@ function computeStreakCurrent(){
   return count;
 }
 function computeStreakBonus(){
-  const done=allDayDates().filter(dt=>getDayObj(dt).completed);
+  const done=passedDates();
   let bonus=0, run=0, prev=null;
   for(const dt of done){
     run=(prev && dateDiff(prev,dt)===1)? run+1 : 1;
@@ -1932,7 +1979,7 @@ function getBalance(){ return computeEarnedTotal()+computeBodyBonus()-computeSpe
 
 /* ═══ 學院盃：每月結算，三個對手學院自己會跑分 ═══ */
 /* 對手強度是照「你照計畫做得到的分數」校準的：
-   平日只默寫 = 10／天，週末加錯題 ≈ 15，連續 7 天 +30 → 每日平均約 15.7。
+   平日自動過關 = 0／天，週末刷題＋錯題 ≈ 15，連續 7 天 +30 → 每日平均約 15.7。
    對手設在 11–15，所以：穩定做到最低標＝名列前茅；再勾課堂複習＝穩坐第一；
    斷線就會被超車。（舊值 29–35 是照每週 33 小時的舊計畫設的，贏不了。） */
 const RIVALS=[
@@ -2058,8 +2105,7 @@ const NEWT_PAPERS=[
 ];
 
 const FULLTIME_RHYTHM=[
-  ['09:00–09:15','默寫 10 條條文'],
-  ['09:15–11:00','主攻科目：讀體系／攤平'],
+  ['09:00–11:00','主攻科目：讀體系／攤平'],
   ['11:00–11:15','休息，離開位子'],
   ['11:15–12:00','刷題——<b>就是上午讀的那一科</b>（TaiLexi 即時詳解）'],
   ['12:00–13:00','午餐'],
@@ -2083,15 +2129,15 @@ const PHASES=[
    weekShort:['憲法〈魔法理論〉全科一輪','民法〈變形學〉親屬繼承','民法〈變形學〉攤平＋體系表定稿','預習秋季課程（民訴一為主）']},
 
   {id:2,name:'秋季學期',start:'2026-09-07',end:'2026-12-25',tag:'在校・維持',len:'16 週（實際 13 週）',
-   one:'平日只默寫 10 條，刷題全部集中在週六和週日上午。',
+   one:'平日不排司律進度——課業本身就是那 130 分。刷題全部集中在週六和週日上午。',
    goal:'定位是「不要退步」，不是「往前推」。你在修的課（民訴、公司法、保險法、國私）本身就是一試的 130 分，上課就是在讀司律。',
    drill:'民訴 363 題（第 1–8 週）＋ 公司法 213 題（第 9–13 週）＝ <b>576 題</b>，每個刷題日約 22 題',
-   rhythm:[['週一～週五','只做默寫 10 條。其餘時間＝上課＋課業'],
+   rhythm:[['週一～週五','不排司律進度，自動過關。時間全給上課＋課業'],
            ['週六','憲法第二輪（讀釋字與憲判字的理由書）＋當週刷題量'],
            ['週日上午','刷題＋當天錯題入本'],
-           ['週日下午','完全休息，連默寫都不用']],
+           ['週日下午','完全休息，這是排定的']],
    weeks:['刷題只排在週六與週日上午——平日不排，因為排了也做不到。',
-          '默寫 10 條的來源是 TaiLexi 的 272 條高頻法條，27 天跑一輪。'],
+          '在校期的司律動作只有週末——平日把課修好，就是最有效率的一試準備。'],
    check:'報告在 12/4 前交完。',
    warn:'最後 3 週（12/5–12/25）是期末考期，司律排 0，所以實際只有 13 週。'},
 
@@ -2112,7 +2158,7 @@ const PHASES=[
    goal:'比秋季多一天可用。刷題排在週一和週六，其餘照秋季的節奏走。',
    drill:'保險 138 ＋ 法英 207 ＋ 票據 135 ＋ 證交 117 ＋ 強執 111 ＝ <b>708 題</b>，每個刷題日約 27–35 題',
    rhythm:[['週一（全天沒課）','主攻日：當週刷題量＋錯題第二輪，約 4 小時'],
-           ['週二～週五','默寫 10 條。其餘＝上課＋課業'],
+           ['週二～週五','不排司律進度，自動過關。其餘＝上課＋課業'],
            ['週六','刷題；模考日改照真實四卷節次計時'],
            ['週日上午','錯題；下午休息']],
    weeks:['第 1–2 週保險法／3–5 週法學英文／6–7 週票據法／8–9 週證交法／10–11 週強制執行。',
@@ -2152,7 +2198,7 @@ const PHASES=[
            ['第 11–12 週','國文作文 3 篇＋智財收尾＋模板背熟']],
    weeks:['除國文外都附發法條，分數在論述結構與涵攝，不在背誦。',
           '每題有 10 頁作答空間——寫得少不會被同情。'],
-   check:'每科都有一張能默寫出來的 A4 模板。',
+   check:'每科都有一張能空手畫出來的 A4 模板。',
    warn:'批改紀錄是本機儲存，換瀏覽器或清快取就消失——每天批改完立刻把「改寫示範」複製到自己的模板筆記，不要留在 TaiLexi 那邊。'},
 
   {id:'newt',name:'N.E.W.T. 二試',start:NEWT_DATE,end:NEWT_END_DATE,tag:'考試',len:'兩天七節',
@@ -2162,13 +2208,14 @@ const PHASES=[
    weeks:[],
    warn:'兩天都是 08:00 寫到 18:40。'}
 ];
-function currentPhase(){
-  const now=d(todayStr());
+function currentPhase(ds){
+  const now=d(ds||todayStr());
   for(const p of PHASES) if(now>=d(p.start)&&now<=d(p.end)) return p;
   if(now<d(PHASES[0].start)) return null;
   return PHASES[PHASES.length-1];
 }
-function weekIdx(p){ return Math.floor(daysBetween(d(mondayOf(p.start)), d(todayStr()))/7); }
+/* 第幾週。一定要傳日期進來——不然任意日期的計畫會用到「今天」的週次 */
+function weekIdx(p,ds){ return Math.floor(daysBetween(d(mondayOf(p.start)), d(ds||todayStr()))/7); }
 
 /* ═══ 咒法對照 ═══ */
 const COURSE_SPELL={
@@ -2229,8 +2276,8 @@ const SPRING_CLASSES={
   6:[],0:[]
 };
 /* 有課的日子不排司律自習——那些時間會被上課與課業吃掉。
-   平日只有默寫 10 條，其餘時間的課業本身就是那 130 分。 */
-const CLASSDAY=[{t:'10 分鐘',x:'默寫 10 條條文（今天的司律就這一件）'}];
+   平日不排司律進度，其餘時間的課業本身就是那 130 分。 */
+const CLASSDAY=[];   // 上課日不排司律進度——課業本身就是那 130 分，自動算過關
 const FALL_STUDY={
   1:CLASSDAY, 2:CLASSDAY, 3:CLASSDAY, 4:CLASSDAY, 5:CLASSDAY,
   6:[{t:'09:30–13:00',x:'憲法〈魔法理論〉主攻——一段做完，不切塊'}],
@@ -2343,7 +2390,7 @@ function todayDrill(cp,tStr){
   const sc=DRILL_SCHOOL[cp.id];
   if(sc){
     if(!sc.days.includes(d(tStr).getDay())) return null;
-    const w=weekIdx(cp);
+    const w=weekIdx(cp,tStr);
     const b=sc.blocks.find(x=>w>=x.w0&&w<=x.w1);
     if(!b) return null;
     const days=blockDays(cp,b,sc);
@@ -2369,8 +2416,7 @@ function segRange(t){
 /* 全職期：一天一段，不切成上午／下午／晚上三塊——但吃飯是身體需要，不是切塊，中午照樣留給自己。晚上也留給自己。 */
 function fulltimeSegs(main, drill, wrap){
   return [
-    {t:'09:00–09:15', label:'默寫 10 條條文', kind:'study'},
-    {t:'09:15–11:00', label:main,  kind:'study'},
+    {t:'09:00–11:00', label:main,  kind:'study'},
     {t:'11:00–11:15', label:'休息，離開位子', kind:'rest'},
     {t:'11:15–12:00', label:drill, kind:'study'},
     {t:'12:00–13:00', label:'午餐', kind:'rest'},
@@ -2379,17 +2425,18 @@ function fulltimeSegs(main, drill, wrap){
     {t:'14:20–14:50', label:wrap,  kind:'study'}
   ];
 }
-function getTodayPlan(){
-  const cp=currentPhase(), tStr=todayStr(), wd=d(tStr).getDay();
+/* 傳日期就算那天的計畫，不傳就是今天——autoPassDay() 需要能算任意一天 */
+function getTodayPlan(ds){
+  const tStr=ds||todayStr(), cp=currentPhase(tStr), wd=d(tStr).getDay();
   let segments=[], focus='', note='', classes=[];
 
   if(!cp){
     focus='檢事官最後衝刺';
     note='8/10 檢事官考完、8/11 起這頁會自動切換成司律模式（第一週：憲法〈魔法理論〉全科一輪）。';
-    segments=fulltimeSegs('申論實寫／體系複習','刷題（檢事官歷年題）','錯題本＋條文默寫加強');
+    segments=fulltimeSegs('申論實寫／體系複習','刷題（檢事官歷年題）','錯題本整理');
   }
   else if(cp.id===1){
-    const w=Math.min(weekIdx(cp), cp.weekShort.length-1);
+    const w=Math.min(weekIdx(cp,tStr), cp.weekShort.length-1);
     focus=`第 ${w+1} 週主攻：${cp.weekShort[w]}`;
     if(w===3){
       // 最後一週：預習秋季課程，但民法的刷題量還沒清完，一起排進來
@@ -2416,10 +2463,10 @@ function getTodayPlan(){
     classes=(isFall?FALL_CLASSES:SPRING_CLASSES)[wd]||[];
     let study=((isFall?FALL_STUDY:SPRING_STUDY)[wd]||[]).slice();
     const rot=isFall?SMALL_ROTATION_FALL:SMALL_ROTATION_SPRING;
-    const w1=weekIdx(cp)+1;
+    const w1=weekIdx(cp,tStr)+1;
     if(wd===0){
       // 週日上午照表（刷題／錯題），下午是排定的休息
-      segments.push({t:'下午',label:'完全休息——連默寫都不用。這是排定的，不是偷懶',kind:'rest'});
+      segments.push({t:'下午',label:'完全休息——這是排定的，不是偷懶',kind:'rest'});
     }
     // ── 期末考期（期末週＋往前兩週）：司律進度排 0 ──
     const examStart  = isFall? FALL_EXAM_START  : SPRING_EXAM_START;
@@ -2431,7 +2478,6 @@ function getTodayPlan(){
       if(wd===0) study.push({t:'下午',x:'休息'});
       segments=segments.concat(
         classes.map(c=>({t:c.t,label:`上課：${csp(c.n)}${c.room||c.prof?`（${[c.room,c.prof].filter(Boolean).join('・')}）`:''}`,kind:'class'})),
-        [{t:'10 分鐘',label:'默寫 10 條條文（期末期間唯一的司律動作）',kind:'study'}],
         study.map(s=>({t:s.t,label:s.x,kind:'exam'}))
       );
       focus = isFinalsWeek? '期末週——司律進度 0' : '期末考期——司律進度 0';
@@ -2458,7 +2504,7 @@ function getTodayPlan(){
       const hot=drS.hot? `，先刷「${drS.hot}」`:'';
       study.push({t:'刷題', x:`${esp(drS.subj)} ${drS.n} 題${hot}（累計 ${Math.min(drS.done+drS.n,drS.total)}/${drS.total}）`});
     }
-    if(MOCK_DATES.includes(todayStr(-1))) study.unshift({t:'優先',x:'昨天模考的檢討：寫一頁「哪一類在流血」'});
+    if(MOCK_DATES.includes(addDays(tStr,-1))) study.unshift({t:'優先',x:'昨天模考的檢討：寫一頁「哪一類在流血」'});
     segments=segments.concat(
       classes.map(c=>({t:c.t,label:`上課：${csp(c.n)}${c.room||c.prof?`（${[c.room,c.prof].filter(Boolean).join('・')}）`:''}`,kind:'class'})),
       study.map(s=>({t:s.t,label:(s.exam?'':'自習：')+s.x,kind:s.exam?'exam':'study'}))
@@ -2469,7 +2515,7 @@ function getTodayPlan(){
       note=`⚠️ 再 ${daysToExam} 天進入期末考期（${examStart} 起三週司律排 0）。報告要在那之前交完。`;
     } else if(drS){
       note=`今天刷 ${esp(drS.subj)} ${drS.n} 題（這一科共 ${drS.total} 題，第 ${drS.dayNo}/${drS.days} 個刷題日）。`
-         + '在校期只有這幾天有刷題量，平日照樣只默寫 10 條。';
+         + '在校期只有這幾天有刷題量，平日不排司律進度、自動過關。';
     } else if(classes.length){
       note='有課的日子不排司律自習。你的課業（民訴、商事法、國私、著作權、專利）本身就是那 130 分——不用有罪惡感。';
     } else if(!isFall){
@@ -2509,13 +2555,13 @@ function getTodayPlan(){
       note='作息照考試時間走，不碰新東西。⚠️ 這一週午餐改成 12:40–14:00——真正的考場午休就是這段（第二卷 12:40 結束、第三卷 14:00 開始），'
          + '你平常 12:00 吃飯，考當天會提前餓。現在開始調，胃才來得及跟上。';
       segments=[
-        {t:'09:00–10:30',label:'條文默寫＋錯題本速讀（照第一卷時間，養成這個時段就是清醒的）',kind:'study'},
+        {t:'09:00–10:30',label:'錯題本速讀（照第一卷時間，養成這個時段就是清醒的）',kind:'study'},
         {t:'10:30–12:40',label:'錯題本速讀（續）',kind:'study'},
         {t:'12:40–14:00',label:'午餐——照考試當天的午休時間吃',kind:'rest'},
         {t:'14:00–15:40',label:'條文速讀（照第三卷時間）',kind:'study'},
         {t:'15:40–17:40',label:'輕度複習，然後收工。早點睡比多讀一小時值錢',kind:'study'}
       ];
-    } else if(weekIdx(cp)>=4){
+    } else if(weekIdx(cp,tStr)>=4){
       focus='封盤期'; note='不碰任何新教材。';
       segments=fulltimeSegs('錯題本第三輪','條文速讀','錯題本＋條文（輪替）');
     } else {
@@ -2527,12 +2573,12 @@ function getTodayPlan(){
         note='不用模考班。TaiLexi 開「真分科」＋「整卷後詳解」，照下面的時間自己計時，中途不查書不暫停。'
            + '你在練的是體力分配——09:00 到 17:40 這一整天，最後一卷還要能算票據法。';
       }
-      else if(MOCK_DATES.includes(todayStr(-1))||MOCK_DATES.includes(todayStr(-2))) segments=fulltimeSegs('模考檢討（哪一類在流血）','弱項專修','錯題本＋條文');
+      else if(MOCK_DATES.includes(addDays(tStr,-1))||MOCK_DATES.includes(addDays(tStr,-2))) segments=fulltimeSegs('模考檢討（哪一類在流血）','弱項專修','錯題本＋條文');
       else segments=fulltimeSegs('刷題＋弱科加強','刷題（續）','錯題本＋條文');
     }
   }
   else if(cp.id===6){
-    const w=weekIdx(cp);
+    const w=weekIdx(cp,tStr);
     note='二試除國文外都附發法條——分數在論述結構與涵攝，不在背誦。⚠️ 全部用電腦練，二試是電腦作答。';
     if(w<2){ focus='建各科答題模板（每科一張 A4）';
       segments=fulltimeSegs('答題模板：爭點→法條→學說／實務→涵攝→結論','模板（續）＋讀判決抄骨架','條文＋立法理由整理');
@@ -2598,8 +2644,11 @@ function renderHero(){
   const st=getDayObj(todayStr());
   if(f.state==='done'||!f.seg){
     // 排程外的時間絕不趕人走——永遠給一個現在就能做的最小動作
-    tagEl.textContent = st.completed? '今天已經過關了' : '排程外的時間';
-    whatEl.textContent = st.completed
+    const auto=autoPassDay(todayStr());
+    tagEl.textContent = auto? '上課日' : st.completed? '今天已經過關了' : '排程外的時間';
+    whatEl.textContent = auto
+      ? '今天沒有另外排司律進度——去上課就是進度，這天自動過關。'
+      : st.completed
       ? '今天的份做完了。想再多做一點也可以，不做也很好。'
       : '現在開始也算數——開一個回合，做多少算多少。';
     whenEl.textContent = TODAY_PLAN.focus? '本階段：'+TODAY_PLAN.focus : '';
@@ -2618,11 +2667,13 @@ function renderRing(){
   const st=getDayObj(todayStr());
   const items=todayItems(), ck=st.items||{};
   const total=items.length, done=items.filter((_,i)=>ck[i]).length;
-  const pct= total? Math.round(done/total*100) : 0;
+  const auto= !total && autoPassDay(todayStr());
+  const pct= total? Math.round(done/total*100) : auto? 100 : 0;
   const ring=document.getElementById('dayRing');
   ring.style.setProperty('--p',pct);
   const txt=document.getElementById('ringTxt');
-  if(!total){ txt.textContent='—'; txt.style.fontSize='20px'; }
+  if(auto){ txt.textContent='✓'; txt.style.fontSize='26px'; }        // 上課日自動過關
+  else if(!total){ txt.textContent='—'; txt.style.fontSize='20px'; }
   else { txt.textContent=`${done}/${total}`; txt.style.fontSize=''; }
 }
 function renderTodayPlan(){
@@ -2642,16 +2693,16 @@ function renderTodayPlan(){
 /* ═══ 今日任務 ═══ */
 /* 一份清單就好，不再分電量。清單＝當天時間表裡「要動腦的那幾段」。 */
 function todayItems(){
-  const blocks=(TODAY_PLAN?TODAY_PLAN.segments:[])
-    .filter(s=>s.kind==='study'||s.kind==='exam')
-    .map(s=>`${s.t}｜${s.label.replace(/^自習：/,'')}`);
-  const hasDictation=blocks.some(b=>/默寫\s*10\s*條/.test(b));
-  return hasDictation? blocks : ['默寫 10 條條文', ...blocks];
+  const segs=(TODAY_PLAN?TODAY_PLAN.segments:[]);
+  return segs.filter(s=>s.kind==='study'||s.kind==='exam')
+             .map(s=>`${s.t}｜${s.label.replace(/^自習：/,'')}`);
+  // 上課日會是空陣列——那天靠 autoPassDay() 自動過關
 }
-/* 過關＝勾完第一項（默寫 10 條）。這是計畫的最低標準，也是低電量的出口。 */
+/* 過關＝勾完第一項；上課日沒有項目，由 autoPassDay() 自動算過關。 */
 function recomputeCompleted(st){
   const items=todayItems();
-  return items.length>0 && !!(st.items||{})[0];
+  if(!items.length) return autoPassDay(todayStr());   // 上課日沒項目＝自動過關
+  return !!(st.items||{})[0];
 }
 function syncItemCount(st){
   st.itemCount=todayItems().length;
@@ -2668,8 +2719,12 @@ function renderChecklist(st){
   const ul=document.getElementById('dayChecklist');
   const items=todayItems(), ck=st.items||{}, sp=itemPointSplits(items.length);
   if(!items.length){
-    ul.innerHTML='<li class="dim">今天沒有排程。</li>';
-    document.getElementById('dayProgress').style.width='0%';
+    const auto=autoPassDay(todayStr());
+    ul.innerHTML= auto
+      ? '<li class="auto-pass"><span class="ap-tick">✓</span><div><b>今天的課業就是進度</b>'
+        +'<span class="dim">你在修的課本身就是一試的 130 分。去上課、把課聽懂，這天自動過關。</span></div></li>'
+      : '<li class="dim">今天沒有排程——休息也是計畫的一部分。</li>';
+    document.getElementById('dayProgress').style.width= auto?'100%':'0%';
     document.getElementById('dayCompleteMsg').style.display='none';
     renderRing(); return;
   }
@@ -2769,7 +2824,7 @@ function renderDrillTable(){
     ['階段 1 · 開學前空窗<br><span class="dim">8/11–9/6 · 全職 27 天</span>',
      [['憲法',225,'第1週'],['民法',659,'第2–4週']], '每天約 30–45 題，跟著上午讀的那一科'],
     ['階段 2 · 秋季學期<br><span class="dim">9/7–12/4 · 只有週六、週日上午</span>',
-     [['民訴',363,'第1–8週'],['公司法',213,'第9–13週']], '每個刷題日約 22 題，平日只默寫 10 條'],
+     [['民訴',363,'第1–8週'],['公司法',213,'第9–13週']], '每個刷題日約 22 題，平日不排進度（自動過關）'],
     ['階段 3 · 寒假<br><span class="dim">12/26–2/14 · 全職 51 天</span>',
      [['行政法',409,'D1–7'],['刑法',320,'D8–14'],['刑訴',267,'D15–21'],
       ['法律倫理',186,'D22–26'],['國際公法',129,'D27–30'],['國際私法',134,'D31–34']],
@@ -2865,8 +2920,10 @@ function renderHeatmap(){
     const o=getDayObj(dt);
     const n=o.itemCount||0, ckn=n? Object.values(o.items||{}).filter(Boolean).length : 0;
     const r= n? ckn/n : 0;
-    const cls= o.completed? (r>=0.99?'l3': r>=0.5?'l2':'l1') : '';
-    html+=`<div class="hm ${cls}" title="${dt}${o.completed?`（過關${n?`　${ckn}/${n}`:''}）`:''}"></div>`;
+    const auto=!o.completed && autoPassDay(dt);
+    const cls= o.completed? (r>=0.99?'l3': r>=0.5?'l2':'l1') : auto? 'auto' : '';
+    const tip= o.completed? `（過關${n?`　${ckn}/${n}`:''}）` : auto? '（上課日・自動過關）' : '';
+    html+=`<div class="hm ${cls}" title="${dt}${tip}"></div>`;
   }
   box.innerHTML=html;
 }
@@ -3421,7 +3478,7 @@ const CARDS=[
   {id:'norris',n:'拿樂絲太太',e:'🐈‍⬛',r:'c',cat:'b',line:'「牠在盯著你讀書。」'},
   {id:'dobby',n:'多比',e:'🧦',r:'c',cat:'b',line:'「多比是自由的小精靈！」'},
   {id:'kreacher',n:'怪角',e:'📿',r:'c',cat:'b',line:'「主人今天有讀書，怪角欣慰。」'},
-  {id:'fluffy',n:'路威（三頭犬）',e:'🐺',r:'c',cat:'b',line:'「三顆頭都在問：今天默寫了嗎？」'},
+  {id:'fluffy',n:'路威（三頭犬）',e:'🐺',r:'c',cat:'b',line:'「三顆頭都在問：今天開始了嗎？」'},
   {id:'basilisk',n:'蛇怪',e:'🟩',r:'r',cat:'b',line:'「別直視它——也別直視還沒讀的範圍。」'},
   {id:'dragon',n:'匈牙利角尾龍',e:'🐲',r:'r',cat:'b',line:'「第一關最難。過了就不怕了。」'},
   {id:'dementor',n:'催狂魔',e:'🌫️',r:'r',cat:'b',line:'「它吃掉的是動力，不是時間。」'},
@@ -3445,7 +3502,7 @@ const CARDS=[
   {id:'sword',n:'葛萊芬多寶劍',e:'⚔️',r:'r',cat:'o',line:'「真正需要的時候才會出現。」'},
   {id:'diadem',n:'雷文克勞冠冕',e:'👑',r:'r',cat:'o',line:'「智慧是最大的財富——也要背條文。」'},
   {id:'snitch',n:'金探子',e:'🟡',r:'c',cat:'o',line:'「我在結束時開啟。」'},
-  {id:'howler',n:'咆哮信',e:'✉️',r:'c',cat:'o',line:'「你！今天！還沒！默寫！」'},
+  {id:'howler',n:'咆哮信',e:'✉️',r:'c',cat:'o',line:'「你！今天！還沒！開始！」'},
   {id:'remembrall',n:'記憶球',e:'🔴',r:'c',cat:'o',line:'「它會變紅，但不會告訴你忘了什麼。」'},
   {id:'extendable',n:'伸縮耳',e:'👂',r:'c',cat:'o',line:'「偷聽出題老師在想什麼。」'},
   {id:'quill',n:'羽毛筆與羊皮紙',e:'🪶',r:'c',cat:'o',line:'「手寫的東西，記得比較久。」'},
@@ -3481,7 +3538,7 @@ const CARDS=[
   {id:'wolfsbane',n:'縛狼汁',e:'🌙',r:'r',cat:'x',line:'「控制不了月圓，但控制得了準備。」'}
 ];
 const RARITY_NAME={l:'傳說',r:'稀有',c:'普通'};
-/* 全套 360 張，抽到集滿為止都不會重複。
+/* 全套卡牌抽到集滿為止都不會重複（張數見 CARDS.length）。
    稀有度只決定「先抽哪一階」；那一階抽完了就往還有剩的階去拿，
    所以每一天開出來的一定是新的一張。全部集滿後回傳 null，功能結束。 */
 function unownedCards(){ const o=ownedCards(); return CARDS.filter(c=>!o[c.id]); }
@@ -3508,7 +3565,7 @@ function cardHTML(c,cnt){
 function renderFrogCard(){
   const box=document.getElementById('frogBox'), t=todayStr();
   const card=box.closest('.card');
-  // 360 張全部收齊 → 這個功能功成身退，整張卡收起來
+  // 全部收齊 → 這個功能功成身退，整張卡收起來
   if(albumComplete()){
     if(card) card.style.display='none';
     return;
@@ -3519,15 +3576,15 @@ function renderFrogCard(){
   const drawnAll = slots.map(k=>LS.get(k,null));
   const nextSlot = slots.findIndex(k=>!LS.get(k,null));
 
-  if(!getDayObj(t).completed && nextSlot===0){
-    box.innerHTML='<p class="dim">完成今天的任務清單，就能打開一隻巧克力蛙。全套 360 張，<b>集滿之前不會抽到重複的</b>。</p>';
+  if(!dayPassed(t) && nextSlot===0){
+    box.innerHTML='<p class="dim">完成今天的任務清單，就能打開一隻巧克力蛙。全套 '+CARDS.length+' 張，<b>集滿之前不會抽到重複的</b>。</p>';
     return;
   }
   let html = drawnAll.filter(Boolean).map(id=>{
     const c=CARDS.find(x=>x.id===id);
     return c? cardHTML(c, ownedCards()[c.id]||1).replace(' frog-reveal','') : '';
   }).join('');
-  if(nextSlot>-1 && getDayObj(t).completed){
+  if(nextSlot>-1 && dayPassed(t)){
     const left=unownedCards().length;
     html += `<div style="text-align:center; padding:6px 0;">
       <p style="margin:0 0 10px;">${nextSlot===0?'今天過關了——盒子在你手上跳動。':'🚪 有求必應屋：牆上還有一道門，再開一隻。'}
@@ -3543,7 +3600,7 @@ function renderFrogCard(){
     LS.set(slots[nextSlot],c.id);
     renderFrogCard(); renderAlbum();
     celebrate(c.r==='l');
-    if(albumComplete()){ celebrate(true); toast('🍫 全套 360 張收齊了！'); }
+    if(albumComplete()){ celebrate(true); toast('🍫 全套 '+CARDS.length+' 張收齊了！'); }
     else toast(c.r==='l'?'傳說畫片！✨':`獲得畫片：${c.n}`);
   });
 }
@@ -3638,7 +3695,7 @@ document.getElementById('extraDrawBtn').addEventListener('click',()=>{
   if(!c){ toast('全套已經收齊了'); return; }
   grantCard(c);
   celebrate(c.r==='l');
-  if(albumComplete()){ celebrate(true); toast('🍫 全套 360 張收齊了！'); }
+  if(albumComplete()){ celebrate(true); toast('🍫 全套 '+CARDS.length+' 張收齊了！'); }
   else toast(c.r==='l'?'傳說畫片！✨':`獲得畫片：${c.n}`);
   refreshHeaderStats(); renderFrogCard(); renderRedemptionHistory(); renderRewardShopList();
   const grid=document.getElementById('albumGrid');
@@ -3686,7 +3743,7 @@ function currentLevelIdx(){
 /* lv = 需要的學年索引（對應 LEVELS）。每個咒語都綁一個真實的讀書處境。 */
 const SPELLS=[
   {id:'lumos',n:'路摸思',en:'Lumos',e:'🕯️',lv:0,eff:'杖尖亮起',
-   use:'不知道從哪開始的時候：先默寫 10 條。最小的光就夠你看見下一步。'},
+   use:'不知道從哪開始的時候：先勾第一項。最小的光就夠你看見下一步。'},
   {id:'wingardium',n:'溫咖癲啦唯啊薩',en:'Wingardium Leviosa',e:'🪶',lv:0,eff:'讓物體浮起',
    use:'先抬最重的那一塊——今天最不想做的那件事排第一個。'},
   {id:'scourgify',n:'清理一新',en:'Scourgify',e:'🧼',lv:0,eff:'清潔',
@@ -3710,7 +3767,7 @@ const SPELLS=[
   {id:'stupefy',n:'昏昏倒地',en:'Stupefy',e:'⚡',lv:3,eff:'擊昏目標',
    use:'先把「我等一下再開始」那個念頭打昏。它是今天最大的敵人。'},
   {id:'aparecium',n:'萬物顯形',en:'Aparecium',e:'🔍',lv:3,eff:'顯現隱形字跡',
-   use:'看不出重點的時候，把它默寫一遍——寫不出來的地方就是還沒懂的地方。'},
+   use:'看不出重點的時候，闔上書把它講一遍——講不出來的地方就是還沒懂的地方。'},
   {id:'obliviate',n:'空空，遺忘',en:'Obliviate',e:'🌫️',lv:4,eff:'消除記憶',
    use:'今天爛掉就讓它過去。**不准補**——這是保護規則，不是安慰。'},
   {id:'occlumency',n:'鎖心術',en:'Occlumency',e:'🛡️',lv:4,eff:'封閉心靈',
@@ -3845,7 +3902,7 @@ const PROPHET_LINES=[
   '貓頭鷹郵局：寫給明天自己的信，今晚截止收件。',
   '時光器管理處：時間不會重來，但錯題可以重寫。',
   '分類帽專欄：史萊哲林的野心，要配上行動才算數。',
-  '考選司公告：O.W.L. 應考人請每日默寫條文十條。',
+  '考選司公告：O.W.L. 應考人請每日至少開始一件事。',
   '夜騎士公車：再晚也載你，但明天請早起。',
   '記憶保存學會：定期回顧，記憶不打結。',
   '魔藥學教授評語：「尚可。」——這已是他最高的讚美。',
@@ -4025,11 +4082,11 @@ const PROPHET_LINES=[
   '親屬繼承提醒：檢事官沒考到的真空，數字特別多。',
   '攤平作業說明：不加深，只加寬。',
   '體系表繳交期限：能空手畫出來才算完成。',
-  '默寫十條公告：這是唯一跨越所有日子的動作。',
-  '最低標準備忘：做默寫十條，然後去睡。一樣算過關。',
+  '最低標準公告：勾到第一項，這天就算數。',
+  '最低標準備忘：做第一項，然後去睡。一樣算過關。',
   '保護規則第一條：不准補。落後就改計畫。',
   '保護規則第二條：停在時間，不停在進度。',
-  '不可破的誓言第一條：每天默寫十條，就算只讀二十分鐘。',
+  '不可破的誓言第一條：每天勾到第一項，就算只讀二十分鐘。',
   '不可破的誓言第二條：錯題不隔夜。',
   '不可破的誓言第三條：週日回顧不跳過。',
   '週日下午公告：完全休息。這是排定的，不是偷懶。',
@@ -4046,7 +4103,7 @@ const PROPHET_LINES=[
   '進度回顧提醒：做了什麼比想了什麼重要。',
   '連續紀錄公告：斷了就從一開始，不是從零。',
   '學院點數結算：勾一項拿一項，取消會扣回。',
-  '巧克力蛙開盒提醒：全套三百六十張，集滿之前不重複。',
+  '巧克力蛙開盒提醒：全套五百六十張，集滿之前不重複。',
   '畫片冊整理公告：傳說在最前面，普通在後面。',
   '咒語書更新：升上新學年，就會想起新的咒語。',
   '魔寵成長紀錄：牠看的是總共餵養幾天，不是連續。',
@@ -4305,12 +4362,13 @@ function catSay(ctx){
 function renderCat(){
   const box=document.getElementById('catSvg'); if(!box) return;
   const streak=computeStreakCurrent(), fed=completedDayCount(), o=getDayObj(todayStr());
-  const any=Object.values(o.items||{}).some(Boolean)||o.completed;
+  const passed=dayPassed(todayStr());
+  const any=Object.values(o.items||{}).some(Boolean)||passed;
   const hour=new Date().getHours();
   const st=catStageIdx(fed), stage=CAT_STAGES[st];
   let mood;
   if(hour>=23||hour<6) mood='sleep';
-  else if(o.completed)  mood='happy';
+  else if(passed)       mood='happy';
   else if(any)          mood='watch';
   else if(streak===0&&fed>0) mood='sulk';
   else mood='idle';
@@ -4323,7 +4381,7 @@ function renderCat(){
 
   const cp=currentPhase();
   const toOWL = d(todayStr())<=d(OWL_DATE)? daysBetween(d(todayStr()),d(OWL_DATE)) : null;
-  const pool=catSay({mood,streak,fed,st,done:o.completed,any,hour,toOWL,cp});
+  const pool=catSay({mood,streak,fed,st,done:passed,any,hour,toOWL,cp});
   // 同一天同一種心情講同一句，不會每次重畫就跳字
   document.getElementById('catLine').textContent = pool[hashNum(todayStr()+mood+streak)%pool.length];
 
@@ -4563,7 +4621,7 @@ const PATRONI=[
 ];
 const PATRONUS_DAYS=30;
 function bestStreakEver(){
-  const done=allDayDates().filter(dt=>getDayObj(dt).completed);
+  const done=passedDates();
   let best=0,run=0,prev=null;
   for(const dt of done){ run=(prev&&dateDiff(prev,dt)===1)?run+1:1; if(run>best)best=run; prev=dt; }
   return best;
@@ -4633,7 +4691,7 @@ const STORY=[
   ['五月','「五月中，三門報告全部交完。那天晚上我把桌上所有跟報告有關的紙都收進箱子裡，封起來。剩下的七週不能有殘骸。」'],
   ['封盤','「考前兩週我不碰任何新東西。所有人都在瘋狂補進度，我在重讀我的錯題本。那是我這一年做過最反直覺、也最正確的決定。」'],
   ['為什麼要封盤','「因為新的東西記不牢，而且會把已經穩固的記憶擠掉。最後兩週的任務不是變強，是不要變弱。」'],
-  ['考前一夜','「今晚我什麼都沒讀。我把默寫本翻了一遍就闔上了。明天上場的不是今晚的我，是這一整年的我。」'],
+  ['考前一夜','「今晚我什麼都沒讀。我把錯題本翻了一遍就闔上了。明天上場的不是今晚的我，是這一整年的我。」'],
   ['O.W.L.','後面幾頁是空的。整整八頁的空白，像是那幾天什麼都寫不出來。'],
   ['「過了。」','然後在很後面，突然又出現一行字，墨水的顏色跟前面都不一樣：「過了。」下面沒有驚嘆號，也沒有其他的話。'],
   ['第八年','「他們說霍格華茲只有七年。但考完一試到二試那九週，是我的第八年——沒有人陪你上課，沒有課表，你得自己當自己的教授。這本筆記本就是那時候寫的。」'],
@@ -4657,7 +4715,7 @@ const STORY=[
 /* 解鎖改成看「累積過關天數」，不再綁計畫起跑日的週次——
    原本在 2026-08-10 之前 weeks 會算成 -1，迴圈不執行，永遠 0 章。 */
 const DAYS_PER_CHAPTER=4;
-function completedDayCount(){ return allDayDates().filter(dt=>getDayObj(dt).completed).length; }
+function completedDayCount(){ return passedDates().length; }
 function unlockedChapters(){
   return Math.min(Math.floor(completedDayCount()/DAYS_PER_CHAPTER), STORY.length);
 }
