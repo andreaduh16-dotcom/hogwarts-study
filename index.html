@@ -892,6 +892,15 @@ details.ph-more>summary:hover{color:var(--acc,#4fae74);}
 .prophet-sub{font-size:12px; color:var(--gold); margin-top:7px; padding-top:7px; border-top:1px dashed var(--line); line-height:1.6;}
 .prophet-sub b{color:var(--silver-hi); font-size:14px;}
 
+/* ── 身體也要顧：只給糖不給棍子，按鈕要顯眼、給的分要大方 ── */
+#bodyCareBox{line-height:1.7;}
+.body-actions{display:flex; align-items:center; gap:10px; margin-top:10px; flex-wrap:wrap;}
+.body-actions .magic.small{padding:7px 14px;}
+.body-streak{
+  font-family:"Cinzel","Noto Serif TC",serif; font-size:11.5px; color:var(--gold);
+  letter-spacing:.4px; display:flex; align-items:center; gap:3px;
+}
+
 /* ── 兌換 ── */
 .reward-card{
   background:rgba(255,255,255,.05); border:1px solid var(--line); border-left:3px solid #8a6bb5; border-radius:10px;
@@ -1305,6 +1314,12 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       <p class="dim" id="todayLine" style="margin:7px 0 0;"></p>
     </div>
 
+    <!-- 身體也要顧：不計分、不綁連續天數，純粹的溫柔提醒 -->
+    <div class="card sub" id="bodyCareCard">
+      <h2>🌿 身體也要顧</h2>
+      <p class="dim" id="bodyCareBox"></p>
+    </div>
+
     <!-- 出勤 -->
     <div class="card sub">
       <h2>🦉 出勤紀錄 <span class="dim">最近 12 週</span></h2>
@@ -1664,6 +1679,89 @@ function computeStreakBonus(){
   }
   return bonus;
 }
+
+/* ═══ 身體也要顧：只給糖，不給棍子 ═══
+   使用者自己要求「非常強烈的獎勵制度」——所以做了給很大方的加分，
+   但完全跟「過關」「連續天數」「學院盃」「等級」脫鉤：
+   沒做，什麼事都不會發生，不扣分、不斷連續、不會有任何提醒說你沒做。 */
+const BODY_START='2026-08-11';
+const BODY_LINES=[
+  '髖屈肌伸展：單膝跪地，另一腳在前呈弓箭步，臀部微微前推，停 20 秒換邊。對骨盆前傾特別有感。',
+  '臀橋：躺著屈膝，臀部夾緊往上頂，停 3 秒放下，做 10–15 下。喚醒臀肌，順便穩定骨盆。',
+  '死蟲式：躺著手腳舉起，交替伸直對側手腳，核心自然收緊，做 8 下換邊。比仰臥起坐溫和很多。',
+  '貓牛式：跪姿手撐地，脊椎一拱一塌，慢慢做 8 次。久坐後腰背會很喜歡這個。',
+  '牆邊站直：後腦、肩胛、屁股、腳跟貼牆，停 30 秒，找回站姿的感覺，對骨盆前傾有幫助。',
+  '側躺抬腿：側躺，上面那隻腳慢慢抬起放下，一邊 10 下。練的是外側臀肌，讓臀型更好看，不是更大。',
+  '慢慢蹲下再站起，膝蓋對齊腳尖，做 8–10 下，不用蹲很低，感覺大腿後側跟臀部在出力。',
+  '大腿後側伸展：坐姿一腳伸直、身體前傾，停 20 秒換邊。久坐的人這裡最緊。',
+  '深呼吸，吐氣時肚子往內收，停 5 秒放鬆，做 5 次——最溫和的核心練習。',
+  '起來倒杯水，順便甩甩手腕、轉轉腳踝，久坐的關節會卡。',
+  '手臂交叉抱胸，肩膀畫大圈，前後各 10 圈，肩頸會鬆很多。',
+  '闔書之前，趴在桌上或床上，手往前伸展背部，比坐著硬撐舒服。',
+  '走去倒水或上廁所的路上，順便繞遠一點點路，就是額外的活動量。',
+  '飯後那 20 分鐘，出去晒兩分鐘太陽、走幾步路，血糖跟精神都會好一點。',
+  '窗邊或陽台站一分鐘，看遠方，眼睛跟身體一起休息。',
+  '肩膀聳一聳、放下，重複五次。念書久了肩頸最先抗議。'
+];
+const BODY_LINES_REST=[
+  '難得有整段空檔，出門散步 15–20 分鐘，順便曬點太陽，對下一週的精神有幫助。',
+  '今天可以做一套完整一點的伸展：貓牛式、髖屈肌伸展、大腿後側伸展，各抓 30 秒，慢慢來。',
+  '休息時間想動就動，不為了燃燒什麼，單純讓身體覺得舒服。'
+];
+function allBodyDates(){ return Object.keys(localStorage).filter(k=>k.startsWith('hp_body_')).map(k=>k.slice(8)).sort(); }
+function bodyDoneToday(){ return !!LS.get('hp_body_'+todayStr(), false); }
+function computeBodyStreak(){
+  let count=0, probe=todayStr();
+  if(!LS.get('hp_body_'+probe,false)) probe=todayStr(-1);
+  while(LS.get('hp_body_'+probe,false)){
+    count++;
+    probe=toLocalDateStr(new Date(d(probe).getTime()-86400000+12*3600000));
+    if(count>3650) break;
+  }
+  return count;
+}
+/* 每次做到 +15（比任何單一讀書項目都大方），連續 7 天再加碼 +30 */
+function computeBodyBonus(){
+  const done=allBodyDates().filter(dt=>LS.get('hp_body_'+dt,false));
+  let bonus=done.length*15, run=0, prev=null;
+  for(const dt of done){
+    run=(prev && dateDiff(prev,dt)===1)? run+1 : 1;
+    if(run%7===0) bonus+=30;
+    prev=dt;
+  }
+  return bonus;
+}
+function bodyCareActive(){
+  const tStr=todayStr();
+  if(tStr<BODY_START) return false;
+  const cp=currentPhase();
+  if(cp && (cp.id==='owl'||cp.id==='newt')) return false;   // 考試日不要來煩她
+  if(MOCK_DATES.includes(tStr)) return false;               // 模考日也是
+  return true;
+}
+function renderBodyCare(){
+  const card=document.getElementById('bodyCareCard'); if(!card) return;
+  if(!bodyCareActive()){ card.style.display='none'; return; }
+  card.style.display='';
+  const tStr=todayStr(), cp=currentPhase(), wd=d(tStr).getDay();
+  const isRestAfternoon = cp&&(cp.id===2||cp.id===4)&&wd===0;
+  const pool = isRestAfternoon? BODY_LINES_REST : BODY_LINES;
+  const line = pool[hashNum(tStr+'_body')%pool.length];
+  const done = bodyDoneToday();
+  const streak = computeBodyStreak();
+  const box=document.getElementById('bodyCareBox');
+  box.innerHTML = `<span id="bodyCareLine">${line}</span>`
+    + `<div class="body-actions">`
+    + `<button class="magic small${done?' secondary':''}" id="bodyDoneBtn">${done?'✓ 今天做到了':'今天做到了　+15'}</button>`
+    + (streak>0? `<span class="body-streak">🔥 連續 ${streak} 天</span>` : '')
+    + `</div>`;
+  document.getElementById('bodyDoneBtn').addEventListener('click',()=>{
+    const before=getBalance();
+    LS.set('hp_body_'+tStr, !bodyDoneToday());
+    renderBodyCare();
+    pointsFeedback(before, bodyDoneToday()?'身體活動完成':'取消今天的身體活動');
+  });
+}
 /* ═══ 每日事件（依日期決定，不需儲存，重算永遠一致） ═══ */
 const EVENTS=[
   {id:'felix',   e:'🍀', n:'福來福喜',   d:'幸運藥水生效：今天所有得分 ×2。', w:8},
@@ -1705,7 +1803,7 @@ function renderEvent(){
         <div><div class="en">${ev.n}</div><div class="ed">${ev.d}</div></div></div>`;
 }
 function computeSpent(){ return LS.get('hp_redemptions',[]).reduce((s,r)=>s+r.cost,0); }
-function getBalance(){ return computeEarnedTotal()-computeSpent(); }
+function getBalance(){ return computeEarnedTotal()+computeBodyBonus()-computeSpent(); }
 
 /* ═══ 學院盃：每月結算，三個對手學院自己會跑分 ═══ */
 /* 對手強度是照「你照計畫做得到的分數」校準的：
@@ -1774,7 +1872,7 @@ function refreshHeaderStats(){
   document.getElementById('statLineNew').style.display = virgin? 'flex':'none';
   document.querySelector('.xp-wrap').style.display = virgin? 'none':'block';
   renderLevel(); renderPointsDetail(); renderHeatmap(); renderCat(); renderAlbum(); renderRing();
-  renderCup(); renderPatronus(); renderStory();
+  renderCup(); renderPatronus(); renderStory(); renderBodyCare();
   if(TODAY_PLAN) renderHero();   // hero 文案依當日狀態改變
 }
 function pointsFeedback(before,label){
@@ -2622,11 +2720,12 @@ function renderPointsDetail(){
     ['今日進度勾選', dayEarnedFromChecklist(o)? `+${dayEarnedFromChecklist(o)}`:'—'],
     ['錯題當天入本', o.errorLogged?'+5':'—'],
     ['課堂當天複習', cc?`+${cc*10}（${cc} 門）`:'—'],
-    ['模考達標', o.examPass?'+50':'—']
+    ['模考達標', o.examPass?'+50':'—'],
+    ['身體活動（不計入過關）', bodyDoneToday()?'+15':'—']
   ];
   box.innerHTML=`<div class="tbl-wrap"><table class="schedule-table"><tr><th>項目</th><th>得分</th></tr>
     ${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table></div>
-    <p class="dim" style="margin-top:8px;">累計獲得 ${computeEarnedTotal()} ｜ 已兌換 ${computeSpent()} ｜ <b style="color:var(--gold)">餘額 ${getBalance()}</b></p>`;
+    <p class="dim" style="margin-top:8px;">累計獲得 ${computeEarnedTotal()+computeBodyBonus()} ｜ 已兌換 ${computeSpent()} ｜ <b style="color:var(--gold)">餘額 ${getBalance()}</b></p>`;
 }
 
 /* ═══ 熱圖 ═══ */
