@@ -894,12 +894,31 @@ details.ph-more>summary:hover{color:var(--acc,#4fae74);}
 
 /* ── 身體也要顧：只給糖不給棍子，按鈕要顯眼、給的分要大方 ── */
 #bodyCareBox{line-height:1.7;}
-.body-actions{display:flex; align-items:center; gap:10px; margin-top:10px; flex-wrap:wrap;}
-.body-actions .magic.small{padding:7px 14px;}
+.body-head{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px;}
+.body-type{font-family:"Cinzel","Noto Serif TC",serif; font-size:13px; font-weight:700; color:var(--silver-hi);}
+.body-stage{
+  font-size:10px; letter-spacing:1px; color:var(--acc,#4fae74);
+  border:1px solid var(--line-str); border-radius:9px; padding:1px 7px;
+}
+.body-kcal{font-size:11px; color:var(--gold); margin-left:auto;}
+.body-focus{font-size:12px; color:var(--dim); margin:0 0 9px; line-height:1.6;}
+.body-moves{width:100%; border-collapse:collapse; font-size:12.5px;}
+.body-moves td{padding:6px 8px; border-bottom:1px solid rgba(255,255,255,.05); vertical-align:top;}
+.body-moves tr:last-child td{border-bottom:none;}
+.body-moves .bm-set{text-align:right; white-space:nowrap; color:var(--silver-hi); font-variant-numeric:tabular-nums;}
+.body-moves .bm-tip td{padding:0 8px 7px; font-size:11px; color:var(--dim); border-bottom:none; line-height:1.55;}
+.body-actions{display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap;}
+.body-actions .magic.small{padding:8px 15px;}
 .body-streak{
   font-family:"Cinzel","Noto Serif TC",serif; font-size:11.5px; color:var(--gold);
   letter-spacing:.4px; display:flex; align-items:center; gap:3px;
 }
+.body-card-won{
+  display:flex; align-items:center; gap:9px; margin-top:10px; padding:9px 12px; border-radius:10px;
+  background:linear-gradient(90deg, rgba(201,169,78,.14), transparent);
+  border-left:2px solid var(--gold); font-size:12.5px;
+}
+.body-note{margin-top:10px; font-size:11px; line-height:1.6;}
 
 /* ── 兌換 ── */
 .reward-card{
@@ -1316,8 +1335,8 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
 
     <!-- 身體也要顧：不計分、不綁連續天數，純粹的溫柔提醒 -->
     <div class="card sub" id="bodyCareCard">
-      <h2>🌿 身體也要顧</h2>
-      <p class="dim" id="bodyCareBox"></p>
+      <h2>🌿 今天的運動</h2>
+      <div class="dim" id="bodyCareBox"></div>
     </div>
 
     <!-- 出勤 -->
@@ -1344,7 +1363,7 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
 
     <div class="card">
       <h2>🍫 巧克力蛙畫片冊 <span class="dim" id="albumCount"></span></h2>
-      <p class="dim">每天過關就能開一隻，<b>集滿之前絕不重複</b>。共六類、360 張：巫師與角色、魔法生物、魔法物品、霍格華茲場所、魔藥、咒語與魔法。收齊那天，這個功能就功成身退。</p>
+      <p class="dim">每天過關開一隻，<b>做完當天的運動再開一隻</b>——集滿之前絕不重複。共九類、560 張。收齊那天，這個功能就功成身退。</p>
       <div style="margin:9px 0;"><button class="magic small" id="extraDrawBtn">🍫 用 30 點再抽一張</button></div>
       <div id="albumGrid"></div>
     </div>
@@ -1413,11 +1432,57 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     </details>
 
     <details class="fold">
+      <summary>📚 書怎麼用 <span class="fold-sub">概念書、題庫書、二試總複習書</span></summary>
+      <div class="fold-body">
+        <p class="dim" style="margin:0 0 10px;">
+          <b>先講一個觀念：一試不是考考古題。</b>考古題的功能是<b>診斷</b>——找出「你以為懂但其實不知道」的條文，
+          不是背過去的答案。所以 3,613 題是<b>掃描範圍</b>，不是進度條。刷到一題不會，價值不在那一題，
+          在它暴露了你哪一塊沒讀熟。
+        </p>
+        <div class="tbl-wrap"><table class="schedule-table txt">
+          <tr><th>手上的書</th><th>怎麼用</th></tr>
+          <tr>
+            <td><b>一試概念書</b><br><span class="dim">重要概念＋相關選擇題，約 300 頁</span></td>
+            <td><b>快速過一輪，不求記住。</b>目標是建立「這科有哪些區塊」的地圖，一週左右讀完就對了。
+                讀完立刻刷該科的題——<b>不要讀完三百頁才開始刷</b>，那樣會忘光。
+                之後這本書變成<b>查閱工具</b>：刷題錯了、詳解看不懂，才翻回去讀那一節。</td>
+          </tr>
+          <tr>
+            <td><b>一試題庫書</b><br><span class="dim">全選擇題練習</span></td>
+            <td>照你自己說的做就對了：<b>挑該年份的分科寫</b>。跟 TaiLexi 的差別是紙本可以標記、
+                寫在旁邊。建議把「猜對的」也圈起來，那些跟錯的一樣危險。</td>
+          </tr>
+          <tr>
+            <td><b>二試參考書</b><br><span class="dim">500–700 頁那幾本</span></td>
+            <td><b>永遠不要從第一頁讀到最後一頁。</b>二試給法條，考的是爭點辨識與論述結構，
+                所以只抽三樣東西：<b>①爭點列表　②每個爭點的兩造說法　③答題架構</b>。
+                做法：翻目錄找爭點 → 只讀那幾頁 → 濃縮成自己的 A4 模板。
+                <b>你「沒耐心看完」是對的直覺，那種書本來就是工具書不是教科書。</b></td>
+          </tr>
+          <tr>
+            <td><b>補習班二試總複習書</b><br><span class="dim">之後會買</span></td>
+            <td>買了之後<b>它就是階段 6 的主教材</b>，取代那幾本厚的。
+                總複習書的價值就是「已經幫你抽好爭點」——直接拿它建模板，
+                厚的參考書退回查閱位置。<b>建議 7 月一試考完再買，買最新版。</b></td>
+          </tr>
+        </table></div>
+        <p class="dim" style="margin-top:10px;">
+          <b>關於「基礎很弱」與「浪費時間在細節」：</b>這兩個焦慮的解法是同一個——
+          <b>讓刷題決定你讀什麼</b>。不要自己判斷哪裡重要（那會陷入細節），
+          用錯題告訴你哪裡弱（那是客觀的）。概念書快過一輪建立框架，剩下的時間全部交給
+          「刷題 → 錯了 → 回去補那一小塊」的循環。
+        </p>
+      </div>
+    </details>
+
+    <details class="fold">
       <summary>🎯 刷題總表 <span class="fold-sub">哪一科、哪一天、幾題</span></summary>
       <div class="fold-body">
         <p class="dim" style="margin:0 0 9px;">
           依 TaiLexi「102–115 未做題數」（單科題）排的。<b>海商法 10 題不排</b>——一試第四卷沒有海商法。
-          原則是<b>讀完哪一科就刷哪一科</b>，攤平期就開始刷，所以<b>不需要另外留一段「純刷題期」</b>。
+          原則是<b>讀完哪一科就刷哪一科</b>，攤平期就開始刷，所以<b>不需要另外留一段「純刷題期」</b>。<br>
+          ⚠️ <b>這個數字是掃描範圍，不是進度條。</b>一試不考考古題本身，刷題的功能是找出你不知道的條文。
+          刷完一輪卻沒有回頭補洞，等於沒刷。
         </p>
         <div class="tbl-wrap"><table class="schedule-table txt" id="drillTable"></table></div>
         <p class="dim" style="margin-top:9px;" id="drillSummary"></p>
@@ -1685,30 +1750,61 @@ function computeStreakBonus(){
    但完全跟「過關」「連續天數」「學院盃」「等級」脫鉤：
    沒做，什麼事都不會發生，不扣分、不斷連續、不會有任何提醒說你沒做。 */
 const BODY_START='2026-08-11';
-const BODY_LINES=[
-  '髖屈肌伸展：單膝跪地，另一腳在前呈弓箭步，臀部微微前推，停 20 秒換邊。對骨盆前傾特別有感。',
-  '臀橋：躺著屈膝，臀部夾緊往上頂，停 3 秒放下，做 10–15 下。喚醒臀肌，順便穩定骨盆。',
-  '死蟲式：躺著手腳舉起，交替伸直對側手腳，核心自然收緊，做 8 下換邊。比仰臥起坐溫和很多。',
-  '貓牛式：跪姿手撐地，脊椎一拱一塌，慢慢做 8 次。久坐後腰背會很喜歡這個。',
-  '牆邊站直：後腦、肩胛、屁股、腳跟貼牆，停 30 秒，找回站姿的感覺，對骨盆前傾有幫助。',
-  '側躺抬腿：側躺，上面那隻腳慢慢抬起放下，一邊 10 下。練的是外側臀肌，讓臀型更好看，不是更大。',
-  '慢慢蹲下再站起，膝蓋對齊腳尖，做 8–10 下，不用蹲很低，感覺大腿後側跟臀部在出力。',
-  '大腿後側伸展：坐姿一腳伸直、身體前傾，停 20 秒換邊。久坐的人這裡最緊。',
-  '深呼吸，吐氣時肚子往內收，停 5 秒放鬆，做 5 次——最溫和的核心練習。',
-  '起來倒杯水，順便甩甩手腕、轉轉腳踝，久坐的關節會卡。',
-  '手臂交叉抱胸，肩膀畫大圈，前後各 10 圈，肩頸會鬆很多。',
-  '闔書之前，趴在桌上或床上，手往前伸展背部，比坐著硬撐舒服。',
-  '走去倒水或上廁所的路上，順便繞遠一點點路，就是額外的活動量。',
-  '飯後那 20 分鐘，出去晒兩分鐘太陽、走幾步路，血糖跟精神都會好一點。',
-  '窗邊或陽台站一分鐘，看遠方，眼睛跟身體一起休息。',
-  '肩膀聳一聳、放下，重複五次。念書久了肩頸最先抗議。'
-];
-const BODY_LINES_REST=[
-  '難得有整段空檔，出門散步 15–20 分鐘，順便曬點太陽，對下一週的精神有幫助。',
-  '今天可以做一套完整一點的伸展：貓牛式、髖屈肌伸展、大腿後側伸展，各抓 30 秒，慢慢來。',
-  '休息時間想動就動，不為了燃燒什麼，單純讓身體覺得舒服。'
-];
-function allBodyDates(){ return Object.keys(localStorage).filter(k=>k.startsWith('hp_body_')).map(k=>k.slice(8)).sort(); }
+/* 器材：瑜伽墊＋彈力帶，室內、可安靜做。時間 25–30 分鐘。
+   重點順序：① 骨盆前傾矯正（她的「肚子凸＋屁股翹」主因）
+             ② 臀腿與核心的肌力（決定瘦下來之後的線條）
+             ③ 心率循環（熱量消耗，但誠實標示：運動燒的熱量遠小於飲食）
+   循序漸進：討厭運動的人只要第一週太痛苦就會全放棄，所以入門期刻意很輕。 */
+const BODY_PLAN={
+  A:{ t:'臀腿＋骨盆矯正', kcal:[110,150], focus:'直接處理骨盆前傾與臀型',
+      moves:[
+        ['髖屈肌伸展（弓箭步）','左右各 30 秒 ×2','骨盆前傾最關鍵的一條。前推時肚子收好，不要塌腰'],
+        ['臀橋','12–15 下 ×3','彈力帶繞膝更有感。頂到最高夾緊 2 秒'],
+        ['蚌式開腿（彈力帶）','每邊 15 下 ×2','練外側臀肌，讓臀型變好看不是變大'],
+        ['側躺抬腿','每邊 12 下 ×2','慢慢放下比抬起來重要'],
+        ['深蹲（彈力帶繞膝）','12 下 ×3','膝蓋對齊腳尖，不用蹲太低'],
+        ['死蟲式','每邊 8 下 ×2','腰要貼緊墊子，貼不住就把腳抬高一點']
+      ]},
+  B:{ t:'核心＋背部姿勢', kcal:[100,140], focus:'改善小腹外觀與駝背',
+      moves:[
+        ['貓牛式','10 次','當暖身，慢慢做'],
+        ['死蟲式','每邊 10 下 ×3','腹部往內收，不是憋氣'],
+        ['棒式','20–40 秒 ×3','撐不住就跪姿棒式，不要硬撐到塌腰'],
+        ['側棒式','每邊 15–30 秒 ×2','練腰側線條'],
+        ['彈力帶划船','15 下 ×3','肩胛往後夾，姿勢改善很有感'],
+        ['超人式','12 下 ×3','背後鏈太弱也會加重骨盆前傾']
+      ]},
+  C:{ t:'全身循環（心率）', kcal:[200,260], focus:'今天是消耗熱量的一天',
+      moves:[
+        ['深蹲','20 下','循環開始，速度放穩'],
+        ['原地快踏步或開合跳','30 下','怕吵就原地快踏步，效果差不多'],
+        ['彈力帶划船','15 下','—'],
+        ['棒式','30 秒','—'],
+        ['臀橋','15 下','—'],
+        ['循環休息','60 秒','以上做完算一輪，總共做 3–4 輪']
+      ]},
+  R:{ t:'放鬆日', kcal:[30,60], focus:'讓身體修復，不是偷懶',
+      moves:[
+        ['貓牛式','10 次','—'],
+        ['髖屈肌伸展','左右各 30 秒','—'],
+        ['大腿後側伸展','左右各 30 秒','—'],
+        ['胸椎開展（靠牆或趴姿）','1 分鐘','久坐念書的必要補償'],
+        ['深呼吸收腹','5 次','吐氣時肚子往內收，停 5 秒']
+      ]}
+};
+/* 週一到週日的課表：5 練 2 放鬆 */
+const BODY_WEEK=['A','B','C','R','A','B','R'];   // 週一…週日
+/* 分期：入門 2 週（份量減半）→ 建立期 → 進階 */
+function bodyStage(tStr){
+  const w=Math.floor(dateDiff(BODY_START,tStr)/7);
+  if(w<2)  return {n:0,t:'入門期',note:'次數先做一半就好，先讓身體習慣有這件事。'};
+  if(w<6)  return {n:1,t:'建立期',note:'照表操課，做不完就砍組數，不要砍動作。'};
+  return    {n:2,t:'進階期',note:'彈力帶換更緊的一條，或每個動作多加一組。'};
+}
+function allBodyDates(){
+  // 只收 hp_body_YYYY-MM-DD，避免其他 hp_body_* 的鍵被誤算成「有做的一天」
+  return Object.keys(localStorage).filter(k=>/^hp_body_\d{4}-\d{2}-\d{2}$/.test(k)).map(k=>k.slice(8)).sort();
+}
 function bodyDoneToday(){ return !!LS.get('hp_body_'+todayStr(), false); }
 function computeBodyStreak(){
   let count=0, probe=todayStr();
@@ -1720,7 +1816,7 @@ function computeBodyStreak(){
   }
   return count;
 }
-/* 每次做到 +15（比任何單一讀書項目都大方），連續 7 天再加碼 +30 */
+/* 點數照給（連續 7 天加碼），但真正的獎勵是抽卡——見 renderBodyCare */
 function computeBodyBonus(){
   const done=allBodyDates().filter(dt=>LS.get('hp_body_'+dt,false));
   let bonus=done.length*15, run=0, prev=null;
@@ -1739,27 +1835,56 @@ function bodyCareActive(){
   if(MOCK_DATES.includes(tStr)) return false;               // 模考日也是
   return true;
 }
+function todayBodyKey(tStr){
+  const wd=d(tStr).getDay();               // 0=日
+  return BODY_WEEK[(wd===0?6:wd-1)];       // 轉成 週一=0
+}
 function renderBodyCare(){
   const card=document.getElementById('bodyCareCard'); if(!card) return;
   if(!bodyCareActive()){ card.style.display='none'; return; }
   card.style.display='';
-  const tStr=todayStr(), cp=currentPhase(), wd=d(tStr).getDay();
-  const isRestAfternoon = cp&&(cp.id===2||cp.id===4)&&wd===0;
-  const pool = isRestAfternoon? BODY_LINES_REST : BODY_LINES;
-  const line = pool[hashNum(tStr+'_body')%pool.length];
-  const done = bodyDoneToday();
-  const streak = computeBodyStreak();
+  const tStr=todayStr();
+  const key=todayBodyKey(tStr), plan=BODY_PLAN[key], st=bodyStage(tStr);
+  const done=bodyDoneToday(), streak=computeBodyStreak();
+  const half = st.n===0 && key!=='R';
+  const kcal = half? [Math.round(plan.kcal[0]*0.6),Math.round(plan.kcal[1]*0.6)] : plan.kcal;
+  const drawnId=LS.get('hp_bcard_'+tStr,null);
+  const drawn=drawnId? CARDS.find(c=>c.id===drawnId) : null;
+
+  const movesHtml=plan.moves.map(m=>
+    `<tr><td>${m[0]}</td><td class="bm-set">${half? m[1].replace(/×\d/,'×1'):m[1]}</td></tr>`
+    + (m[2]&&m[2]!=='—'? `<tr class="bm-tip"><td colspan="2">${m[2]}</td></tr>`:'')
+  ).join('');
+
   const box=document.getElementById('bodyCareBox');
-  box.innerHTML = `<span id="bodyCareLine">${line}</span>`
-    + `<div class="body-actions">`
-    + `<button class="magic small${done?' secondary':''}" id="bodyDoneBtn">${done?'✓ 今天做到了':'今天做到了　+15'}</button>`
-    + (streak>0? `<span class="body-streak">🔥 連續 ${streak} 天</span>` : '')
-    + `</div>`;
+  box.innerHTML =
+    `<div class="body-head">
+       <span class="body-type">${plan.t}</span>
+       <span class="body-stage">${st.t}</span>
+       <span class="body-kcal">約 ${kcal[0]}–${kcal[1]} 大卡</span>
+     </div>
+     <p class="body-focus">${plan.focus}${half? '　·　入門期：份量先減半':''}</p>
+     <div class="tbl-wrap"><table class="body-moves">${movesHtml}</table></div>
+     <div class="body-actions">
+       <button class="magic small${done?' secondary':''}" id="bodyDoneBtn">${done?'✓ 今天做完了':'做完了　抽一張畫片'}</button>
+       ${streak>0? `<span class="body-streak">🔥 連續 ${streak} 天</span>`:''}
+     </div>`
+    + (drawn? `<div class="body-card-won"><span class="ah-emoji">${drawn.e}</span>
+         <span class="ah-nm">${drawn.n}</span>
+         <span class="dim">${RARITY_NAME[drawn.r]}・${CAT_NAME[drawn.cat]}</span></div>`:'')
+    + `<p class="dim body-note">${st.note}　做起來會痛就停下來，那是要看醫生的訊號，不是要撐過去的。</p>`;
+
   document.getElementById('bodyDoneBtn').addEventListener('click',()=>{
-    const before=getBalance();
-    LS.set('hp_body_'+tStr, !bodyDoneToday());
-    renderBodyCare();
-    pointsFeedback(before, bodyDoneToday()?'身體活動完成':'取消今天的身體活動');
+    const before=getBalance(), now=!bodyDoneToday();
+    LS.set('hp_body_'+tStr, now);
+    if(now && !LS.get('hp_bcard_'+tStr,null) && !albumComplete()){
+      const c=drawRandomCard();
+      if(c){ grantCard(c); LS.set('hp_bcard_'+tStr,c.id);
+        celebrate(c.r==='l');
+        toast(c.r==='l'? '傳說畫片！✨':`運動換到畫片：${c.n}`); }
+    }
+    renderBodyCare(); renderAlbum();
+    pointsFeedback(before, now?'今天的運動完成':'取消今天的運動');
   });
 }
 /* ═══ 每日事件（依日期決定，不需儲存，重算永遠一致） ═══ */
@@ -2721,7 +2846,7 @@ function renderPointsDetail(){
     ['錯題當天入本', o.errorLogged?'+5':'—'],
     ['課堂當天複習', cc?`+${cc*10}（${cc} 門）`:'—'],
     ['模考達標', o.examPass?'+50':'—'],
-    ['身體活動（不計入過關）', bodyDoneToday()?'+15':'—']
+    ['運動（不計入過關，另抽一張畫片）', bodyDoneToday()?'+15':'—']
   ];
   box.innerHTML=`<div class="tbl-wrap"><table class="schedule-table"><tr><th>項目</th><th>得分</th></tr>
     ${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table></div>
@@ -2748,8 +2873,8 @@ function renderHeatmap(){
 
 /* ═══ 巧克力蛙 ═══ */
 /* cat：w 巫師與角色｜b 魔法生物｜o 魔法物品｜p 霍格華茲場所｜x 魔藥 */
-const CAT_NAME={w:'巫師與角色',b:'魔法生物',o:'魔法物品',p:'霍格華茲場所',x:'魔藥',s:'咒語與魔法'};
-const CAT_ICON={w:'🧙',b:'🐾',o:'🪄',p:'🏰',x:'⚗️',s:'✨'};
+const CAT_NAME={w:'巫師與角色',b:'魔法生物',o:'魔法物品',p:'霍格華茲場所',x:'魔藥',s:'咒語與魔法',h:'魔法植物',q:'魁地奇',n:'魔法界制度'};
+const CAT_ICON={w:'🧙',b:'🐾',o:'🪄',p:'🏰',x:'⚗️',s:'✨',h:'🌿',q:'🧹',n:'🏛️'};
 const CARDS=[
   /* ── 巫師與角色 ── */
   {id:'dumbledore',n:'鄧不利多',e:'🧙‍♂️',r:'l',cat:'w',line:'「做對的選擇，比做容易的選擇難。」'},
@@ -3070,6 +3195,224 @@ const CARDS=[
   {id:'sp_immobulus',n:'定身術',e:'⏸️',r:'c',cat:'s',line:'「暫停一下。世界不會塌。」'},
   {id:'sp_revelio',n:'現形咒',e:'🔎',r:'r',cat:'s',line:'「藏起來的東西終究要面對。比如那一科。」'},
   {id:'sp_finite2',n:'咒立停（全解除）',e:'🕊️',r:'l',cat:'s',line:'「最後一張。所有咒語解除——你自由了。」'},
+  /* ══ 魔法植物 ══ */
+  {id:'devilsnare',n:'魔鬼網',e:'🌿',r:'r',cat:'h',line:'「越掙扎纏得越緊。放鬆才逃得掉——焦慮也是。」'},
+  {id:'whompingwillow',n:'打人柳',e:'🌳',r:'r',cat:'h',line:'「知道哪個節點能讓它安靜，比蠻力有用。」'},
+  {id:'tentacula',n:'毒觸手',e:'🪴',r:'c',cat:'h',line:'「會咬人的植物。有些科目也是。」'},
+  {id:'bubotuber',n:'鼓皮球莖',e:'🫧',r:'c',cat:'h',line:'「擠出來的膿汁能治痘。噁心但有用。」'},
+  {id:'puffapod',n:'蓬蓬果',e:'🫛',r:'c',cat:'h',line:'「掉到地上就開花。跌倒也可以是開始。」'},
+  {id:'fangedgeranium',n:'尖牙天竺葵',e:'🌺',r:'c',cat:'h',line:'「看起來無害的那一題，最會咬人。」'},
+  {id:'flitterbloom',n:'顫抖草',e:'🌾',r:'c',cat:'h',line:'「長得像魔鬼網，其實無害。要分辨得出來。」'},
+  {id:'dittany',n:'白鮮',e:'🌱',r:'r',cat:'h',line:'「幾滴就能長新皮。休息就是你的白鮮。」'},
+  {id:'aconite',n:'附子草',e:'🌸',r:'r',cat:'h',line:'「又叫烏頭、又叫縛狼汁的原料——一個東西三個名字，法律也是。」'},
+  {id:'asphodel',n:'常春花根',e:'🌼',r:'c',cat:'h',line:'「加上艾草就是生死水。石內卜第一堂課就問了。」'},
+  {id:'wormwoodplant',n:'艾草',e:'🍃',r:'c',cat:'h',line:'「苦的東西通常有效。」'},
+  {id:'valerian',n:'纈草根',e:'🌿',r:'c',cat:'h',line:'「安神用的。睡不好的時候想想它。」'},
+  {id:'sopophorous',n:'安眠豆',e:'🫘',r:'c',cat:'h',line:'「用刀壓比用切的出汁多——混血王子的邊註。」'},
+  {id:'shrivelfig',n:'皺無花果',e:'🍈',r:'c',cat:'h',line:'「要剝皮才有用。表面那層不是重點。」'},
+  {id:'knotgrass',n:'打結草',e:'🌾',r:'c',cat:'h',line:'「複方湯劑的材料之一。細節決定成敗。」'},
+  {id:'lovage',n:'圓葉當歸',e:'🌿',r:'c',cat:'h',line:'「配方裡最不起眼的一味，少了就不成。」'},
+  {id:'screechsnap',n:'尖叫草',e:'📣',r:'c',cat:'h',line:'「會叫的植物。你的身體也會叫，記得聽。」'},
+  {id:'alihotsy',n:'笑笑樹',e:'😆',r:'c',cat:'h',line:'「吃了會歇斯底里地笑。壓力大的時候會這樣。」'},
+  {id:'mimbulus',n:'米寶思',e:'🪴',r:'r',cat:'h',line:'「奈威最寶貝的植物。會噴臭汁，但他還是愛它。」'},
+  {id:'snargaluff',n:'咬人捕手',e:'🌵',r:'c',cat:'h',line:'「外表像枯木，裡面全是刺。」'},
+  {id:'mandrakeseed',n:'曼德拉草幼苗',e:'🪴',r:'c',cat:'h',line:'「還小的時候叫聲只會讓你昏幾小時，長大才致命。趁早處理。」'},
+  {id:'bouncingbulb',n:'跳跳球莖',e:'🎾',r:'c',cat:'h',line:'「會亂跳的球根。像你的專注力。」'},
+  {id:'moondew',n:'月露',e:'💧',r:'c',cat:'h',line:'「只在月光下採得到。有些事有時機。」'},
+  {id:'giantpumpkin',n:'巨型南瓜',e:'🎃',r:'c',cat:'h',line:'「海格種的。用了膨脹咒——有些成長是假的。」'},
+  {id:'fireseaweed',n:'火焰海帶',e:'🔥',r:'c',cat:'h',line:'「在水裡燃燒的植物。矛盾的東西也能存在。」'},
+  {id:'dragondung',n:'龍糞肥料',e:'💩',r:'c',cat:'h',line:'「最好的肥料是最髒的東西。錯題本也是。」'},
+  {id:'nettle',n:'蕁麻',e:'🌿',r:'c',cat:'h',line:'「乾燥的蕁麻是治癤子藥水的材料。一年級的東西不要忘。」'},
+  {id:'gillyweedplant',n:'鰓囊草（原生）',e:'🌊',r:'r',cat:'h',line:'「多比偷來的那把。有時候救命的是別人的好意。」'},
+
+  /* ══ 魁地奇 ══ */
+  {id:'cannons',n:'查德里砲彈隊',e:'🧡',r:'c',cat:'q',line:'「榮恩支持的隊。上次奪冠是 1892 年。忠誠不需要理由。」'},
+  {id:'puddlemere',n:'帕德米爾聯隊',e:'🔵',r:'c',cat:'q',line:'「木透後來去了這一隊。堅持是有用的。」'},
+  {id:'harpies',n:'神鷹隊',e:'💚',r:'r',cat:'q',line:'「全女子球隊。金妮後來加入了。」'},
+  {id:'magpies',n:'蒙特羅斯喜鵲隊',e:'🖤',r:'c',cat:'q',line:'「聯盟奪冠次數最多。累積才是王道。」'},
+  {id:'arrows',n:'艾波比之箭隊',e:'🏹',r:'c',cat:'q',line:'「射箭慶祝的傳統被禁了。規則會變。」'},
+  {id:'ballycastle',n:'巴利卡索蝙蝠隊',e:'🦇',r:'c',cat:'q',line:'「吉祥物是一隻叫巴尼的果蝠。」'},
+  {id:'catapults',n:'卡菲力投石機隊',e:'🎯',r:'c',cat:'q',line:'「打法兇猛。有時候需要那股狠勁。」'},
+  {id:'falcons',n:'法茅斯獵鷹隊',e:'🦅',r:'c',cat:'q',line:'「隊訓：贏就好，斷幾根骨頭沒關係。不要學。」'},
+  {id:'kestrels',n:'肯梅爾隼隊',e:'🍀',r:'c',cat:'q',line:'「愛爾蘭隊。中場休息有跳舞的妖精。」'},
+  {id:'portree',n:'波特里驕傲隊',e:'💜',r:'c',cat:'q',line:'「來自蘇格蘭小島。小地方也能出強隊。」'},
+  {id:'tornados',n:'塔茨山龍捲風隊',e:'🌪️',r:'c',cat:'q',line:'「張秋支持的隊。連續五年奪冠過。」'},
+  {id:'wanderers',n:'威格頓流浪者隊',e:'⚔️',r:'c',cat:'q',line:'「由七個兄弟姊妹創立。」'},
+  {id:'wasps',n:'溫布恩黃蜂隊',e:'🐝',r:'c',cat:'q',line:'「路多·貝漫曾經是打擊手。」'},
+  {id:'seeker',n:'搜捕手',e:'🟡',r:'r',cat:'q',line:'「全場只有你在找那一顆。抓到就結束。」'},
+  {id:'chaser',n:'追蹤手',e:'🔴',r:'c',cat:'q',line:'「一分一分慢慢累積的人。大部分的分數是他們得的。」'},
+  {id:'beater',n:'打擊手',e:'🏏',r:'c',cat:'q',line:'「負責把麻煩打走，讓別人專心。」'},
+  {id:'keeper',n:'看守手',e:'🥅',r:'c',cat:'q',line:'「守住已經有的，跟得新分一樣重要。」'},
+  {id:'worldcup',n:'魁地奇世界盃',e:'🏆',r:'r',cat:'q',line:'「四年一次。你這一年也只有一次。」'},
+  {id:'irelandteam',n:'愛爾蘭國家隊',e:'☘️',r:'r',cat:'q',line:'「追蹤手強到搜捕手輸了還是贏。團隊 > 個人。」'},
+  {id:'bulgariateam',n:'保加利亞國家隊',e:'🐻',r:'r',cat:'q',line:'「喀浪抓到金探子，但隊伍還是輸了。」'},
+  {id:'wronskifeint',n:'朗斯基假動作',e:'💫',r:'r',cat:'q',line:'「假裝俯衝把對手騙下去。出題老師也會這招。」'},
+  {id:'quidditchrules',n:'《魁地奇溯源》',e:'📕',r:'c',cat:'q',line:'「七百多條犯規規則，大部分沒人記得。挑重要的記。」'},
+
+  /* ══ 魔法界制度 ══ */
+  {id:'ministry_org',n:'魔法部',e:'🏛️',r:'r',cat:'n',line:'「七個司。你未來可能會在其中一個上班。」'},
+  {id:'aurorffice',n:'傲羅總部',e:'🎖️',r:'r',cat:'n',line:'「錄取條件：五科 N.E.W.T. 拿 E 以上。門檻就是門檻。」'},
+  {id:'accidentreversal',n:'魔法意外逆轉小組',e:'🔄',r:'c',cat:'n',line:'「專門收拾別人的爛攤子。你只要收拾自己的。」'},
+  {id:'icw',n:'國際巫師聯盟',e:'🌍',r:'r',cat:'n',line:'「國際公法的巫師版。20 分，不多但別放棄。」'},
+  {id:'misuseartifacts',n:'麻瓜人工製品濫用局',e:'🔌',r:'c',cat:'n',line:'「亞瑟上班的地方。他真的很愛插頭。」'},
+  {id:'beastdivision',n:'神奇動物管控部門',e:'🐾',r:'c',cat:'n',line:'「把生物分成 X 到 XXXXX 五級。分類是理解的第一步。」'},
+  {id:'magiclaw',n:'魔法法律執行部',e:'⚖️',r:'r',cat:'n',line:'「巫師界的司法體系。跟你要考的是同一種東西。」'},
+  {id:'secrecystatute',n:'國際保密法',e:'🤫',r:'r',cat:'n',line:'「1692 年制定。所有巫師法的基礎規範。」'},
+  {id:'underagedecree',n:'未成年巫術限制法令',e:'🚸',r:'c',cat:'n',line:'「年齡是要件之一。民法也很愛考這個。」'},
+  {id:'thetrace',n:'偵測咒',e:'📍',r:'c',cat:'n',line:'「十七歲就解除。有些限制會自己消失，有些要自己解。」'},
+  {id:'floonetwork',n:'呼嚕網路',e:'🔥',r:'c',cat:'n',line:'「發音不清楚就會跑錯地方。答題也是。」'},
+  {id:'knightbus',n:'騎士公車',e:'🚌',r:'c',cat:'n',line:'「走投無路時伸出魔杖，它就會來。」'},
+  {id:'prophetpress',n:'預言家日報社',e:'📰',r:'c',cat:'n',line:'「不一定寫真的。二手資訊都要查證。」'},
+  {id:'quibbler',n:'謬論家',e:'📗',r:'c',cat:'n',line:'「大家都說它胡說八道，但關鍵時刻它登了真相。」'},
+  {id:'witchweekly',n:'女巫周刊',e:'💅',r:'c',cat:'n',line:'「最迷人微笑獎就是它辦的。別太在意排名。」'},
+  {id:'wwn',n:'巫師無線廣播網',e:'📻',r:'c',cat:'n',line:'「戰時的祕密頻道。資訊管道要多留一條。」'},
+  {id:'spew',n:'家庭小精靈福利促進協會',e:'🧦',r:'c',cat:'n',line:'「妙麗創的。沒人參加，但她是對的。」'},
+  {id:'merlinorder',n:'梅林勳章',e:'🎖️',r:'r',cat:'n',line:'「一級、二級、三級。等級制度到處都有。」'},
+  {id:'triwizard',n:'三巫鬥法大賽',e:'🏆',r:'r',cat:'n',line:'「報名了就不能反悔——魔法契約。跟你的考試一樣。」'},
+  {id:'wea',n:'巫師考試局',e:'📜',r:'c',cat:'n',line:'「負責出 O.W.L. 與 N.E.W.T. 的單位。考選部的巫師版。」'},
+  {id:'owlexam',n:'O.W.L. 普等巫測',e:'📝',r:'r',cat:'n',line:'「五年級考。決定你六年級能選什麼課。」'},
+  {id:'newtexam',n:'N.E.W.T. 超勞巫測',e:'📋',r:'r',cat:'n',line:'「七年級考。決定你能做什麼工作。你的也是。」'},
+
+  /* ══ 擴充：巫師與角色 ══ */
+  {id:'pince',n:'平斯夫人',e:'📚',r:'c',cat:'w',line:'「在她的圖書館裡吃東西？想都別想。」'},
+  {id:'hooch',n:'霍琦夫人',e:'🧹',r:'c',cat:'w',line:'「我吹哨子就起飛。口令要清楚。」'},
+  {id:'rosmerta',n:'羅梅塔夫人',e:'🍺',r:'c',cat:'w',line:'「三根掃帚的老闆娘。休息也需要有人張羅。」'},
+  {id:'grubblyplank',n:'葛柏蘭教授',e:'🌿',r:'c',cat:'w',line:'「代課老師，但課上得很扎實。」'},
+  {id:'bartyjr',n:'小巴堤·柯羅奇',e:'👅',r:'r',cat:'w',line:'「偽裝了一整年沒被發現。細節才是破綻。」'},
+  {id:'walburga',n:'華柏加的畫像',e:'🖼️',r:'c',cat:'w',line:'「一直尖叫的那幅畫。有些聲音要學會拉上簾子。」'},
+  {id:'regulus',n:'雷古勒斯·布萊克',e:'🐍',r:'r',cat:'w',line:'「R.A.B.。他一個人做了對的事，沒人知道。」'},
+  {id:'andromeda',n:'安多米達·唐克斯',e:'💐',r:'c',cat:'w',line:'「離開家族的那一個。選擇比出身重要。」'},
+  {id:'narcissa',n:'水仙·馬份',e:'🤍',r:'r',cat:'w',line:'「為了兒子對佛地魔說謊。母親的底線。」'},
+  {id:'lucius',n:'魯休思·馬份',e:'🐍',r:'r',cat:'w',line:'「有錢有勢，最後什麼都沒保住。」'},
+  {id:'greyback',n:'芬里爾·灰背',e:'🐺',r:'r',cat:'w',line:'「路平最怕變成的樣子。恐懼要面對。」'},
+  {id:'stan',n:'史坦·桑派',e:'🚌',r:'c',cat:'w',line:'「騎士公車的售票員。小人物也有名字。」'},
+  {id:'margeaunt',n:'瑪姬姑姑',e:'🐶',r:'c',cat:'w',line:'「被吹成氣球那位。有些人的話不用聽。」'},
+  {id:'dudley',n:'達力',e:'🍩',r:'c',cat:'w',line:'「最後他說了謝謝。人是會變的。」'},
+  {id:'vernon',n:'威農姨丈',e:'🥸',r:'c',cat:'w',line:'「越否認信件，信就來得越多。」'},
+  {id:'figg',n:'費格太太',e:'🐈',r:'c',cat:'w',line:'「看起來只是愛貓的鄰居，其實一直在守著。」'},
+  {id:'romilda',n:'羅咪達·文恩',e:'🍫',r:'c',cat:'w',line:'「別亂吃來路不明的巧克力。」'},
+  {id:'cormac',n:'麥拉·柯馬',e:'🏉',r:'c',cat:'w',line:'「自信過頭的下場是失球。」'},
+  {id:'cadogan',n:'卡多根爵士',e:'🐴',r:'c',cat:'w',line:'「勇氣可嘉，方向常常錯。」'},
+  {id:'dippet',n:'阿曼多·迪劈',e:'🎩',r:'c',cat:'w',line:'「鄧不利多的前一任校長。位子總會換人坐。」'},
+  {id:'ignotus',n:'伊格諾圖斯·佩威爾',e:'🧥',r:'r',cat:'w',line:'「選了隱形斗篷的那個弟弟。活得最久。」'},
+  {id:'cadmus',n:'卡德摩斯·佩威爾',e:'🪨',r:'r',cat:'w',line:'「選了復活石。想留住的東西，反而毀了他。」'},
+  {id:'antioch',n:'安提俄克·佩威爾',e:'⚔️',r:'r',cat:'w',line:'「選了最強的魔杖。當晚就被殺了。」'},
+  {id:'borgin',n:'波金',e:'🕯️',r:'c',cat:'w',line:'「翻倒巷的老闆。有些地方不要去。」'},
+  {id:'fortescue',n:'佛倫·福斯克',e:'🍨',r:'c',cat:'w',line:'「斜角巷的冰淇淋店老闆，免費請哈利吃過。」'},
+  {id:'malkin',n:'摩金夫人',e:'👗',r:'c',cat:'w',line:'「量身訂做。你的計畫也該是訂做的。」'},
+  {id:'ollivanderyoung',n:'年輕的奧利凡德',e:'🪄',r:'c',cat:'w',line:'「他記得每一根賣出去的魔杖。」'},
+  {id:'krumseeker',n:'喀浪（搜捕手）',e:'🦈',r:'r',cat:'w',line:'「他抓到金探子，但選擇了結束比賽。有些勝利是自己定義的。」'},
+  {id:'fleurchampion',n:'花兒（勇士）',e:'🌼',r:'c',cat:'w',line:'「第二項任務失敗了，但她還是站上去了。」'},
+  {id:'cedricchampion',n:'西追（勇士）',e:'🏆',r:'r',cat:'w',line:'「他堅持一起碰獎盃。正直有時候要付代價。」'},
+  {id:'lunamom',n:'露娜的媽媽',e:'✨',r:'c',cat:'w',line:'「實驗出錯過世。探索有風險，但值得。」'},
+  {id:'xenophilius',n:'謝諾菲留斯',e:'📗',r:'c',cat:'w',line:'「謬論家的主編。為了女兒什麼都願意。」'},
+
+  /* ══ 擴充：魔法生物 ══ */
+  {id:'welshgreen',n:'威爾斯綠龍',e:'🐲',r:'c',cat:'b',line:'「最溫和的龍。但還是龍。」'},
+  {id:'shortsnout',n:'瑞典短鼻龍',e:'💙',r:'c',cat:'b',line:'「藍色火焰能燒穿骨頭。溫和的外表不代表安全。」'},
+  {id:'fireball',n:'中國火球龍',e:'🧧',r:'c',cat:'b',line:'「又叫獅子龍。名字多的東西通常很重要。」'},
+  {id:'ironbelly',n:'烏克蘭鐵肚皮龍',e:'⚙️',r:'r',cat:'b',line:'「最大的龍。古靈閣用牠看金庫。」'},
+  {id:'vipertooth',n:'祕魯毒牙龍',e:'🐍',r:'c',cat:'b',line:'「最小但毒性最強。小科目也會咬人。」'},
+  {id:'hebridean',n:'赫布里底黑龍',e:'🖤',r:'c',cat:'b',line:'「英國原生種。就在你以為安全的地方。」'},
+  {id:'vampire',n:'吸血鬼',e:'🧛',r:'c',cat:'b',line:'「洛哈聲稱打敗過。聲稱而已。」'},
+  {id:'banshee',n:'女妖',e:'👻',r:'c',cat:'b',line:'「聽到她的叫聲代表有人要走了。有些警訊要當真。」'},
+  {id:'firecrab',n:'火蟹',e:'🦀',r:'c',cat:'b',line:'「背上鑲滿寶石，還會噴火。海格養過。」'},
+  {id:'griffin',n:'獅身鷹首獸',e:'🦁',r:'r',cat:'b',line:'「頭是鷹，身體是獅。兩種力量可以並存。」'},
+  {id:'seaserpent',n:'海蛇',e:'🌊',r:'c',cat:'b',line:'「傳說很多，傷人紀錄一次都沒有。謠言比真相大。」'},
+  {id:'grim',n:'不祥',e:'🐕‍🦺',r:'r',cat:'b',line:'「看見牠就會死——除非那只是你教父的變形。」'},
+  {id:'kappa',n:'河童',e:'🥒',r:'c',cat:'b',line:'「日本的水鬼，頭上有碗水。地域性的知識也要記。」'},
+  {id:'manticore',n:'蠍尾獅',e:'🦂',r:'r',cat:'b',line:'「XXXXX 級。有些東西就是不要碰。」'},
+  {id:'unicornfoal',n:'獨角獸幼崽',e:'🦄',r:'c',cat:'b',line:'「小時候是金色的，長大才變白。過程本來就會變。」'},
+  {id:'fairy',n:'小仙子',e:'🧚',r:'c',cat:'b',line:'「愛慕虛榮、智力低下，但很好看。裝飾用。」'},
+  {id:'nargle',n:'蜷翼魔',e:'🌰',r:'c',cat:'b',line:'「露娜說槲寄生裡有。沒人證明過，也沒人證偽過。」'},
+  {id:'thestralherd',n:'騎士墜鬼馬群',e:'🖤',r:'r',cat:'b',line:'「只有看過死亡的人看得見。有些理解要付代價。」'},
+  {id:'nifflergold',n:'嗅嗅（找金子）',e:'🪙',r:'c',cat:'b',line:'「牠只找閃亮的。你要找的是漏洞。」'},
+  {id:'hippogriffbow',n:'鷹馬的鞠躬禮',e:'🙇',r:'c',cat:'b',line:'「先低頭，牠才會接受你。謙虛是通行證。」'},
+  {id:'housecrest',n:'城堡的護衛石像',e:'🗿',r:'r',cat:'b',line:'「平常只是裝飾，需要時會站起來。」'},
+  {id:'giantsquidfriend',n:'大烏賊（曬太陽）',e:'🦑',r:'c',cat:'b',line:'「牠也需要浮上來透氣。」'},
+  {id:'phoenixtears',n:'鳳凰的眼淚',e:'💧',r:'r',cat:'b',line:'「能解蛇怪的毒。哭出來有時候真的有用。」'},
+  {id:'phoenixsong',n:'鳳凰之歌',e:'🎵',r:'r',cat:'b',line:'「給純潔的心勇氣，給邪惡的心恐懼。」'},
+  {id:'owlpostnight',n:'夜間送信的貓頭鷹',e:'🌙',r:'c',cat:'b',line:'「牠們整夜在飛，只為了把一封信送到。」'},
+  {id:'catnorris',n:'拿樂絲太太（巡邏中）',e:'🐈‍⬛',r:'c',cat:'b',line:'「牠看到什麼，飛七就知道什麼。」'},
+  {id:'toadchoir',n:'蛙鳴合唱團',e:'🐸',r:'c',cat:'b',line:'「霍格華茲真的有這個社團。什麼都有人做。」'},
+  {id:'pixieswarm',n:'康瓦耳小精靈群',e:'💙',r:'c',cat:'b',line:'「洛哈放了一整籠出來就落跑了。老師也會出包。」'},
+
+  /* ══ 擴充：魔法物品 ══ */
+  {id:'beadedbag',n:'妙麗的串珠包',e:'👜',r:'r',cat:'o',line:'「不可偵測延展咒。她連逃亡都先打包好。」'},
+  {id:'comet260',n:'彗星 260',e:'☄️',r:'c',cat:'o',line:'「不是最快的，但飛得起來。工具堪用就好。」'},
+  {id:'cleansweep',n:'清掃者 11 號',e:'🧹',r:'c',cat:'o',line:'「學校的公用掃帚。沒有最好的裝備也能練。」'},
+  {id:'wizardtent',n:'巫師帳篷',e:'⛺',r:'c',cat:'o',line:'「外面小、裡面大。腦袋也可以這樣裝。」'},
+  {id:'droobles',n:'吹寶超級泡泡糖',e:'🫧',r:'c',cat:'o',line:'「藍色泡泡可以飄好幾天。小快樂也能撐很久。」'},
+  {id:'pumpkinjuice',n:'冰鎮南瓜汁',e:'🥤',r:'c',cat:'o',line:'「大禮堂的標配。記得喝水。」'},
+  {id:'firewhisky',n:'火燒威士忌',e:'🥃',r:'c',cat:'o',line:'「成年之後再說。現在專心。」'},
+  {id:'acidpops',n:'酸味棒棒糖',e:'🍭',r:'c',cat:'o',line:'「會燒穿舌頭。蜂蜜公爵不負責。」'},
+  {id:'micesweets',n:'老鼠糖',e:'🐭',r:'c',cat:'o',line:'「吃了會吱吱叫。無害的惡作劇。」'},
+  {id:'bloodpops',n:'血味棒棒糖',e:'🩸',r:'c',cat:'o',line:'「賣給吸血鬼的。分眾很重要。」'},
+  {id:'invisibleink',n:'隱形墨水',e:'🖋️',r:'c',cat:'o',line:'「寫了看不到的東西，等於沒寫。筆記要看得懂。」'},
+  {id:'selfcorrecting',n:'自動批改羽毛筆',e:'✍️',r:'c',cat:'o',line:'「考場禁用。真正的能力騙不了人。」'},
+  {id:'explodingsnap',n:'爆炸紙牌',e:'💥',r:'c',cat:'o',line:'「交誼廳的消遣。休息就好好休息。」'},
+  {id:'gobstones',n:'狗石遊戲',e:'🔮',r:'c',cat:'o',line:'「輸了會被噴臭液。有些遊戲代價很高。」'},
+  {id:'goblinarmour',n:'妖精製盔甲',e:'🛡️',r:'c',cat:'o',line:'「只吸收讓它更強的東西。你也可以這樣選擇。」'},
+  {id:'sirius_bike',n:'天狼星的飛天摩托車',e:'🏍️',r:'r',cat:'o',line:'「他把它送給海格。信任是傳下去的。」'},
+  {id:'dacoin',n:'鄧不利多軍的硬幣',e:'🪙',r:'r',cat:'o',line:'「妙麗用假錢咒改的。傳訊不一定要靠貓頭鷹。」'},
+  {id:'fakelocket',n:'假墜飾盒（R.A.B.）',e:'📿',r:'r',cat:'o',line:'「裡面只有一張紙條。有人比你早一步做了。」'},
+  {id:'daydream',n:'白日夢符咒',e:'💭',r:'c',cat:'o',line:'「三十分鐘高品質幻想。但那三十分鐘也是時間。」'},
+  {id:'portableswamp',n:'便攜沼澤',e:'🐸',r:'c',cat:'o',line:'「雙胞胎的傑作。孚立維留了一小塊當紀念。」'},
+  {id:'nosebleednougat',n:'鼻血牛軋糖',e:'👃',r:'c',cat:'o',line:'「翹課點心盒的一種。裝病也要有技術。」'},
+  {id:'omniocular2',n:'萬里鏡（慢動作）',e:'🎞️',r:'c',cat:'o',line:'「重播、慢放、逐格分析。錯題就該這樣看。」'},
+  {id:'sneakoscope2',n:'口袋窺鏡',e:'🔺',r:'c',cat:'o',line:'「一直轉代表附近有人不老實。包括對自己。」'},
+  {id:'hourglassturner',n:'霍格華茲的沙漏',e:'⏳',r:'r',cat:'o',line:'「四座沙漏裝著四種寶石。分數看得見。」'},
+  {id:'quill_sugar',n:'糖羽毛筆',e:'🍬',r:'c',cat:'o',line:'「上課可以吃的筆。看起來像在思考。」'},
+  {id:'schoolrobes',n:'霍格華茲學生袍',e:'🧥',r:'c',cat:'o',line:'「穿上它就進入狀態。儀式感是有用的。」'},
+
+  /* ══ 擴充：霍格華茲場所 ══ */
+  {id:'knockturn',n:'翻倒巷',e:'🕯️',r:'c',cat:'p',line:'「唸錯呼嚕粉的目的地就會到這裡。」'},
+  {id:'borginburkes',n:'波金與伯克',e:'🏚️',r:'c',cat:'p',line:'「消失櫃的另一半在這裡。」'},
+  {id:'flourishblotts',n:'麗痕書店',e:'📚',r:'c',cat:'p',line:'「開學前的補書處。買了要讀。」'},
+  {id:'malkinshop',n:'摩金夫人長袍專賣店',e:'👗',r:'c',cat:'p',line:'「哈利跟跩哥第一次見面的地方。」'},
+  {id:'ollivandershop',n:'奧利凡德魔杖店',e:'🪄',r:'c',cat:'p',line:'「西元前 382 年就開了。老店有老店的道理。」'},
+  {id:'eeylops',n:'咿啦貓頭鷹商店',e:'🦉',r:'c',cat:'p',line:'「嘿美是從這裡來的。」'},
+  {id:'qualityquidditch',n:'魁地奇精品店',e:'🧹',r:'c',cat:'p',line:'「櫥窗裡的火閃電。想要的東西先記著。」'},
+  {id:'vault713',n:'古靈閣 713 號金庫',e:'🔐',r:'r',cat:'p',line:'「裡面只有一個小包裹。最重要的東西通常很小。」'},
+  {id:'hogwartsexpress',n:'霍格華茲特快車',e:'🚄',r:'c',cat:'p',line:'「十一點準時開。它不會等你收行李。」'},
+  {id:'littlehangleton',n:'小漢果頓',e:'🪦',r:'c',cat:'p',line:'「一切開始的墓園。有些地方要回去看。」'},
+  {id:'gaunt',n:'岡特老宅',e:'🛖',r:'c',cat:'p',line:'「破敗但藏著戒指。外表跟價值無關。」'},
+  {id:'seacave',n:'海邊的洞穴',e:'🕳️',r:'r',cat:'p',line:'「要付出代價才進得去。有些關卡就是這樣。」'},
+  {id:'malfoymanor',n:'馬份莊園',e:'🏛️',r:'r',cat:'p',line:'「華麗但沒有人快樂。」'},
+  {id:'lovegoodhouse',n:'洛夫古德家',e:'🍐',r:'c',cat:'p',line:'「長得像巨大的黑棋子。怪但溫暖。」'},
+  {id:'ministrylift',n:'魔法部電梯',e:'🛗',r:'c',cat:'p',line:'「紙飛機備忘錄在裡面亂飛。官僚就是這樣。」'},
+  {id:'umbridgeoffice',n:'恩不里居的辦公室',e:'🐱',r:'c',cat:'p',line:'「滿牆的貓盤子。粉紅色也可以很可怕。」'},
+  {id:'spidernest',n:'禁忌森林深處',e:'🕸️',r:'c',cat:'p',line:'「跟著蜘蛛走。海格的提示有時候很危險。」'},
+  {id:'castlestairs',n:'會移動的樓梯',e:'🪜',r:'c',cat:'p',line:'「一百四十二座，而且會自己換方向。計畫要有彈性。」'},
+  {id:'greatlake_ice',n:'冬天的黑湖',e:'❄️',r:'c',cat:'p',line:'「結冰的湖面下什麼都沒變。」'},
+  {id:'commonroom_fire',n:'交誼廳的壁爐',e:'🔥',r:'c',cat:'p',line:'「最容易睡著的地方。小心。」'},
+  {id:'hospitalwing_night',n:'深夜的醫療翼',e:'🕯️',r:'c',cat:'p',line:'「龐芮夫人整夜都在。有人在看著你。」'},
+  {id:'towerview',n:'塔樓的窗',e:'🪟',r:'c',cat:'p',line:'「讀累了就看遠方三十秒。眼睛需要。」'},
+
+  /* ══ 擴充：魔藥 ══ */
+  {id:'witsharpening',n:'增智劑',e:'🧠',r:'c',cat:'x',line:'「讓腦袋清楚一點。真正有效的是睡飽。」'},
+  {id:'invisibilitypotion',n:'隱形藥水',e:'🫥',r:'c',cat:'x',line:'「比斗篷便宜，但會退。捷徑通常有期限。」'},
+  {id:'fireprotection',n:'防火藥水',e:'🔥',r:'c',cat:'x',line:'「妙麗解開的那道邏輯題。冷靜比魔法有用。」'},
+  {id:'rebirthpotion',n:'重生藥',e:'🩸',r:'r',cat:'x',line:'「父之骨、僕之肉、敵之血。代價很清楚。」'},
+  {id:'wartremoving',n:'除疣藥水',e:'🧴',r:'c',cat:'x',line:'「小毛病也要處理，不然會擴散。」'},
+  {id:'hairgrowth',n:'毛髮生長劑',e:'💇',r:'c',cat:'x',line:'「艾洛·洛哈的最愛。」'},
+  {id:'pukingpastille',n:'嘔吐糖漿',e:'🤢',r:'c',cat:'x',line:'「一半讓你吐，一半讓你停。凡事都有解藥。」'},
+  {id:'phoenixtearpotion',n:'鳳凰淚（療傷）',e:'💧',r:'r',cat:'x',line:'「最強的療癒魔法之一，而且是免費的。」'},
+  {id:'puffapodpotion',n:'蓬蓬果藥水',e:'🫛',r:'c',cat:'x',line:'「二年級的作業。基礎題也要會。」'},
+  {id:'dragonblood',n:'龍血補藥',e:'🐲',r:'c',cat:'x',line:'「鄧不利多發現了龍血的十二種用途。一樣東西可以有很多解。」'},
+
+  /* ══ 擴充：咒語與魔法 ══ */
+  {id:'sp_parseltongue',n:'蛇佬腔',e:'🐍',r:'r',cat:'s',line:'「不是學來的，是天生的。但天生的東西不代表是你的錯。」'},
+  {id:'sp_animagus',n:'阿尼馬格斯變形術',e:'🐾',r:'r',cat:'s',line:'「要登記。麥教授花了很多年才成功。難的東西都要時間。」'},
+  {id:'sp_extension',n:'不可偵測延展咒',e:'👜',r:'r',cat:'s',line:'「外面看起來一樣，裡面裝得下一切。腦袋就是這樣。」'},
+  {id:'sp_mugglerepel',n:'麻瓜驅逐咒',e:'🚫',r:'c',cat:'s',line:'「讓不相干的人走開。專注也需要這個。」'},
+  {id:'sp_switching',n:'移形換影',e:'🔀',r:'c',cat:'s',line:'「變形學的基本功。把 A 換成 B。」'},
+  {id:'sp_incarcerous',n:'速速禁錮',e:'🪢',r:'c',cat:'s',line:'「憑空變出繩子把對方綁住。有時候要綁的是自己的手機。」'},
+  {id:'sp_bubblehead',n:'泡頭咒',e:'🫧',r:'c',cat:'s',line:'「水下呼吸的另一種解法。條條大路。」'},
+  {id:'sp_impervius',n:'防水咒',e:'💧',r:'c',cat:'s',line:'「妙麗在雨中的魁地奇賽幫哈利施的。小忙很關鍵。」'},
+  {id:'sp_fiendfyre',n:'厲火',e:'🔥',r:'l',cat:'s',line:'「能毀掉分靈體，也會毀掉施咒的人。太猛的方法要小心。」'},
+  {id:'sp_bloodprotection',n:'血親保護咒',e:'🩸',r:'r',cat:'s',line:'「母親的犧牲。最強的保護不是咒語。」'},
+
 
   /* ── 魔法生物 ── */
   {id:'fawkes',n:'佛客使',e:'🐦‍🔥',r:'r',cat:'b',line:'「燒盡重生——錯題也一樣。」'},
