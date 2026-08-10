@@ -672,7 +672,9 @@ details.ph-more>summary:hover{color:var(--acc,#4fae74);}
 /* 全部集滿之後，用一句話取代分類列 */
 .subtab-done{font-size:12.5px; color:var(--dim); padding:6px 2px 10px;}
 .subtab-row.subfilter{border-bottom:none; padding-bottom:8px; margin-top:-4px;}
-.subtab.small{padding:5px 10px; font-size:11.5px;}
+.subtab.small{padding:5px 10px; font-size:11.5px; gap:5px;}
+.subtab.small .subtab-n{font-size:10px; opacity:.75;}
+.subtab.small.active .subtab-n{opacity:1;}
 /* 最新收到：不用點分類就有東西可看 */
 .album-highlight{
   display:flex; align-items:center; gap:9px; margin-bottom:10px; padding:9px 12px;
@@ -1374,7 +1376,6 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     <div class="card">
       <h2>🍫 巧克力蛙畫片冊 <span class="dim" id="albumCount"></span></h2>
       <p class="dim">每天過關開一隻，<b>做完當天的運動再開一隻</b>——集滿之前絕不重複。共九類、560 張。收齊那天，這個功能就功成身退。</p>
-      <div style="margin:9px 0;"><button class="magic small" id="extraDrawBtn">🍫 用 30 點再抽一張</button></div>
       <div id="albumGrid"></div>
     </div>
     <div class="card">
@@ -1924,7 +1925,8 @@ function renderBodyCare(){
   document.getElementById('bodyDoneBtn').addEventListener('click',()=>{
     const before=getBalance(), now=!bodyDoneToday();
     LS.set('hp_body_'+tStr, now);
-    if(now && !LS.get('hp_bcard_'+tStr,null) && !albumComplete()){
+    // 時光器期間一樣不發畫片——運動可以補記，卡不能預支
+    if(now && tStr===realTodayStr() && !LS.get('hp_bcard_'+tStr,null) && !albumComplete()){
       const c=drawRandomCard();
       if(c){ grantCard(c); LS.set('hp_bcard_'+tStr,c.id);
         celebrate(c.r==='l');
@@ -3576,6 +3578,8 @@ function renderFrogCard(){
   const drawnAll = slots.map(k=>LS.get(k,null));
   const nextSlot = slots.findIndex(k=>!LS.get(k,null));
 
+  // 時光器只是拿來看別天的計畫，不能拿來預支抽卡
+  const timeTravel = t!==realTodayStr();
   if(!dayPassed(t) && nextSlot===0){
     box.innerHTML='<p class="dim">完成今天的任務清單，就能打開一隻巧克力蛙。全套 '+CARDS.length+' 張，<b>集滿之前不會抽到重複的</b>。</p>';
     return;
@@ -3584,7 +3588,10 @@ function renderFrogCard(){
     const c=CARDS.find(x=>x.id===id);
     return c? cardHTML(c, ownedCards()[c.id]||1).replace(' frog-reveal','') : '';
   }).join('');
-  if(nextSlot>-1 && dayPassed(t)){
+  if(nextSlot>-1 && dayPassed(t) && timeTravel){
+    html += `<p class="dim" style="text-align:center; padding:6px 0;">🕰️ 時光器開啟中——這天的巧克力蛙要等真的到了那天才能開。</p>`;
+  }
+  else if(nextSlot>-1 && dayPassed(t)){
     const left=unownedCards().length;
     html += `<div style="text-align:center; padding:6px 0;">
       <p style="margin:0 0 10px;">${nextSlot===0?'今天過關了——盒子在你手上跳動。':'🚪 有求必應屋：牆上還有一道門，再開一隻。'}
@@ -3605,9 +3612,10 @@ function renderFrogCard(){
   });
 }
 let ALBUM_CAT_SEL=null;      // 目前選中的分類——用切換取代收合，一次只渲染一疊
-let ALBUM_FILTER='all';      // all｜owned｜missing——大分類（119 張）用這個再縮小範圍
+let ALBUM_FILTER=LS.get('hp_album_filter','owned');   // all｜owned｜missing——預設先看已收集的
 function renderAlbum(){
   const grid=document.getElementById('albumGrid'); if(!grid) return;
+  const keepScroll=grid.querySelector('.subtab-row')?.scrollLeft||0;
   const owned=ownedCards();
   const got=CARDS.filter(c=>owned[c.id]).length;
   const nL=CARDS.filter(c=>c.r==='l').length, nR=CARDS.filter(c=>c.r==='r').length;
@@ -3651,14 +3659,16 @@ function renderAlbum(){
   }).join('');
 
   const sel=cats.find(c=>c.k===ALBUM_CAT_SEL);
-  // 大分類再給一層篩選：全部／已收集／未收集——不用整疊捲過去找
-  const filterRow = sel.total>24
-    ? `<div class="subtab-row subfilter">${[['all','全部'],['owned','已收集'],['missing','未收集']].map(([v,t])=>
-        `<button class="subtab small ${ALBUM_FILTER===v?'active':''}" data-filter="${v}">${t}</button>`).join('')}</div>`
-    : '';
-  const filtered = sel.total<=24? sel.pool
-    : ALBUM_FILTER==='owned'? sel.pool.filter(c=>owned[c.id])
-    : ALBUM_FILTER==='missing'? sel.pool.filter(c=>!owned[c.id])
+  // 每個分類都給篩選列，張數少的也一樣——按鈕位置固定，不會切分類就消失
+  // 「已收集」是預設。但這個分類還一張都沒有時，顯示已收集等於一片空白，
+  // 所以這一次改用「全部」——只在這次渲染生效，不覆蓋你選過的偏好。
+  const eff = (ALBUM_FILTER==='owned' && sel.mine===0) ? 'all' : ALBUM_FILTER;
+  const filterRow = `<div class="subtab-row subfilter">${
+    [['owned','已收集',sel.mine],['missing','未收集',sel.total-sel.mine],['all','全部',sel.total]].map(([v,t,n])=>
+      `<button class="subtab small ${eff===v?'active':''}" data-filter="${v}">${t}<span class="subtab-n">${n}</span></button>`
+    ).join('')}</div>`;
+  const filtered = eff==='owned'? sel.pool.filter(c=>owned[c.id])
+    : eff==='missing'? sel.pool.filter(c=>!owned[c.id])
     : sel.pool;
   const gridHtml=(filtered.length? filtered : [null]).map(c=>{
     if(!c) return '<p class="dim" style="padding:8px 2px;">這個篩選下沒有卡片。</p>';
@@ -3675,34 +3685,24 @@ function renderAlbum(){
     + `<div class="album-grid">${gridHtml}</div>`;
 
   grid.querySelectorAll('.subtab[data-cat]').forEach(b=>b.addEventListener('click',()=>{
-    ALBUM_CAT_SEL=b.dataset.cat; ALBUM_FILTER='all'; renderAlbum();
+    ALBUM_CAT_SEL=b.dataset.cat; renderAlbum();     // 保留目前的篩選，不重設
   }));
   grid.querySelectorAll('.subtab[data-filter]').forEach(b=>b.addEventListener('click',()=>{
-    ALBUM_FILTER=b.dataset.filter; renderAlbum();
+    ALBUM_FILTER=b.dataset.filter; LS.set('hp_album_filter',ALBUM_FILTER); renderAlbum();
   }));
-  const eb=document.getElementById('extraDrawBtn');
-  eb.disabled = getBalance()<30 || albumComplete();
-  eb.style.display = albumComplete()? 'none' : '';
+  // innerHTML 重畫會把橫向捲軸歸零——選了後面的分類，上面那排會跳回第一個。
+  // 還原捲動位置，再把選中的那顆確實帶進視野。
+  const row=grid.querySelector('.subtab-row');
+  if(row){
+    row.scrollLeft=keepScroll;
+    const act=row.querySelector('.subtab.active');
+    if(act){
+      const l=act.offsetLeft, r=l+act.offsetWidth;
+      if(l<row.scrollLeft+8 || r>row.scrollLeft+row.clientWidth-8)
+        row.scrollLeft = l - (row.clientWidth-act.offsetWidth)/2;
+    }
+  }
 }
-document.getElementById('extraDrawBtn').addEventListener('click',()=>{
-  if(albumComplete()){ toast('全套已經收齊了'); return; }
-  if(getBalance()<30){ toast('點數不夠'); return; }
-  if(!confirm('用 30 點再抽一張畫片？')) return;
-  const rd=LS.get('hp_redemptions',[]);
-  rd.push({id:Date.now().toString(36),name:'巧克力蛙 ×1',cost:30,date:todayStr()});
-  LS.set('hp_redemptions',rd);
-  const c=drawRandomCard();
-  if(!c){ toast('全套已經收齊了'); return; }
-  grantCard(c);
-  celebrate(c.r==='l');
-  if(albumComplete()){ celebrate(true); toast('🍫 全套 '+CARDS.length+' 張收齊了！'); }
-  else toast(c.r==='l'?'傳說畫片！✨':`獲得畫片：${c.n}`);
-  refreshHeaderStats(); renderFrogCard(); renderRedemptionHistory(); renderRewardShopList();
-  const grid=document.getElementById('albumGrid');
-  const tmp=document.createElement('div'); tmp.innerHTML=cardHTML(c, ownedCards()[c.id]);
-  grid.parentNode.insertBefore(tmp.firstChild, grid);
-  setTimeout(()=>{ const el=document.querySelector('#tab-album .tarot'); if(el) el.remove(); },6000);
-});
 
 /* ═══ 學年等級 ═══ */
 /* 門檻是照「照最低標準做、每 17 天還漏一天」的模擬曲線校準的（實測約 21.8 分/天）：
