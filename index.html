@@ -1449,16 +1449,22 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       <div class="fold-body">
       <div class="tbl-wrap"><table class="schedule-table">
         <tr><th>行為</th><th>分</th></tr>
-        <tr><td>今天勾選的每一項進度（依電量模式拆分，滿額 10）</td><td>+1～10</td></tr>
+        <tr><td>今日任務勾選的每一項</td><td>+6 / 項</td></tr>
         <tr><td>錯題當天入本，不隔夜（收工儀式勾選）</td><td>+5</td></tr>
-        <tr><td>課堂當天複習那門課</td><td>+10 / 門</td></tr>
-        <tr><td>連續 7 天不斷線（歷史紀錄都算）</td><td>+30 / 每滿7天</td></tr>
+        <tr><td>課堂當天複習那門課</td><td>+5 / 門</td></tr>
+        <tr><td>當天的運動做完</td><td>+15（連續 7 天再 +30）</td></tr>
+        <tr><td>連續 7 天不斷線（歷史紀錄都算）</td><td>+30 / 每滿 7 天</td></tr>
         <tr><td>模考達標</td><td>+50</td></tr>
         <tr><td>🍀 福來福喜日</td><td>當日總分 ×2</td></tr>
         <tr><td>🌫️ 催狂魔日（過關驅散）</td><td>+20</td></tr>
-        <tr><td>🏛️ 魔法部視察日（課堂複習加倍）</td><td>+10 / 門</td></tr>
+        <tr><td>🏛️ 魔法部視察日（課堂複習加倍）</td><td>再 +5 / 門</td></tr>
       </table></div>
       <p class="dim" style="margin-top:8px;">勾一項就先拿一項的分，不用等全部做完；取消勾選會自動扣回——不是懲罰，只是那件事本來就沒發生。</p>
+      <p class="dim" style="margin-top:6px;">
+        <b>為什麼是「每項 6 分」而不是「一天固定 10 分」：</b>全職期一天 4–5 項、在校期週末只有 1–2 項，
+        固定總分會讓做得多的日子每一項越來越不值錢。改成每項固定分數之後，<b>排得重的日子本來就拿得多</b>。<br>
+        <b>運動與連續獎勵不列入學院盃</b>——學院盃比的是課業，運動只進你的總點數。
+      </p>
       </div>
     </details>
 
@@ -1793,11 +1799,13 @@ function setDayObj(dt,obj){ LS.set(dayKey(dt),obj); }
 function allDayDates(){ return Object.keys(localStorage).filter(k=>k.startsWith('hp_day_')).map(k=>k.slice(7)).sort(); }
 
 /* ═══ 點數引擎（勾了加、取消扣） ═══ */
+/* 每個清單項目固定 6 分。
+   舊版是「整張清單固定 10 分、平分給各項」——那讓全職期（一天 4.25 小時、
+   4–5 項）跟在校期週末（1–2 項）拿一樣多，做得越多每項越不值錢。 */
+const ITEM_PTS=6;
 function itemPointSplits(n){
   if(n<=0) return [];
-  const base=Math.floor(10/n), rem=10-base*n, arr=[];
-  for(let i=0;i<n;i++) arr.push(base+(i<rem?1:0));
-  return arr;
+  return Array.from({length:n},()=>ITEM_PTS);
 }
 function dayEarnedFromChecklist(o){
   if(o.itemCount){
@@ -1805,7 +1813,7 @@ function dayEarnedFromChecklist(o){
     let s=0; for(let i=0;i<n;i++) if(ck[i]) s+=sp[i];
     return s;
   }
-  return o.completed?10:0;
+  return o.completed?ITEM_PTS:0;
 }
 /* ═══ 上課日自動過關 ═══
    拿掉默寫之後，在校期的平日沒有任何司律項目——那是刻意的：
@@ -2026,9 +2034,9 @@ function dayEvent(ds){
 function dayTotalEarned(dt){
   const o=getDayObj(dt);
   const cc=Object.values(o.courses).filter(Boolean).length;
-  let p = dayEarnedFromChecklist(o) + (o.errorLogged?5:0) + (o.examPass?50:0) + cc*10;
+  let p = dayEarnedFromChecklist(o) + (o.errorLogged?5:0) + (o.examPass?50:0) + cc*COURSE_PTS;
   const ev=dayEvent(dt);
-  if(ev.id==='ministry') p += cc*10;
+  if(ev.id==='ministry') p += cc*COURSE_PTS;
   if(ev.id==='dementor' && o.completed) p += 20;
   if(ev.id==='felix') p *= 2;
   return p;
@@ -2052,21 +2060,39 @@ function computeSpent(){ return LS.get('hp_redemptions',[]).reduce((s,r)=>s+r.co
 function getBalance(){ return computeEarnedTotal()+computeBodyBonus()-computeSpent(); }
 
 /* ═══ 學院盃：每月結算，三個對手學院自己會跑分 ═══ */
-/* 對手強度是照「你照計畫做得到的分數」校準的：
-   平日自動過關 = 0／天，週末刷題＋錯題 ≈ 15，連續 7 天 +30 → 每日平均約 15.7。
-   對手設在 11–15，所以：穩定做到最低標＝名列前茅；再勾課堂複習＝穩坐第一；
-   斷線就會被超車。（舊值 29–35 是照每週 33 小時的舊計畫設的，贏不了。） */
+/* 對手強度照「你照計畫做滿拿得到的分數」校準（連續獎勵不列入學院盃）：
+   全職期一天 3–5 項 × 6 分 ＋ 錯題 5 ＝ 23–35；在校期平日 5 ＋ 課堂 5×堂數 ＝ 10–20。
+   對手日均設在 11.4／14.2／16.1，所以：
+     照計畫做滿 → 穩坐第一　·　做到七八成 → 一二名　·　一半 → 第三　·　放掉 → 第四。
+   （上一版是 12/14/16，但那時全職期天花板剛好也是 15——等於全勤全勾還是輸雷文克勞。） */
+const COURSE_PTS=5;   // 課堂當天複習：一堂 5 分（原本 10 分，三堂課 30 分比認真刷半天還多）
+/* k＝對手拿到「今天計畫要求你做滿」的幾成。
+   所以做滿 → 第一；做八成 → 跟雷文克勞纏鬥；六成 → 第三；掉到一半以下 → 第四。 */
 const RIVALS=[
-  {id:'gryffindor',n:'葛萊分多',e:'🦁',c:'#9e2a2b',base:14},
-  {id:'ravenclaw', n:'雷文克勞',e:'🦅',c:'#2e4a8f',base:16},
-  {id:'hufflepuff',n:'赫夫帕夫',e:'🦡',c:'#c8a02a',base:12}
+  {id:'gryffindor',n:'葛萊分多',e:'🦁',c:'#9e2a2b',k:0.70},
+  {id:'ravenclaw', n:'雷文克勞',e:'🦅',c:'#2e4a8f',k:0.80},
+  {id:'hufflepuff',n:'赫夫帕夫',e:'🦡',c:'#c8a02a',k:0.57}
 ];
+/* 今天照計畫做滿能拿幾分（不含連續獎勵與運動——那兩項不列入學院盃） */
+const _ceilMemo={};
+function planCeiling(ds){
+  if(_ceilMemo[ds]!==undefined) return _ceilMemo[ds];
+  let v=5;
+  try{
+    const p=getTodayPlan(ds);
+    const items=p.segments.filter(s=>(s.kind==='study'||s.kind==='exam')
+      && !/^(自習：)?錯題入本/.test(s.label)).length;
+    v = items*ITEM_PTS + 5 + p.classes.length*COURSE_PTS;
+  }catch(e){}
+  return _ceilMemo[ds]=v;
+}
+/* 對手也是學生——他們的分數跟著「計畫今天要求你做多少」走。
+   學期中大家一起慢下來，寒暑假大家一起衝。
+   這樣你不會因為在校期計畫本來就排得少，就莫名其妙落後四個月。 */
 function rivalDayScore(id,ds){
   const rv=RIVALS.find(x=>x.id===id);
-  const wd=d(ds).getDay();
-  const weekend=(wd===0||wd===6)?0.82:1;
-  // 0.5~1.5 倍起伏：有好日子也有爛日子
-  return Math.round(rv.base*weekend*(0.5+rnd01(id+'|'+ds)));
+  // 0.55~1.45 倍起伏：他們也有好日子跟爛日子
+  return Math.round(planCeiling(ds)*rv.k*(0.55+rnd01(id+'|'+ds)*0.9));
 }
 function cupSeasonStart(){
   const today=todayStr(), ms=monthStart(today);
@@ -2104,9 +2130,27 @@ function renderCup(){
       <span class="cup-name">${r.n}</span>
       <span class="cup-bar"><div style="width:${Math.round(r.pts/max*100)}%; background:${r.c};"></div></span>
       <span class="cup-pts">${r.pts}</span></div>`).join('')
-    + (rank===1
-        ? `<div class="cup-note cup-lead">👑 史萊哲林目前領先 ${me.pts-rows[1].pts} 分。守住它。</div>`
-        : `<div class="cup-note cup-chase">${rows[0].n}領先你 ${rows[0].pts-me.pts} 分——今天補回來還來得及。</div>`);
+    + cupNote(rows, me, rank, daysLeft);
+}
+/* 落後多少分是個嚇人的數字；「每天多幾分」才是能動手的東西。
+   而且要追的是「上面那一名」，不是第一名——追第一名在月中通常不切實際，
+   看到一個追不到的數字只會想把這張卡關掉。 */
+function cupNote(rows, me, rank, daysLeft){
+  if(rank===1){
+    const lead=me.pts-rows[1].pts;
+    return `<div class="cup-note cup-lead">👑 史萊哲林第一，領先 ${rows[1].n} ${lead} 分。守住它。</div>`;
+  }
+  const up=rows[rank-2];                 // 上面那一名
+  const gap=up.pts-me.pts;
+  const d=Math.max(daysLeft,1);
+  const perDay=Math.ceil(gap/d);
+  const reach = perDay<=10;              // 一天多 10 分以內＝正常一天就補得回來
+  return `<div class="cup-note cup-chase">
+      目前第 ${rank} 名，離${up.n} ${gap} 分。
+      ${reach
+        ? `本月還剩 ${daysLeft} 天——<b>每天多 ${perDay} 分</b>就追得上。`
+        : `這個月剩 ${daysLeft} 天，追起來有點趕。<b>每個月 1 號全部歸零重來</b>，不用把這個數字扛在身上。`}
+    </div>`;
 }
 
 function refreshHeaderStats(){
@@ -2561,7 +2605,7 @@ function getTodayPlan(ds){
       segments=fulltimeSegs(
         '預習民事訴訟法一〈魔咒學〉——讀完課本前幾章，畫出訴訟流程圖',
         drillLabel(dr4)||'預習商事法一（公司法）〈算術占卜〉',
-        '整理兩科的架構筆記＋錯題入本');
+        '整理兩科的架構筆記');
     } else {
       const dr1=todayDrill(cp,tStr);
       note='過關標準：能空手畫出民法五編＋憲法的體系表。智財〈鍊金術〉這四週完全不碰。'
@@ -2871,7 +2915,10 @@ function renderTodayPlan(){
 function todayItems(){
   const segs=(TODAY_PLAN?TODAY_PLAN.segments:[]);
   return segs.filter(s=>s.kind==='study'||s.kind==='exam')
-             .map(s=>`${s.t}｜${s.label.replace(/^自習：/,'')}`);
+    // 「錯題入本」已經是收工儀式的固定項目（+5），時間表照樣顯示它，
+    // 但不再重複列進今日任務——同一個動作不該算兩次分
+    .filter(s=>!/^(自習：)?錯題入本/.test(s.label))
+    .map(s=>`${s.t}｜${s.label.replace(/^自習：/,'')}`);
   // 上課日會是空陣列——那天靠 autoPassDay() 自動過關
 }
 /* 過關＝勾完第一項；上課日沒有項目，由 autoPassDay() 自動算過關。 */
@@ -2937,7 +2984,7 @@ function renderCourseReview(){
   const o=getDayObj(todayStr());
   document.getElementById('courseChecklist').innerHTML=classes.map((c,i)=>{
     const ck=!!o.courses[c.n];
-    return `<li class="${ck?'done':''}"><input type="checkbox" id="cr${i}" data-course="${c.n.replace(/"/g,'&quot;')}" ${ck?'checked':''}><label for="cr${i}">${csp(c.n)}</label><span class="pt">+10</span></li>`;
+    return `<li class="${ck?'done':''}"><input type="checkbox" id="cr${i}" data-course="${c.n.replace(/"/g,'&quot;')}" ${ck?'checked':''}><label for="cr${i}">${csp(c.n)}</label><span class="pt">+${COURSE_PTS}</span></li>`;
   }).join('');
 }
 document.getElementById('courseChecklist').addEventListener('change',e=>{
@@ -2969,6 +3016,7 @@ const CLOSING_ITEMS=[
   {label:'今天的錯題已經入本（不隔夜，一句話也算）',points:5},
   {label:'合上書，離開位子',points:0}
 ];
+/* 這一項就是時間表上那格「錯題入本」——只在這裡計分，今日任務不重複收錄 */
 function renderClosing(){
   const o=getDayObj(todayStr()), st=LS.get('hp_closing_'+todayStr(),{});
   document.getElementById('closingChecklist').innerHTML=CLOSING_ITEMS.map((it,i)=>{
