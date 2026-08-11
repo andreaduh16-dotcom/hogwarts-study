@@ -534,22 +534,63 @@ details.fold .fold-body{padding:0 16px 15px;}
 .card.parch .schedule-table th{color:var(--gold);}
 .tbl-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
 
-/* ── 時間軸 ── */
-.timeline{position:relative; margin-left:9px; padding-left:19px; border-left:2px solid var(--line-str);}
-.phase{position:relative; margin-bottom:19px;}
-.phase::before{content:''; position:absolute; left:-26px; top:3px; width:13px; height:13px; border-radius:50%; background:var(--stone2); border:2px solid var(--line-str);}
-.phase.current::before{background:var(--green-lt); border-color:var(--green-lt); box-shadow:0 0 13px var(--green-lt);}
-.phase.done::before{background:var(--line-str); border-color:var(--line-str);}
-.phase .ph-title{font-family:"Cinzel","Noto Serif TC",serif; font-weight:600; color:var(--silver-hi); font-size:13.5px;}
+/* ── 你在這裡：整年壓成一條 ── */
+.yah-bar{position:relative; display:flex; gap:2px; height:13px; margin:3px 0 12px;}
+.yah-seg{border-radius:2px; background:rgba(255,255,255,.07); transition:.2s;}
+.yah-seg.done{background:rgba(92,192,132,.3);}
+.yah-seg.cur{background:var(--gold); box-shadow:0 0 11px rgba(201,169,78,.55);}
+.yah-seg.exam{background:rgba(214,109,109,.45); min-width:4px;}
+.yah-seg.exam.done{background:rgba(214,109,109,.28);}
+.yah-now{position:absolute; top:-4px; bottom:-4px; width:2px; background:var(--silver-hi);
+  box-shadow:0 0 7px rgba(255,255,255,.7); pointer-events:none;}
+.yah-line{font-size:13px; line-height:1.7; color:var(--silver-hi);}
+.yah-line b{color:var(--gold);}
+.yah-counts{display:flex; gap:9px; flex-wrap:wrap; margin-top:10px;}
+.yah-counts span{font-size:11.5px; color:var(--dim); padding:6px 11px; border-radius:8px;
+  background:rgba(255,255,255,.045); border:1px solid var(--line);}
+.yah-counts b{font-family:"Cinzel",serif; font-size:15px; color:var(--silver-hi); margin-right:3px;}
+
+/* ── 查閱區分隔：把「每天要看的」跟「偶爾才翻的」分開 ── */
+.sec-divider{display:flex; align-items:center; gap:11px; margin:22px 0 4px;}
+.sec-divider::before,.sec-divider::after{content:''; flex:1; height:1px; background:var(--line);}
+.sec-divider span{font-family:"Cinzel","Noto Serif TC",serif; font-size:10.5px;
+  letter-spacing:2.4px; color:var(--dim);}
+.sec-note{font-size:11.5px; text-align:center; margin:0 0 11px;}
+
+/* ── 時間軸：一次只攤開一段 ── */
+.timeline{position:relative; margin-left:7px; padding-left:18px; border-left:2px solid var(--line-str);}
+.phase{position:relative; margin-bottom:5px;}
+.ph-dot{position:absolute; left:-25px; top:13px; width:11px; height:11px; border-radius:50%;
+  background:var(--stone2); border:2px solid var(--line-str);}
+.phase.current .ph-dot{background:var(--green-lt); border-color:var(--green-lt); box-shadow:0 0 12px var(--green-lt);}
+.phase.done .ph-dot{background:var(--line-str); border-color:var(--line-str);}
+.ph-head{
+  width:100%; display:flex; align-items:center; gap:9px; flex-wrap:wrap; text-align:left;
+  background:none; border:none; border-radius:9px; padding:9px 10px; cursor:pointer;
+  font-family:inherit; color:inherit; transition:background .18s;
+}
+.ph-head:hover{background:rgba(255,255,255,.045);}
+.phase.open>.ph-head{background:rgba(255,255,255,.05);}
+.ph-title{font-family:"Cinzel","Noto Serif TC",serif; font-weight:600;
+  color:var(--silver-hi); font-size:13.5px;}
 .phase.current .ph-title{color:var(--gold);}
-.phase.done .ph-title,.phase.done .ph-date{opacity:.5;}
-.phase .ph-date{font-size:11px; color:var(--dim); margin-bottom:4px;}
-.phase.current .ph-title::after{content:' ← 現在'; color:var(--gold); font-size:11px;}
+.phase.done .ph-title{opacity:.55;}
+.ph-date{font-size:11px; color:var(--dim);}
+.phase.done .ph-date{opacity:.6;}
+.ph-tag{font-size:10px; letter-spacing:.8px; color:var(--dim); padding:2px 7px;
+  border-radius:20px; border:1px solid var(--line); white-space:nowrap;}
+.ph-now{font-size:10px; letter-spacing:1px; color:#0d1a12; background:var(--gold);
+  padding:2px 8px; border-radius:20px; font-weight:700; white-space:nowrap;}
+.ph-caret{margin-left:auto; font-size:10px; color:var(--dim);}
+.ph-peek{font-size:12px; line-height:1.6; color:var(--dim); padding:0 10px 8px 10px;
+  overflow:hidden; text-overflow:ellipsis; display:-webkit-box;
+  -webkit-line-clamp:1; -webkit-box-orient:vertical;}
+.phase.done .ph-peek{opacity:.5;}
+.ph-body{padding:4px 10px 14px;}
+
 .week-focus{font-size:12.5px; background:rgba(255,255,255,.06); border-radius:7px; padding:8px 10px; margin-top:5px; line-height:1.6; border-left:2px solid var(--line);}
 .card.parch .week-focus{background:rgba(0,0,0,.22); border-left-color:rgba(201,169,78,.3);}
-
-/* ── 階段卡：第一眼只看得到重點，細節要自己展開 ── */
-.ph-one{font-size:13.5px; line-height:1.62; color:var(--silver-hi); margin:6px 0 8px;}
+.ph-one{font-size:13.5px; line-height:1.62; color:var(--silver-hi); margin:2px 0 9px;}
 .ph-drill{
   display:flex; align-items:baseline; gap:9px; flex-wrap:wrap;
   font-size:12.5px; line-height:1.6; margin-bottom:9px; padding:8px 11px; border-radius:9px;
@@ -560,17 +601,6 @@ details.fold .fold-body{padding:0 16px 15px;}
   color:var(--acc,#4fae74); flex-shrink:0;
 }
 .ph-drill b{color:#f0dfa8;}
-details.ph-more{margin-top:2px;}
-details.ph-more>summary{
-  cursor:pointer; list-style:none; font-size:11.5px; color:var(--dim);
-  font-family:"Cinzel","Noto Serif TC",serif; letter-spacing:1px;
-  padding:5px 0; display:inline-flex; align-items:center; gap:5px;
-}
-details.ph-more>summary::-webkit-details-marker{display:none;}
-details.ph-more>summary::after{content:'▾'; font-size:10px; transition:.25s;}
-details.ph-more[open]>summary::after{transform:rotate(180deg);}
-details.ph-more>summary:hover{color:var(--acc,#4fae74);}
-.ph-more-body{padding-top:4px;}
 
 /* ── 階段詳解（地圖頁：這階段到底要幹嘛） ── */
 .ph-goal{font-size:12.5px; line-height:1.65; margin:6px 0 8px; padding:9px 11px; border-radius:8px;
@@ -1229,7 +1259,10 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       </div>
     </details>
 
-
+    <details class="fold">
+      <summary>💎 今天的得分 <span class="fold-sub">這個數字怎麼來的</span></summary>
+      <div class="fold-body"><div id="pointsDetailBox"></div></div>
+    </details>
 
     </div>
 
@@ -1395,10 +1428,20 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
 
   <!-- ═══ 學院地圖 ═══ -->
   <section class="tab-panel" id="tab-map">
-    <div class="card">
-      <h2>💎 今天的得分</h2>
-      <div id="pointsDetailBox"></div>
+    <!-- 你在這裡：進地圖第一眼就該知道自己在整年的哪個位置 -->
+    <div class="card" id="youAreHereCard">
+      <h2>📍 你在這裡</h2>
+      <div id="youAreHere"></div>
     </div>
+
+    <div class="card">
+      <h2>🗺️ 全年計畫</h2>
+      <p class="dim">八個階段。<b>現在這一段預設是攤開的</b>——點其他階段就換成展開它。只想知道今天做什麼，回「📜 今天」。</p>
+      <div class="timeline" id="timelineBox"></div>
+    </div>
+
+    <div class="sec-divider"><span>查閱</span></div>
+    <p class="dim sec-note">下面幾項是<b>需要的時候才翻</b>的資料，不是每天要看的東西。</p>
 
     <div class="fold-pair">
     <details class="fold">
@@ -1567,11 +1610,6 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
     </details>
 
     </div>
-    <div class="card">
-      <h2>🗺️ 全年計畫</h2>
-      <p class="dim">八個階段，每一段都寫清楚「要幹嘛、每天怎麼跑、什麼算過關」。<b>不確定現在該做什麼就翻到這裡</b>；只想知道今天做什麼，回「📜 今天」。</p>
-      <div class="timeline" id="timelineBox"></div>
-    </div>
   </section>
 
   <!-- ═══ 兌換區 ═══ -->
@@ -1580,19 +1618,21 @@ footer.foot{text-align:center; font-size:11px; color:var(--dim); margin-top:24px
       <h2>🛒 獎勵清單</h2>
       <div id="rewardShopList"></div>
     </div>
-    <div class="card">
-      <h2>🎁 新增獎勵</h2>
-      <p class="dim">獎勵是你自己訂的，換掉之後點數會扣掉。不要用「不讀書」當獎勵，會反噬。</p>
-      <label class="field-label">獎勵名稱</label>
-      <input type="text" id="rewardName" placeholder="例：看一集動畫">
-      <label class="field-label">兌換所需點數</label>
-      <input type="number" id="rewardCost" placeholder="例：50" min="1">
-      <div style="margin-top:11px;"><button class="magic" id="addReward">+ 新增獎勵</button></div>
-    </div>
-    <div class="card">
-      <h2>📜 兌換紀錄</h2>
-      <div id="redemptionHistory"></div>
-    </div>
+    <details class="fold">
+      <summary>🎁 新增獎勵 <span class="fold-sub">想到新的再開</span></summary>
+      <div class="fold-body">
+        <p class="dim" style="margin-top:0;">獎勵是你自己訂的，換掉之後點數會扣掉。不要用「不讀書」當獎勵，會反噬。</p>
+        <label class="field-label">獎勵名稱</label>
+        <input type="text" id="rewardName" placeholder="例：看一集動畫">
+        <label class="field-label">兌換所需點數</label>
+        <input type="number" id="rewardCost" placeholder="例：50" min="1">
+        <div style="margin-top:11px;"><button class="magic" id="addReward">+ 新增獎勵</button></div>
+      </div>
+    </details>
+    <details class="fold">
+      <summary>📜 兌換紀錄 <span class="fold-sub">換過什麼</span></summary>
+      <div class="fold-body"><div id="redemptionHistory"></div></div>
+    </details>
   </section>
 
   <!-- ═══ 更多 ═══ -->
@@ -2983,35 +3023,98 @@ function renderDrillTable(){
   if(sm) sm.innerHTML=`合計 <b>${sum}</b> 題＝未做總數 3,623 扣掉海商法 10 題。`
     + `暑假衝刺不排新題，只有模考、錯題第三輪與封盤。`;
 }
+/* 你在這裡：整年壓成一條，第一眼就知道自己在哪一段、還剩多久 */
+function renderYouAreHere(){
+  const box=document.getElementById('youAreHere'); if(!box) return;
+  const t=todayStr(), today=d(t);
+  const first=d(PHASES[0].start), last=d(PHASES[PHASES.length-1].end);
+  const span=daysBetween(first,last)||1;
+  const cp=currentPhase();
+  const segs=PHASES.map(p=>{
+    const w=(daysBetween(d(p.start),d(p.end))+1)/span*100;
+    const cur=cp&&cp.id===p.id, done=!cur&&today>d(p.end);
+    return `<span class="yah-seg${cur?' cur':''}${done?' done':''}${p.tag==='考試'?' exam':''}"
+      style="flex:${w.toFixed(2)} 0 0" title="${p.name}　${p.start} ~ ${p.end}"></span>`;
+  }).join('');
+  const pct = today<first? 0 : today>last? 100 : daysBetween(first,today)/span*100;
+
+  let line;
+  if(t>NEWT_END_DATE) line='<b>兩試都考完了。</b>你走完了整整 440 天。';
+  else if(!cp) line='計畫還沒開始——8/11 起這條會亮起來。';
+  else if(cp.tag==='考試'){
+    // 二試橫跨兩天，要講清楚今天是第幾天
+    const dn = (t===NEWT_DATE)?'第一天' : (t===NEWT_END_DATE)?'第二天' : '';
+    line=`<b>${cp.name}</b>　就是今天${dn?`・${dn}`:''}。`;
+  }
+  else {
+    const idx=PHASES.indexOf(cp)+1;
+    const leftInPhase=daysBetween(today,d(cp.end));
+    const nx=PHASES[PHASES.indexOf(cp)+1];
+    line=`第 ${idx} 段／共 ${PHASES.length}　·　<b>${cp.name}</b>　·　`
+       + (leftInPhase>0? `還有 ${leftInPhase} 天${nx?`進入「${nx.name}」`:''}` : '今天是這一段的最後一天');
+  }
+  const toOWL = today<=d(OWL_DATE)? daysBetween(today,d(OWL_DATE)) : null;
+  // 二試考到 10/25，所以倒數要撐到那天結束，不是到 10/24 就消失
+  const toNEWT= t<=NEWT_END_DATE? Math.max(0,daysBetween(today,d(NEWT_DATE))) : null;
+
+  box.innerHTML=`
+    <div class="yah-bar">${segs}<span class="yah-now" style="left:${pct.toFixed(2)}%"></span></div>
+    <div class="yah-line">${line}</div>
+    <div class="yah-counts">
+      ${toOWL!==null? `<span><b>${toOWL}</b> 天　一試 ${OWL_DATE}</span>`:''}
+      ${toNEWT!==null? (t>=NEWT_DATE
+          ? `<span><b>${t===NEWT_DATE?'第一天':'第二天'}</b>　二試進行中</span>`
+          : `<span><b>${toNEWT}</b> 天　二試 ${NEWT_DATE}</span>`):''}
+      ${toOWL===null&&toNEWT===null? '<span>兩試都走完了 ✓</span>':''}
+    </div>`;
+}
+
+/* 全年計畫：一次只攤開一段。預設是現在這一段——
+   進來最常想知道的就是「我現在在做什麼」，其他七段收成一行就夠了。 */
+let PHASE_OPEN;   // undefined＝還沒初始化（預設開現在這段）；null＝使用者自己全部收起來了
 function renderTimeline(){
   const cp=currentPhase(), today=d(todayStr());
-  document.getElementById('timelineBox').innerHTML=PHASES.map(p=>{
+  if(PHASE_OPEN===undefined) PHASE_OPEN = cp? cp.id : PHASES[0].id;
+  const box=document.getElementById('timelineBox');
+  box.innerHTML=PHASES.map(p=>{
     const cur=cp&&cp.id===p.id;
     const done=!cur && today>d(p.end);
+    const open=PHASE_OPEN===p.id;
     const span=p.start===p.end? p.start : `${p.start} ~ ${p.end}`;
-    // 第一眼只給：階段名、期間、一句話、刷幾題。細節收在「展開」裡。
-    let h=`<div class="phase ${cur?'current':''}${done?' done':''}">
-      <div class="ph-title">${p.name}</div>
-      <div class="ph-date">${span}${p.len?`　·　${p.len}`:''}　·　${p.tag}</div>`;
-    if(p.one)   h+=`<div class="ph-one">${p.one}</div>`;
-    if(p.drill) h+=`<div class="ph-drill"><span>刷題量</span>${p.drill}</div>`;
-    const hasDetail = (p.rhythm&&p.rhythm.length)||(p.weeks&&p.weeks.length)||p.check||p.warn;
-    if(hasDetail){
-      h+=`<details class="ph-more"${cur?' open':''}><summary>展開細節</summary><div class="ph-more-body">`;
-      if(p.goal) h+=`<div class="ph-goal">${p.goal}</div>`;
+    let h=`<div class="phase ${cur?'current':''}${done?' done':''}${open?' open':''}">
+      <button class="ph-head" data-ph="${p.id}" aria-expanded="${open}">
+        <span class="ph-dot"></span>
+        <span class="ph-title">${p.name}</span>
+        <span class="ph-date">${span}${p.len?`　·　${p.len}`:''}</span>
+        <span class="ph-tag">${p.tag}</span>
+        ${cur?'<span class="ph-now">現在</span>':''}
+        <span class="ph-caret">${open?'▾':'▸'}</span>
+      </button>`;
+    if(open){
+      h+='<div class="ph-body">';
+      if(p.one)   h+=`<div class="ph-one">${p.one}</div>`;
+      if(p.drill) h+=`<div class="ph-drill"><span>刷題量</span>${p.drill}</div>`;
+      if(p.goal)  h+=`<div class="ph-goal">${p.goal}</div>`;
       if(p.rhythm&&p.rhythm.length){
         h+=`<div class="ph-sub">${p.tag==='考試'?'當天節次':'每天／每週怎麼跑'}</div>`
-         + `<table class="ph-rhythm">${p.rhythm.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>`;
+         + `<div class="tbl-wrap"><table class="ph-rhythm">${p.rhythm.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table></div>`;
       }
       if(p.weeks&&p.weeks.length){
         h+=`<div class="ph-sub">重點</div>`+p.weeks.map(x=>`<div class="week-focus">${x}</div>`).join('');
       }
       if(p.check) h+=`<div class="ph-check">✓ ${p.check}</div>`;
       if(p.warn)  h+=`<div class="ph-warn">⚠️ ${p.warn}</div>`;
-      h+=`</div></details>`;
+      h+='</div>';
+    } else if(p.one){
+      h+=`<div class="ph-peek">${p.one}</div>`;
     }
     return h+'</div>';
   }).join('');
+  box.querySelectorAll('.ph-head').forEach(b=>b.addEventListener('click',()=>{
+    const id=isNaN(+b.dataset.ph)? b.dataset.ph : +b.dataset.ph;
+    PHASE_OPEN = PHASE_OPEN===id? null : id;    // 再點一次收起來
+    renderTimeline();
+  }));
 }
 function renderPhaseChip(){
   const cp=currentPhase();
@@ -4930,7 +5033,7 @@ function init(){
   renderExamCard();
   renderClosing();
   renderFrogCard();
-  renderTimeline(); renderDrillTable();
+  renderYouAreHere(); renderTimeline(); renderDrillTable();
   renderRewardShopList();
   renderRedemptionHistory();
   refreshHeaderStats();
