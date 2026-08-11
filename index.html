@@ -556,6 +556,13 @@ details.fold .fold-body{padding:0 16px 15px;}
 .sec-divider span{font-family:"Cinzel","Noto Serif TC",serif; font-size:10.5px;
   letter-spacing:2.4px; color:var(--dim);}
 .sec-note{font-size:11.5px; text-align:center; margin:0 0 11px;}
+/* 得分明細：課業／運動分開，因為只有課業算經驗值 */
+.pd-sec{font-family:"Cinzel","Noto Serif TC",serif; font-size:11px; letter-spacing:1.6px;
+  color:var(--gold); margin:13px 0 6px; display:flex; align-items:baseline; gap:8px;}
+.pd-sec:first-child{margin-top:0;}
+.pd-sec .dim{font-family:inherit; font-size:10.5px; letter-spacing:.6px;}
+.pd-why{margin-top:9px; padding:9px 11px; border-radius:9px; font-size:12px; line-height:1.68;
+  background:rgba(255,255,255,.04); border-left:2px solid var(--line-str);}
 
 /* ── 時間軸：一次只攤開一段 ── */
 .timeline{position:relative; margin-left:7px; padding-left:18px; border-left:2px solid var(--line-str);}
@@ -3183,16 +3190,31 @@ function renderPointsDetail(){
   const box=document.getElementById('pointsDetailBox'); if(!box) return;
   const o=getDayObj(todayStr());
   const cc=Object.values(o.courses).filter(Boolean).length;
-  const rows=[
+  const study=[
     ['今日進度勾選', dayEarnedFromChecklist(o)? `+${dayEarnedFromChecklist(o)}`:'—'],
     ['錯題當天入本', o.errorLogged?'+5':'—'],
-    ['課堂當天複習', cc?`+${cc*10}（${cc} 門）`:'—'],
-    ['模考達標', o.examPass?'+50':'—'],
-    ['運動（不計入過關，另抽一張畫片）', bodyDoneToday()?'+15':'—']
+    ['課堂當天複習', cc?`+${cc*COURSE_PTS}（${cc} 門 × ${COURSE_PTS}）`:'—'],
+    ['模考達標', o.examPass?'+50':'—']
   ];
-  box.innerHTML=`<div class="tbl-wrap"><table class="schedule-table"><tr><th>項目</th><th>得分</th></tr>
-    ${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table></div>
-    <p class="dim" style="margin-top:8px;">累計獲得 ${computeEarnedTotal()+computeBodyBonus()} ｜ 已兌換 ${computeSpent()} ｜ <b style="color:var(--gold)">餘額 ${getBalance()}</b></p>`;
+  const bodyBonus=computeBodyBonus();
+  box.innerHTML=`
+    <div class="pd-sec">課業　<span class="dim">算經驗值・算學院盃</span></div>
+    <div class="tbl-wrap"><table class="schedule-table"><tr><th>項目</th><th>得分</th></tr>
+      ${study.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table></div>
+    <div class="pd-sec">運動　<span class="dim">只算點數・不算經驗值</span></div>
+    <div class="tbl-wrap"><table class="schedule-table"><tr><th>項目</th><th>得分</th></tr>
+      <tr><td>今天的運動做完</td><td>${bodyDoneToday()?'+15':'—'}</td></tr>
+      <tr><td>連續 7 天運動</td><td>+30 / 每滿 7 天</td></tr></table></div>
+    <p class="dim pd-why">
+      <b>為什麼運動不算經驗值：</b>年級是<b>課業</b>的進度條——如果運動也算，
+      光靠運動就能升到七年級，那個數字就不再代表你讀了多少書。
+      運動的分<b>全額進點數</b>，一樣拿得到獎勵，只是不會幫你升年級。
+    </p>
+    <p class="dim" style="margin-top:8px;">
+      經驗值（升年級用）<b>${computeEarnedTotal()}</b>　·　運動加分 <b>${bodyBonus}</b><br>
+      累計獲得 ${computeEarnedTotal()+bodyBonus} ｜ 已兌換 ${computeSpent()} ｜
+      <b style="color:var(--gold)">餘額 ${getBalance()}</b>
+    </p>`;
 }
 
 /* ═══ 熱圖 ═══ */
@@ -4005,10 +4027,14 @@ function renderLevel(){
   const lv=LEVELS[idx], next=LEVELS[idx+1];
   document.getElementById('statLevel').textContent=lv.t;
   const fill=document.getElementById('xpFill'), lbl=document.getElementById('xpLbl');
+  // 標題那顆「學院點數」含運動加分，這條經驗值不含——兩個數字會對不起來，
+  // 所以有運動分的時候就直接把差額寫出來，不要讓她自己猜。
+  const bb=computeBodyBonus();
+  const bodyHint = bb? `（運動的 ${bb} 分只進點數，不算經驗）` : '';
   if(next){
     fill.style.width=Math.round((xp-lv.xp)/(next.xp-lv.xp)*100)+'%';
-    lbl.textContent=`累積 ${xp} 經驗 · 距「${next.t}」還差 ${next.xp-xp}`;
-  } else { fill.style.width='100%'; lbl.textContent=`累積 ${xp} 經驗 · 已至頂點`; }
+    lbl.textContent=`累積 ${xp} 經驗 · 距「${next.t}」還差 ${next.xp-xp}${bodyHint}`;
+  } else { fill.style.width='100%'; lbl.textContent=`累積 ${xp} 經驗 · 已至頂點${bodyHint}`; }
   const last=LS.get('hp_last_level_shown',0);
   if(idx>last){
     LS.set('hp_last_level_shown',idx); celebrate(true);
