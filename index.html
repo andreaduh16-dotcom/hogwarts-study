@@ -2073,14 +2073,21 @@ function getBalance(){ return computeEarnedTotal()+computeBodyBonus()-computeSpe
      照計畫做滿 → 穩坐第一　·　做到七八成 → 一二名　·　一半 → 第三　·　放掉 → 第四。
    （上一版是 12/14/16，但那時全職期天花板剛好也是 15——等於全勤全勾還是輸雷文克勞。） */
 const COURSE_PTS=5;   // 課堂當天複習：一堂 5 分（原本 10 分，三堂課 30 分比認真刷半天還多）
-/* k＝對手拿到「今天計畫要求你做滿」的幾成。
-   所以做滿 → 第一；做八成 → 跟雷文克勞纏鬥；六成 → 第三；掉到一半以下 → 第四。 */
+/* k＝對手拿到「今天照計畫做滿的期望分數」的幾成（該期望值已含事件加成）。
+   雷文克勞 0.88 是刻意貼身的——要有追趕感，不能做滿就大勝：
+     做滿 → 第一（小勝）　·　九成 → 咬得很緊　·　八成 → 第二，追得回來
+     七成 → 第三　·　六成以下 → 第四 */
 const RIVALS=[
-  {id:'gryffindor',n:'葛萊分多',e:'🦁',c:'#9e2a2b',k:0.70},
-  {id:'ravenclaw', n:'雷文克勞',e:'🦅',c:'#2e4a8f',k:0.80},
-  {id:'hufflepuff',n:'赫夫帕夫',e:'🦡',c:'#c8a02a',k:0.57}
+  {id:'gryffindor',n:'葛萊分多',e:'🦁',c:'#9e2a2b',k:0.78},
+  {id:'ravenclaw', n:'雷文克勞',e:'🦅',c:'#2e4a8f',k:0.88},
+  {id:'hufflepuff',n:'赫夫帕夫',e:'🦡',c:'#c8a02a',k:0.64}
 ];
-/* 今天照計畫做滿能拿幾分（不含連續獎勵與運動——那兩項不列入學院盃） */
+/* 今天照計畫做滿、平均而言能拿幾分（不含連續獎勵與運動——那兩項不列入學院盃）。
+   ⚠️ 一定要把每日事件的期望值算進來：福來福喜 8% 會讓當天 ×2、
+   催狂魔 14% 過關 +20、魔法部視察 12% 讓課堂複習再加一次。
+   實測這些事件會把實際得分墊高 17–37%（在校期基數小，+20 的比重特別大）。
+   對手是照這個數字校準的，漏算事件就等於把對手設得太弱。 */
+const EV_FELIX=0.08, EV_DEMENTOR=0.14, EV_MINISTRY=0.12;
 const _ceilMemo={};
 function planCeiling(ds){
   if(_ceilMemo[ds]!==undefined) return _ceilMemo[ds];
@@ -2089,7 +2096,9 @@ function planCeiling(ds){
     const p=getTodayPlan(ds);
     const items=p.segments.filter(s=>(s.kind==='study'||s.kind==='exam')
       && !/^(自習：)?錯題入本/.test(s.label)).length;
-    v = items*ITEM_PTS + 5 + p.classes.length*COURSE_PTS;
+    const course=p.classes.length*COURSE_PTS;
+    const base = items*ITEM_PTS + 5 + course;
+    v = base*(1+EV_FELIX) + EV_DEMENTOR*20 + EV_MINISTRY*course;
   }catch(e){}
   return _ceilMemo[ds]=v;
 }
@@ -4016,10 +4025,14 @@ function renderAlbum(){
    day60≈1315、day120≈2640、day210≈4580、day300≈6560、day360≈7890（一試）、day446≈9705（二試）。
    所以七年級落在約第 200 天，一試前就到得了；最高的魔法部長落在二試前，
    不會有永遠拿不到的等級——咒語綁在等級上，拿不到就等於那些咒語是死的。 */
+/* 門檻是照「出勤 90%、照計畫做滿（含事件加成）」的實際累積曲線倒推的，
+   讓最後一級落在第 428 天左右——二試前一週。
+   舊值 9400 是漏算每日事件時算的，實測 100% 出勤第 334 天就會封頂，
+   等於考前還有 105 天沒東西可爬。 */
 const LEVELS=[
-  {t:'一年級',xp:0},{t:'二年級',xp:320},{t:'三年級',xp:750},{t:'四年級',xp:1400},
-  {t:'五年級',xp:2200},{t:'六年級',xp:3200},{t:'七年級',xp:4400},{t:'霍格華茲畢業生',xp:5700},
-  {t:'正氣師學徒',xp:7000},{t:'傲羅',xp:8200},{t:'魔法部長',xp:9400}
+  {t:'一年級',xp:0},{t:'二年級',xp:370},{t:'三年級',xp:860},{t:'四年級',xp:1520},
+  {t:'五年級',xp:2340},{t:'六年級',xp:3380},{t:'七年級',xp:4800},{t:'霍格華茲畢業生',xp:5960},
+  {t:'正氣師學徒',xp:7370},{t:'傲羅',xp:9380},{t:'魔法部長',xp:11130}
 ];
 function renderLevel(){
   const xp=computeEarnedTotal();
