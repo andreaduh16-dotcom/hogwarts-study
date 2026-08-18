@@ -556,6 +556,17 @@ details.fold .fold-body{padding:0 16px 15px;}
 .sec-divider span{font-family:"Cinzel","Noto Serif TC",serif; font-size:10.5px;
   letter-spacing:2.4px; color:var(--dim);}
 .sec-note{font-size:11.5px; text-align:center; margin:0 0 11px;}
+/* 每天的快走：整個運動計畫裡消耗最大的一項，所以擺在訓練前面 */
+.body-walk{margin:10px 0 4px; padding:11px 13px; border-radius:11px;
+  background:rgba(92,192,132,.08); border:1px solid rgba(92,192,132,.24);}
+.bw-head{display:flex; align-items:baseline; gap:9px; flex-wrap:wrap;
+  font-size:13.5px; color:var(--silver-hi); font-weight:600; margin-bottom:5px;}
+.bw-head span{font-family:"Cinzel",serif; font-size:11px; color:var(--gold); font-weight:400;}
+.body-walk p{margin:0; font-size:12px; line-height:1.65; color:var(--dim);}
+.bw-sep{display:flex; align-items:center; gap:9px; margin:14px 0 4px;
+  font-family:"Cinzel","Noto Serif TC",serif; font-size:10.5px; letter-spacing:1.4px; color:var(--dim);}
+.bw-sep span{font-size:10.5px; color:var(--gold);}
+.bw-sep::after{content:''; flex:1; height:1px; background:var(--line);}
 /* 得分明細：課業／運動分開，因為只有課業算經驗值 */
 .pd-sec{font-family:"Cinzel","Noto Serif TC",serif; font-size:11px; letter-spacing:1.6px;
   color:var(--gold); margin:13px 0 6px; display:flex; align-items:baseline; gap:8px;}
@@ -1890,35 +1901,48 @@ const BODY_START='2026-08-11';
              ② 臀腿與核心的肌力（決定瘦下來之後的線條）
              ③ 心率循環（熱量消耗，但誠實標示：運動燒的熱量遠小於飲食）
    循序漸進：討厭運動的人只要第一週太痛苦就會全放棄，所以入門期刻意很輕。 */
+/* 每天都有的一段——不管當天是練還是放鬆。
+   這是整個計畫裡消耗最大的一項：57 公斤快走約 3.5–4 大卡／分鐘，
+   40 分鐘就 140–160 大卡，×7 天 ≈ 1,000 大卡／週，比任何一次訓練都多，
+   而且它是這裡面最不痛苦的一種。念書念到腦袋轉不動的時候出去走，兩件事一起解決。 */
+const BODY_WALK={ t:'每天快走 40 分鐘', kcal:[140,170],
+  tip:'配速抓「講得出話但唱不了歌」。可以拆成兩段 20 分鐘。戴耳機聽東西沒關係，但不要邊走邊滑手機——速度會掉。' };
+
 const BODY_PLAN={
-  A:{ t:'臀腿＋骨盆矯正', kcal:[110,150], focus:'直接處理骨盆前傾與臀型',
+  A:{ t:'臀腿＋骨盆矯正', kcal:[190,240], focus:'直接處理骨盆前傾與臀型',
       moves:[
         ['髖屈肌伸展（弓箭步）','左右各 30 秒 ×2','骨盆前傾最關鍵的一條。前推時肚子收好，不要塌腰'],
-        ['臀橋','12–15 下 ×3','彈力帶繞膝更有感。頂到最高夾緊 2 秒'],
+        ['深蹲（彈力帶繞膝）','15 下 ×4','膝蓋對齊腳尖，不用蹲太低。組間只休 30 秒'],
+        ['分腿蹲／後跨步','每邊 12 下 ×3','單腳動作最耗，也最練臀。扶著椅背沒關係'],
+        ['臀橋','15–20 下 ×4','彈力帶繞膝更有感。頂到最高夾緊 2 秒'],
+        ['登階（椅子或樓梯）','每邊 15 下 ×3','心率會拉上來，這是這一天熱量的主要來源'],
         ['蚌式開腿（彈力帶）','每邊 15 下 ×2','練外側臀肌，讓臀型變好看不是變大'],
         ['側躺抬腿','每邊 12 下 ×2','慢慢放下比抬起來重要'],
-        ['深蹲（彈力帶繞膝）','12 下 ×3','膝蓋對齊腳尖，不用蹲太低'],
-        ['死蟲式','每邊 8 下 ×2','腰要貼緊墊子，貼不住就把腳抬高一點']
+        ['死蟲式','每邊 10 下 ×2','腰要貼緊墊子，貼不住就把腳抬高一點']
       ]},
-  B:{ t:'核心＋背部姿勢', kcal:[100,140], focus:'改善小腹外觀與駝背',
+  B:{ t:'核心＋背部姿勢', kcal:[170,220], focus:'改善小腹外觀與駝背',
       moves:[
         ['貓牛式','10 次','當暖身，慢慢做'],
-        ['死蟲式','每邊 10 下 ×3','腹部往內收，不是憋氣'],
-        ['棒式','20–40 秒 ×3','撐不住就跪姿棒式，不要硬撐到塌腰'],
-        ['側棒式','每邊 15–30 秒 ×2','練腰側線條'],
-        ['彈力帶划船','15 下 ×3','肩胛往後夾，姿勢改善很有感'],
-        ['超人式','12 下 ×3','背後鏈太弱也會加重骨盆前傾']
+        ['死蟲式','每邊 12 下 ×3','腹部往內收，不是憋氣'],
+        ['棒式','30–50 秒 ×3','撐不住就跪姿棒式，不要硬撐到塌腰'],
+        ['側棒式','每邊 20–40 秒 ×2','練腰側線條'],
+        ['彈力帶划船','15 下 ×4','肩胛往後夾，姿勢改善很有感'],
+        ['超人式','15 下 ×3','背後鏈太弱也會加重骨盆前傾'],
+        ['熊爬（原地）','30 秒 ×3','核心＋心率一起拉，這一天多的熱量從這裡來'],
+        ['登山者','30 秒 ×3','速度放穩，屁股不要翹高']
       ]},
-  C:{ t:'全身循環（心率）', kcal:[200,260], focus:'今天是消耗熱量的一天',
+  C:{ t:'全身循環（心率）', kcal:[330,400], focus:'今天是消耗熱量的一天',
       moves:[
         ['深蹲','20 下','循環開始，速度放穩'],
-        ['原地快踏步或開合跳','30 下','怕吵就原地快踏步，效果差不多'],
+        ['原地快踏步或開合跳','40 下','怕吵就原地快踏步，效果差不多'],
+        ['分腿蹲','每邊 10 下','—'],
         ['彈力帶划船','15 下','—'],
-        ['棒式','30 秒','—'],
-        ['臀橋','15 下','—'],
-        ['循環休息','60 秒','以上做完算一輪，總共做 3–4 輪']
+        ['登山者','30 秒','—'],
+        ['棒式','40 秒','—'],
+        ['臀橋','20 下','—'],
+        ['循環休息','45–60 秒','以上做完算一輪，總共做 <b>5 輪</b>（入門期先做 3 輪）']
       ]},
-  R:{ t:'放鬆日', kcal:[30,60], focus:'讓身體修復，不是偷懶',
+  R:{ t:'放鬆日', kcal:[40,70], focus:'讓身體修復，不是偷懶',
       moves:[
         ['貓牛式','10 次','—'],
         ['髖屈肌伸展','左右各 30 秒','—'],
@@ -1927,14 +1951,15 @@ const BODY_PLAN={
         ['深呼吸收腹','5 次','吐氣時肚子往內收，停 5 秒']
       ]}
 };
-/* 週一到週日的課表：5 練 2 放鬆 */
-const BODY_WEEK=['A','B','C','R','A','B','R'];   // 週一…週日
+/* 週一到週日：5 練 2 放鬆，其中兩天是循環日（消耗最大的那種） */
+const BODY_WEEK=['A','B','C','R','A','C','R'];   // 週一…週日
 /* 分期：入門 2 週（份量減半）→ 建立期 → 進階 */
 function bodyStage(tStr){
   const w=Math.floor(dateDiff(BODY_START,tStr)/7);
-  if(w<2)  return {n:0,t:'入門期',note:'次數先做一半就好，先讓身體習慣有這件事。'};
-  if(w<6)  return {n:1,t:'建立期',note:'照表操課，做不完就砍組數，不要砍動作。'};
-  return    {n:2,t:'進階期',note:'彈力帶換更緊的一條，或每個動作多加一組。'};
+  if(w<2)  return {n:0,t:'入門期',note:'訓練的次數先做一半就好，先讓身體習慣有這件事。'
+                                    +'<b>但走路不減量</b>——那是消耗最大也最不累的一項，從第一天就走滿。'};
+  if(w<6)  return {n:1,t:'建立期',note:'照表操課，做不完就砍組數，不要砍動作。走路照走。'};
+  return    {n:2,t:'進階期',note:'彈力帶換更緊的一條，或每個動作多加一組。走路可以加到 50 分鐘或走坡。'};
 }
 function allBodyDates(){
   // 只收 hp_body_YYYY-MM-DD，避免其他 hp_body_* 的鍵被誤算成「有做的一天」
@@ -1983,6 +2008,8 @@ function renderBodyCare(){
   const done=bodyDoneToday(), streak=computeBodyStreak();
   const half = st.n===0 && key!=='R';
   const kcal = half? [Math.round(plan.kcal[0]*0.6),Math.round(plan.kcal[1]*0.6)] : plan.kcal;
+  // 走路每天都算，所以卡片上顯示的是「訓練＋走路」的合計
+  const tot = [kcal[0]+BODY_WALK.kcal[0], kcal[1]+BODY_WALK.kcal[1]];
   const drawnId=LS.get('hp_bcard_'+tStr,null);
   const drawn=drawnId? CARDS.find(c=>c.id===drawnId) : null;
 
@@ -1996,9 +2023,14 @@ function renderBodyCare(){
     `<div class="body-head">
        <span class="body-type">${plan.t}</span>
        <span class="body-stage">${st.t}</span>
-       <span class="body-kcal">約 ${kcal[0]}–${kcal[1]} 大卡</span>
+       <span class="body-kcal">約 ${tot[0]}–${tot[1]} 大卡</span>
      </div>
      <p class="body-focus">${plan.focus}${half? '　·　入門期：份量先減半':''}</p>
+     <div class="body-walk">
+       <div class="bw-head">🚶 ${BODY_WALK.t}<span>${BODY_WALK.kcal[0]}–${BODY_WALK.kcal[1]} 大卡</span></div>
+       <p>${BODY_WALK.tip}</p>
+     </div>
+     <div class="bw-sep">下面是今天的訓練　<span>${kcal[0]}–${kcal[1]} 大卡</span></div>
      <div class="tbl-wrap"><table class="body-moves">${movesHtml}</table></div>
      <div class="body-actions">
        <button class="magic small${done?' secondary':''}" id="bodyDoneBtn">${done?'✓ 今天做完了':'做完了　抽一張畫片'}</button>
